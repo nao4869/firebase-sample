@@ -1,7 +1,6 @@
 class Post {
   final int id;
   final String name;
-  final int age;
 
   // 追加分
   final String imagePath;
@@ -10,7 +9,6 @@ class Post {
   Post({
     this.id,
     this.name,
-    this.age,
     this.imagePath,
     this.createdAt,
   });
@@ -19,7 +17,6 @@ class Post {
     return {
       'id': id,
       'name': name,
-      'age': age,
       'imagePath': imagePath,
       'createdAt': createdAt,
     };
@@ -27,6 +24,6 @@ class Post {
 
   @override
   String toString() {
-    return 'Post{id: $id, name: $name, age: $age, imagePath: $imagePath, createdAt: $createdAt}';
+    return 'Post{id: $id, name: $name, imagePath: $imagePath, createdAt: $createdAt}';
   }
 }
