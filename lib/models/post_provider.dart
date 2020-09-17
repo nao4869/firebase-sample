@@ -28,12 +28,12 @@ class PostProvider with ChangeNotifier {
       }
       final List<Post> loadedPosts = [];
 
-      extractedData.forEach((postId, courseData) {
+      extractedData.forEach((postId, postData) {
         loadedPosts.add(Post(
-          id: postId,
-          name: courseData['name'],
-          imagePath: courseData['imagePath'],
-          createdAt: courseData['createdAt'],
+          id: postData['id'],
+          name: postData['name'],
+          imagePath: postData['imagePath'],
+          createdAt: postData['createdAt'],
         ));
       });
       posts = loadedPosts;

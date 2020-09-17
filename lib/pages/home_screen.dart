@@ -1,5 +1,6 @@
 import 'package:firebase_sample/models/post.dart';
 import 'package:firebase_sample/models/post_provider.dart';
+import 'package:firebase_sample/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var _isLoading = false;
+
+  final nameFieldFormKey = GlobalKey<FormState>();
+  final textController = TextEditingController();
+
+  String taskName;
+  bool isValid = false;
+
+  String onValidate(String text) {
+    // resultType = validator.validate(text);
+    // return resultType.errorMessage(Strings.of(navigator.context));
+  }
+
+  void onNameChange(String text) {
+    isValid = text.isNotEmpty;
+    taskName = text;
+    setState(() {});
+  }
+
+  void resetNameTextField() {
+    onNameChange('');
+    nameFieldFormKey.currentState.reset();
+    taskName = '';
+    setState(() {});
+  }
+
   @override
   void initState() {
     Future.delayed(Duration.zero).then((_) {
@@ -28,7 +54,14 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       });
     });
+    textController.text = '';
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
   }
 
   Widget _buildProgressIndicator() {
@@ -109,16 +142,58 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          print(notifier.postsList.length.toString());
-          final post = Post(
-            id: notifier.postsList.length.toString(),
-            name: 'Todo',
-            imagePath: null,
-            createdAt: DateTime.now().toIso8601String(),
-          );
+          showDialog(
+            context: context,
+            builder: (context) {
+              return SimpleDialog(
+                children: <Widget>[
+                  SimpleDialogOption(
+                    onPressed: () {},
+                    child: Column(
+                      children: [
+                        CustomTextFormField(
+                          formKey: nameFieldFormKey,
+                          height: 80,
+                          onValidate: onValidate,
+                          onChanged: onNameChange,
+                          controller: textController,
+                          resetTextField: resetNameTextField,
+                          hintText: 'タスク名',
+                          counterText: '50',
+                        ),
+                        RaisedButton(
+                          color: Colors.blue,
+                          elevation: 0,
+                          onPressed: () {
+                            //postインスタンスの作成
+                            final post = Post(
+                              id: notifier.postsList.length.toString(),
+                              name: taskName,
+                              imagePath: null,
+                              createdAt: DateTime.now().toIso8601String(),
+                            );
 
-          // データベースへ保存 - 挿入
-          notifier.addPost(post);
+                            // データベースへ保存 - 挿入
+                            notifier.addPost(post);
+                            Navigator.of(context).pop();
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Text(
+                            '投稿する',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
         },
         child: const Icon(Icons.add),
       ),
