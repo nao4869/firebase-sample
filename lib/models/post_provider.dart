@@ -50,6 +50,7 @@ class PostProvider with ChangeNotifier {
       final response = await http.post(
         url,
         body: json.encode({
+          'id': post.id,
           'name': post.name,
           'imagePath': post.imagePath,
           'createdAt': post.createdAt,
@@ -60,7 +61,8 @@ class PostProvider with ChangeNotifier {
         name: post.name,
         imagePath: post.imagePath,
         createdAt: post.createdAt,
-        id: json.decode(response.body)['name'],
+        id: post.id,
+        //id: json.decode(response.body)['name'],
       );
       posts.add(newPost);
       notifyListeners();
