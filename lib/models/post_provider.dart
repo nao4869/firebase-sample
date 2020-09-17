@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http; // for http request
 
-class Posts with ChangeNotifier {
-  List<Post> _posts = [];
+class PostProvider with ChangeNotifier {
+  List<Post> posts = [];
 
-  Posts(
-    this._posts,
-  );
+  PostProvider({
+    this.posts,
+  });
 
   // getter for post
-  List<Post> get posts {
-    return [..._posts];
+  List<Post> get postsList {
+    return [...posts];
   }
 
   Future<void> retrievePostData() async {
@@ -36,7 +36,7 @@ class Posts with ChangeNotifier {
           createdAt: courseData['createdAt'],
         ));
       });
-      _posts = loadedPosts;
+      posts = loadedPosts;
       notifyListeners();
     } catch (error) {
       throw (error);
@@ -62,7 +62,7 @@ class Posts with ChangeNotifier {
         createdAt: post.createdAt,
         id: json.decode(response.body)['name'],
       );
-      _posts.add(newPost);
+      posts.add(newPost);
       notifyListeners();
     } catch (error) {
       print(error);
@@ -71,7 +71,7 @@ class Posts with ChangeNotifier {
   }
 
   Future<void> updatePost(String id, Post newPost) async {
-    final postIndex = _posts.indexWhere((cs) => cs.id == id);
+    final postIndex = posts.indexWhere((cs) => cs.id == id);
 
     if (postIndex >= 0) {
       final url = 'https://fir-book-sample.firebaseio.com/posts/$id.json';
@@ -81,7 +81,7 @@ class Posts with ChangeNotifier {
             'imagePath': newPost.imagePath,
             'createdAt': newPost.createdAt,
           }));
-      _posts[postIndex] = newPost;
+      posts[postIndex] = newPost;
       notifyListeners();
     } else {
       print('...');
@@ -90,13 +90,13 @@ class Posts with ChangeNotifier {
 
   Future<void> deletePost(String id) async {
     final url = 'https://fir-book-sample.firebaseio.com/posts/$id.json';
-    final existingPostIndex = _posts.indexWhere((post) => post.id == id);
-    var existingCourse = _posts[existingPostIndex];
-    _posts.removeAt(existingPostIndex);
+    final existingPostIndex = posts.indexWhere((post) => post.id == id);
+    var existingCourse = posts[existingPostIndex];
+    posts.removeAt(existingPostIndex);
     notifyListeners();
     final response = await http.delete(url);
     if (response.statusCode >= 400) {
-      _posts.insert(existingPostIndex, existingCourse);
+      posts.insert(existingPostIndex, existingCourse);
       notifyListeners();
       throw HttpException('Could not delete post.');
     }

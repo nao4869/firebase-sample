@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:firebase_sample/Utility/utility.dart';
 import 'package:firebase_sample/models/post.dart';
+import 'package:firebase_sample/models/post_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screen';
@@ -19,17 +16,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     //final size = MediaQuery.of(context).size;
+    final notifier = Provider.of<PostProvider>(context);
     return Scaffold(
       appBar: AppBar(),
       body: ListView.builder(
         shrinkWrap: true,
-        itemCount: 3,
+        itemCount: notifier.postsList.length,
         itemBuilder: (BuildContext context, int index) {
           return Card(
             child: ListTile(
               //dense: true,
               leading: Text(
-                'dogsNotifier.dogsList[index].id.toString()',
+                notifier.postsList[index].id.toString(),
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,15 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       Text(
-                        'dogsNotifier.dogsList[index].name',
-                      ),
-                      Text(
-                        'dogsNotifier.dogsList[index].age.toString()' + '歳',
+                        notifier.postsList[index].name,
                       ),
                     ],
                   ),
                   Text(
-                    'dogsNotifier.dogsList[index].createdAt',
+                    notifier.postsList[index].createdAt,
                   ),
                 ],
               ),
@@ -84,42 +79,45 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          print('reached');
           final time = DateTime.now().millisecondsSinceEpoch;
-          var imageFile;
-          var imageString;
-          final picker = ImagePicker();
-          final pickedFile = await picker.getImage(
-            source: ImageSource.gallery,
-            maxHeight: 600,
-            maxWidth: 800,
-          );
-          if (pickedFile == null) return;
-          imageFile = File(pickedFile.path);
-
-          if (imageFile != null) {
-            final Directory directory =
-                await getApplicationDocumentsDirectory();
-            final String path = directory.path;
-            final File newImage = await imageFile.copy('$path/$time.png');
-
-            setState(() {
-              imageFile = newImage;
-            });
-
-            imageString = Utility.base64String(imageFile.readAsBytesSync());
-          }
 
           final post = Post(
             id: time.toString(),
             name: 'Todo',
-            imagePath: imageString,
+            imagePath: null,
             createdAt: DateTime.now().toIso8601String(),
           );
 
           // データベースへ保存 - 挿入
+          notifier.addPost(post);
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 }
+
+//          var imageFile;
+//          var imageString;
+//          final picker = ImagePicker();
+//          final pickedFile = await picker.getImage(
+//            source: ImageSource.gallery,
+//            maxHeight: 600,
+//            maxWidth: 800,
+//          );
+//          if (pickedFile == null) return;
+//          imageFile = File(pickedFile.path);
+//
+//          if (imageFile != null) {
+//            final Directory directory =
+//                await getApplicationDocumentsDirectory();
+//            final String path = directory.path;
+//            final File newImage = await imageFile.copy('$path/$time.png');
+//
+//            setState(() {
+//              imageFile = newImage;
+//            });
+//
+//            imageString = Utility.base64String(imageFile.readAsBytesSync());
+//          }
