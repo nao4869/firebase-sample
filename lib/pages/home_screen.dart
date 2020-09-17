@@ -84,10 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return Card(
                   child: ListTile(
-                    //dense: true,
-                    leading: Text(
-                      notifier.postsList[index].id.toString(),
-                    ),
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -103,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+                    // 画像部分の表示
                     // subtitle: SizedBox(
                     //   width: size.width * .8,
                     //   child: ClipRRect(
@@ -125,12 +122,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .deletePost(notifier.postsList[index].id);
                                   Navigator.of(context).pop();
                                 },
-                                child: Center(child: Text('削除')),
+                                child: Center(
+                                  child: Text('削除'),
+                                ),
                               ),
-//                              SimpleDialogOption(
-//                                onPressed: () => Navigator.pop(context),
-//                                child: Center(child: Text('編集')),
-//                              ),
+                              SimpleDialogOption(
+                                onPressed: () => Navigator.pop(context),
+                                child: Center(
+                                  child: Text('編集'),
+                                ),
+                              ),
                             ],
                           );
                         },

@@ -30,13 +30,17 @@ class PostProvider with ChangeNotifier {
 
       extractedData.forEach((postId, postData) {
         loadedPosts.add(Post(
-          id: postData['id'],
+          //id: postData['id'],
+          id: postId,
           name: postData['name'],
           imagePath: postData['imagePath'],
           createdAt: postData['createdAt'],
         ));
       });
       posts = loadedPosts;
+
+      // 作成日毎にソートする
+      posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       notifyListeners();
     } catch (error) {
       throw (error);
@@ -50,7 +54,7 @@ class PostProvider with ChangeNotifier {
       final response = await http.post(
         url,
         body: json.encode({
-          'id': post.id,
+          // 'id': post.id,
           'name': post.name,
           'imagePath': post.imagePath,
           'createdAt': post.createdAt,
@@ -61,10 +65,12 @@ class PostProvider with ChangeNotifier {
         name: post.name,
         imagePath: post.imagePath,
         createdAt: post.createdAt,
-        id: post.id,
-        //id: json.decode(response.body)['name'],
+        // id: post.id,
+        id: json.decode(response.body)['name'],
       );
       posts.add(newPost);
+      // 新規投稿時にも、作成日順にソートする
+      posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       notifyListeners();
     } catch (error) {
       print(error);
