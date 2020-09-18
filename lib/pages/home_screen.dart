@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as Path;
 import 'package:firebase_sample/models/post.dart';
 import 'package:firebase_sample/models/post_provider.dart';
 import 'package:firebase_sample/widgets/text_form_field.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +26,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String taskName;
   bool isValid = false;
+
+  File _image;
+  String _uploadedFileURL;
+
+  Future chooseFile() async {
+    await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
+      setState(() {
+        _image = image;
+      });
+    });
+  }
+
+  Future clearSelection() async {
+    setState(() {
+      _image = null;
+    });
+  }
+
+  Future uploadFile() async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('images/${Path.basename(_image.path)}}');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+
+    storageReference.getDownloadURL().then((fileURL) {
+      setState(() {
+        _uploadedFileURL = fileURL;
+      });
+    });
+  }
 
   String onValidate(String text) {
     // resultType = validator.validate(text);
