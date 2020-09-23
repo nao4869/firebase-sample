@@ -50,12 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
       /// 保存するPostインスタンスを作成
       final photo = Post(
         id: notifier.postList.length.toString(),
-        name: 'TODO',
+        name: taskName,
         createdAt: DateTime.now().toIso8601String(),
         imagePath: _uploadedFileURL,
       );
       notifier.addPost(photo);
-      Navigator.of(context).pop();
     });
   }
 
@@ -136,8 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     // 画像部分の表示
-//                     subtitle: Image.n,
-//                     ),
+                    subtitle: Image.network(
+                      notifier.postList[index].imagePath,
+                      fit: BoxFit.cover,
+                    ),
                     trailing: Icon(Icons.more_vert),
                     onTap: () {
                       showDialog(
@@ -194,7 +195,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         RaisedButton(
                           color: Colors.blue,
                           elevation: 0,
-                          onPressed: uploadFile,
+                          onPressed: () {
+                            // ダイアログを閉じます
+                            Navigator.of(context).pop();
+                            uploadFile();
+                          },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -218,27 +223,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-//          var imageFile;
-//          var imageString;
-//          final picker = ImagePicker();
-//          final pickedFile = await picker.getImage(
-//            source: ImageSource.gallery,
-//            maxHeight: 600,
-//            maxWidth: 800,
-//          );
-//          if (pickedFile == null) return;
-//          imageFile = File(pickedFile.path);
-//
-//          if (imageFile != null) {
-//            final Directory directory =
-//                await getApplicationDocumentsDirectory();
-//            final String path = directory.path;
-//            final File newImage = await imageFile.copy('$path/$time.png');
-//
-//            setState(() {
-//              imageFile = newImage;
-//            });
-//
-//            imageString = Utility.base64String(imageFile.readAsBytesSync());
-//          }
