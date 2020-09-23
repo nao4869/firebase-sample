@@ -58,11 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  String onValidate(String text) {
-    // resultType = validator.validate(text);
-    // return resultType.errorMessage(Strings.of(navigator.context));
-  }
-
   void onNameChange(String text) {
     isValid = text.isNotEmpty;
     taskName = text;
