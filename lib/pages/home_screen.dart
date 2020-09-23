@@ -30,32 +30,32 @@ class _HomeScreenState extends State<HomeScreen> {
   File _image;
   String _uploadedFileURL;
 
-  Future chooseFile() async {
-    await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
-      setState(() {
-        _image = image;
-      });
-    });
-  }
-
-  Future clearSelection() async {
-    setState(() {
-      _image = null;
-    });
-  }
-
   Future uploadFile() async {
+    final notifier = Provider.of<PostProvider>(context, listen: false);
+    _image = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 600,
+      maxWidth: 800,
+    );
+
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
         .child('images/${Path.basename(_image.path)}}');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
-    print('File Uploaded');
 
     storageReference.getDownloadURL().then((fileURL) {
-      setState(() {
-        _uploadedFileURL = fileURL;
-      });
+      _uploadedFileURL = fileURL;
+
+      /// 保存するPostインスタンスを作成
+      final photo = Post(
+        id: notifier.postList.length.toString(),
+        name: 'TODO',
+        createdAt: DateTime.now().toIso8601String(),
+        imagePath: _uploadedFileURL,
+      );
+      notifier.addPost(photo);
+      Navigator.of(context).pop();
     });
   }
 
@@ -109,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final size = MediaQuery.of(context).size;
     final notifier = Provider.of<PostProvider>(context);
     return Scaffold(
       appBar: AppBar(),
@@ -117,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ? _buildProgressIndicator()
           : ListView.builder(
               shrinkWrap: true,
-              itemCount: notifier.postsList.length,
+              itemCount: notifier.postList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Card(
                   child: ListTile(
@@ -127,25 +126,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             Text(
-                              notifier.postsList[index].name,
+                              notifier.postList[index].name,
                             ),
                           ],
                         ),
                         Text(
-                          notifier.postsList[index].createdAt,
+                          notifier.postList[index].createdAt,
                         ),
                       ],
                     ),
                     // 画像部分の表示
-                    // subtitle: SizedBox(
-                    //   width: size.width * .8,
-                    //   child: ClipRRect(
-                    //     borderRadius: BorderRadius.circular(10.0),
-                    //     child: Utility.imageFromBase64String(
-                    //       '',
-                    //     ),
-                    //   ),
-                    // ),
+//                     subtitle: Image.n,
+//                     ),
                     trailing: Icon(Icons.more_vert),
                     onTap: () {
                       showDialog(
@@ -156,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SimpleDialogOption(
                                 onPressed: () {
                                   notifier
-                                      .deletePost(notifier.postsList[index].id);
+                                      .deletePost(notifier.postList[index].id);
                                   Navigator.of(context).pop();
                                 },
                                 child: Center(
@@ -202,19 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         RaisedButton(
                           color: Colors.blue,
                           elevation: 0,
-                          onPressed: () {
-                            //postインスタンスの作成
-                            final post = Post(
-                              id: notifier.postsList.length.toString(),
-                              name: taskName,
-                              imagePath: null,
-                              createdAt: DateTime.now().toIso8601String(),
-                            );
-
-                            // データベースへ保存 - 挿入
-                            notifier.addPost(post);
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: uploadFile,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),

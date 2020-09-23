@@ -13,7 +13,7 @@ class PostProvider with ChangeNotifier {
   });
 
   // getter for post
-  List<Post> get postsList {
+  List<Post> get postList {
     return [...posts];
   }
 
