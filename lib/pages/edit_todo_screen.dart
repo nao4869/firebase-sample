@@ -12,7 +12,11 @@ import 'package:provider/provider.dart';
 class EditTodoScreen extends StatefulWidget {
   static const routeName = '/home-screen';
 
-  const EditTodoScreen();
+  final Post editingTodo;
+
+  const EditTodoScreen({
+    this.editingTodo,
+  });
 
   @override
   _EditTodoScreenState createState() => _EditTodoScreenState();
@@ -119,7 +123,23 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
     final notifier = Provider.of<PostProvider>(context);
     return Scaffold(
       appBar: AppBar(),
-      body: Container(),
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          Text(
+            widget.editingTodo.name,
+          ),
+          widget.editingTodo.imagePath != null
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Image.network(
+                    widget.editingTodo.imagePath,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : const SizedBox()
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: const Icon(Icons.add),

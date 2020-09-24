@@ -204,7 +204,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.of(context).pop();
             Navigator.of(context, rootNavigator: true).push(
               CupertinoPageRoute(
-                builder: (context) => EditTodoScreen(),
+                builder: (context) => EditTodoScreen(
+                  editingTodo: notifier.postList[index],
+                ),
               ),
             );
           },
