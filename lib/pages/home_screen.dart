@@ -58,6 +58,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void createPostWithoutImage() {
+    final notifier = Provider.of<PostProvider>(context, listen: false);
+
+    /// 保存するPostインスタンスを作成
+    final photo = Post(
+      id: notifier.postList.length.toString(),
+      name: taskName,
+      createdAt: DateTime.now().toIso8601String(),
+      imagePath: null,
+    );
+    notifier.addPost(photo);
+  }
+
   void onNameChange(String text) {
     isValid = text.isNotEmpty;
     taskName = text;
@@ -130,35 +143,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     // 画像部分の表示
-                    subtitle: Image.network(
-                      notifier.postList[index].imagePath,
-                      fit: BoxFit.cover,
-                    ),
+                    subtitle: notifier.postList[index].imagePath != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Image.network(
+                              notifier.postList[index].imagePath,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : const SizedBox(),
                     trailing: Icon(Icons.more_vert),
                     onTap: () {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return SimpleDialog(
-                            children: <Widget>[
-                              SimpleDialogOption(
-                                onPressed: () {
-                                  notifier
-                                      .deletePost(notifier.postList[index].id);
-                                  Navigator.of(context).pop();
-                                },
-                                child: Center(
-                                  child: Text('削除'),
-                                ),
-                              ),
-                              SimpleDialogOption(
-                                onPressed: () => Navigator.pop(context),
-                                child: Center(
-                                  child: Text('編集'),
-                                ),
-                              ),
-                            ],
-                          );
+                          return _buildDialogOptions(index);
                         },
                       );
                     },
@@ -171,49 +170,104 @@ class _HomeScreenState extends State<HomeScreen> {
           showDialog(
             context: context,
             builder: (context) {
-              return SimpleDialog(
-                children: <Widget>[
-                  SimpleDialogOption(
-                    onPressed: () {},
-                    child: Column(
-                      children: [
-                        CustomTextFormField(
-                          formKey: nameFieldFormKey,
-                          height: 80,
-                          onValidate: onValidate,
-                          onChanged: onNameChange,
-                          controller: textController,
-                          resetTextField: resetNameTextField,
-                          hintText: 'タスク名',
-                          counterText: '50',
-                        ),
-                        RaisedButton(
-                          color: Colors.blue,
-                          elevation: 0,
-                          onPressed: () {
-                            // ダイアログを閉じます
-                            Navigator.of(context).pop();
-                            uploadFile();
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Text(
-                            '投稿する',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
+              return _buildAddTaskDialog();
             },
           );
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  /// 削除、編集などのダイアログの項目を表示します
+  /// @param index : postListの該当index
+  Widget _buildDialogOptions(
+    int index,
+  ) {
+    final notifier = Provider.of<PostProvider>(context);
+    return SimpleDialog(
+      children: <Widget>[
+        SimpleDialogOption(
+          onPressed: () {
+            notifier.deletePost(notifier.postList[index].id);
+            Navigator.of(context).pop();
+          },
+          child: Center(
+            child: Text('削除'),
+          ),
+        ),
+        SimpleDialogOption(
+          onPressed: () => Navigator.pop(context),
+          child: Center(
+            child: Text('編集'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// TODOタスク追加時の表示ダイアログ
+  Widget _buildAddTaskDialog() {
+    return SimpleDialog(
+      children: <Widget>[
+        SimpleDialogOption(
+          onPressed: () {},
+          child: Column(
+            children: [
+              CustomTextFormField(
+                formKey: nameFieldFormKey,
+                height: 80,
+                onChanged: onNameChange,
+                controller: textController,
+                resetTextField: resetNameTextField,
+                hintText: 'タスク名',
+                counterText: '50',
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  _buildRaisedButton(
+                    title: '画像を追加する',
+                    onPressed: () {
+                      // ダイアログを閉じます
+                      Navigator.of(context).pop();
+                      uploadFile();
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  _buildRaisedButton(
+                    title: '投稿する',
+                    onPressed: () {
+                      // ダイアログを閉じます
+                      Navigator.of(context).pop();
+                      createPostWithoutImage();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRaisedButton({
+    @required String title,
+    @required VoidCallback onPressed,
+  }) {
+    return RaisedButton(
+      color: Colors.blue,
+      elevation: 0,
+      onPressed: onPressed,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.white,
+        ),
       ),
     );
   }
