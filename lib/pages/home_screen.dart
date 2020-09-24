@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_sample/pages/edit_todo_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_sample/models/post.dart';
 import 'package:firebase_sample/models/post_provider.dart';
@@ -197,7 +199,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         SimpleDialogOption(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            // 編集時のProviderの処理
+            Navigator.of(context).pop();
+            Navigator.of(context, rootNavigator: true).push(
+              CupertinoPageRoute(
+                builder: (context) => EditTodoScreen(),
+              ),
+            );
+          },
           child: Center(
             child: Text('編集'),
           ),
