@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_sample/extensions/created_at_format.dart';
+import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screen';
@@ -198,7 +199,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )
                         : notifier.postList[index].videoPath != null
-                            ? const SizedBox()
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: VideoPlayer(
+                                  VideoPlayerController.network(
+                                    notifier.postList[index].videoPath,
+                                  ),
+                                ),
+                              )
                             : const SizedBox(),
                     trailing: Icon(Icons.more_vert),
                     onTap: () {
