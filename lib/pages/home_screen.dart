@@ -57,24 +57,27 @@ class _HomeScreenState extends State<HomeScreen> {
         name: taskName,
         createdAt: DateTime.now().toIso8601String(),
         imagePath: _uploadedFileURL,
+        videoPath: null,
       );
       notifier.addPost(photo);
     });
   }
 
   /// 動画ファイルをストレージにアップロードする関数です
-  Future uploadToStorage() async {
+  Future uploadVideoToStorage() async {
     try {
       final notifier = Provider.of<PostProvider>(context, listen: false);
       final file = await ImagePicker.pickVideo(source: ImageSource.gallery);
 
-      StorageReference ref = FirebaseStorage.instance
+      StorageReference storageReference = FirebaseStorage.instance
           .ref()
-          .child('videos/${Path.basename(_image.path)}}');
-      StorageUploadTask uploadTask =
-          ref.putFile(file, StorageMetadata(contentType: 'video/mp4'));
+          .child('videos/${Path.basename(file.path)}}');
 
-      ref.getDownloadURL().then((fileURL) {
+      StorageUploadTask uploadTask = storageReference.putFile(
+          file, StorageMetadata(contentType: 'video/mp4'));
+      await uploadTask.onComplete;
+
+      storageReference.getDownloadURL().then((fileURL) {
         _uploadedFileURL = fileURL;
 
         /// 保存するPostインスタンスを作成
@@ -82,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
           id: notifier.postList.length.toString(),
           name: taskName,
           createdAt: DateTime.now().toIso8601String(),
-          imagePath: _uploadedFileURL,
+          imagePath: null,
+          videoPath: _uploadedFileURL,
         );
         notifier.addPost(photo);
       });
@@ -100,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
       name: taskName,
       createdAt: DateTime.now().toIso8601String(),
       imagePath: null,
+      videoPath: null,
     );
     notifier.addPost(photo);
   }
@@ -192,7 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               fit: BoxFit.cover,
                             ),
                           )
-                        : const SizedBox(),
+                        : notifier.postList[index].videoPath != null
+                            ? const SizedBox()
+                            : const SizedBox(),
                     trailing: Icon(Icons.more_vert),
                     onTap: () {
                       showDialog(
@@ -301,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   // ダイアログを閉じます
                   Navigator.of(context).pop();
-                  uploadToStorage();
+                  uploadVideoToStorage();
                 },
               ),
               const SizedBox(width: 10),

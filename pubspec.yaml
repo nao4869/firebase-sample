@@ -30,6 +30,9 @@ dependencies:
   # 画像取得
   image_picker: ^0.6.7+7
 
+  # 動画表示
+  video_player:
+
   # ファイルストレージ
   firebase_core: ^0.4.5
   cloud_firestore: ^0.13.7

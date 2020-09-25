@@ -4,12 +4,14 @@ class Post {
 
   // 追加分
   final String imagePath;
+  final String videoPath;
   final String createdAt;
 
   Post({
     this.id,
     this.name,
     this.imagePath,
+    this.videoPath,
     this.createdAt,
   });
 
@@ -18,12 +20,13 @@ class Post {
       'id': id,
       'name': name,
       'imagePath': imagePath,
+      'videoPath': videoPath,
       'createdAt': createdAt,
     };
   }
 
   @override
   String toString() {
-    return 'Post{id: $id, name: $name, imagePath: $imagePath, createdAt: $createdAt}';
+    return 'Post{id: $id, name: $name, imagePath: $imagePath, videoPath: $videoPath, createdAt: $createdAt}';
   }
 }

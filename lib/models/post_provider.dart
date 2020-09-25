@@ -34,6 +34,7 @@ class PostProvider with ChangeNotifier {
           id: postId,
           name: postData['name'],
           imagePath: postData['imagePath'],
+          videoPath: postData['videoPath'],
           createdAt: postData['createdAt'],
         ));
       });
@@ -57,6 +58,7 @@ class PostProvider with ChangeNotifier {
           // 'id': post.id,
           'name': post.name,
           'imagePath': post.imagePath,
+          'videoPath': post.videoPath,
           'createdAt': post.createdAt,
         }),
       );
@@ -64,8 +66,8 @@ class PostProvider with ChangeNotifier {
       final newPost = Post(
         name: post.name,
         imagePath: post.imagePath,
+        videoPath: post.videoPath,
         createdAt: post.createdAt,
-        // id: post.id,
         id: json.decode(response.body)['name'],
       );
       posts.add(newPost);
@@ -87,6 +89,7 @@ class PostProvider with ChangeNotifier {
           body: json.encode({
             'name': newPost.name,
             'imagePath': newPost.imagePath,
+            'videoPath': newPost.videoPath,
             'createdAt': newPost.createdAt,
           }));
       posts[postIndex] = newPost;
