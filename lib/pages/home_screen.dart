@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_sample/extensions/created_at_format.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screen';
@@ -127,6 +128,10 @@ class _HomeScreenState extends State<HomeScreen> {
               shrinkWrap: true,
               itemCount: notifier.postList.length,
               itemBuilder: (BuildContext context, int index) {
+                final formattedCreatedAt = notifier.postList[index].createdAt.setCreatedAtFormat(
+                  notifier.postList[index].createdAt,
+                  isDisplayYear: true,
+                );
                 return Card(
                   child: ListTile(
                     title: Column(
@@ -143,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         Text(
-                          '作成日: ' + notifier.postList[index].createdAt,
+                          '作成日: ' + formattedCreatedAt,
                         ),
                       ],
                     ),
