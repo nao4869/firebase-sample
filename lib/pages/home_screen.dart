@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   File _image;
   String _uploadedFileURL;
 
+  /// 画像ファイルをストレージにアップロードする関数です
   Future uploadFile() async {
     final notifier = Provider.of<PostProvider>(context, listen: false);
     _image = await ImagePicker.pickImage(
@@ -59,6 +60,35 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       notifier.addPost(photo);
     });
+  }
+
+  /// 動画ファイルをストレージにアップロードする関数です
+  Future uploadToStorage() async {
+    try {
+      final notifier = Provider.of<PostProvider>(context, listen: false);
+      final file = await ImagePicker.pickVideo(source: ImageSource.gallery);
+
+      StorageReference ref = FirebaseStorage.instance
+          .ref()
+          .child('videos/${Path.basename(_image.path)}}');
+      StorageUploadTask uploadTask =
+          ref.putFile(file, StorageMetadata(contentType: 'video/mp4'));
+
+      ref.getDownloadURL().then((fileURL) {
+        _uploadedFileURL = fileURL;
+
+        /// 保存するPostインスタンスを作成
+        final photo = Post(
+          id: notifier.postList.length.toString(),
+          name: taskName,
+          createdAt: DateTime.now().toIso8601String(),
+          imagePath: _uploadedFileURL,
+        );
+        notifier.addPost(photo);
+      });
+    } catch (error) {
+      print(error);
+    }
   }
 
   void createPostWithoutImage() {
@@ -128,7 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
               shrinkWrap: true,
               itemCount: notifier.postList.length,
               itemBuilder: (BuildContext context, int index) {
-                final formattedCreatedAt = notifier.postList[index].createdAt.setCreatedAtFormat(
+                final formattedCreatedAt =
+                    notifier.postList[index].createdAt.setCreatedAtFormat(
                   notifier.postList[index].createdAt,
                   isDisplayYear: true,
                 );
@@ -265,6 +296,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+              _buildRaisedButton(
+                title: '動画を追加する',
+                onPressed: () {
+                  // ダイアログを閉じます
+                  Navigator.of(context).pop();
+                  uploadToStorage();
+                },
+              ),
+              const SizedBox(width: 10),
             ],
           ),
         ),
