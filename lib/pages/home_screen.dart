@@ -134,13 +134,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              notifier.postList[index].name,
+                            Flexible(
+                              child: Text(
+                                'タスク詳細: ' + notifier.postList[index].name,
+                                maxLines: 10,
+                              ),
                             ),
                           ],
                         ),
                         Text(
-                          notifier.postList[index].createdAt,
+                          '作成日: ' + notifier.postList[index].createdAt,
                         ),
                       ],
                     ),
