@@ -34,6 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
   File _image;
   String _uploadedFileURL;
 
+  VideoPlayerController _videoController;
+  Future<void> _initializeVideoPlayerFuture;
+
   /// 画像ファイルをストレージにアップロードする関数です
   Future uploadFile() async {
     _image = await ImagePicker.pickImage(
@@ -111,12 +114,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     textController.text = '';
+
+    _videoController = VideoPlayerController.network(
+      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+    );
+
+    _initializeVideoPlayerFuture = _videoController.initialize();
     super.initState();
   }
 
   @override
   void dispose() {
     textController.dispose();
+    _videoController.dispose();
     super.dispose();
   }
 
@@ -309,13 +319,35 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             )
                           : document['videoPath'] != null
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: VideoPlayer(
-                                    VideoPlayerController.network(
-                                      document['videoPath'],
-                                    ),
-                                  ),
+                              ? FutureBuilder(
+                                  future: _initializeVideoPlayerFuture,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      return InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            // If the video is playing, pause it.
+                                            if (_videoController
+                                                .value.isPlaying) {
+                                              _videoController.pause();
+                                            } else {
+                                              // If the video is paused, play it.
+                                              _videoController.play();
+                                            }
+                                          });
+                                        },
+                                        child: AspectRatio(
+                                          aspectRatio: _videoController
+                                              .value.aspectRatio,
+                                          child: VideoPlayer(_videoController),
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    }
+                                  },
                                 )
                               : const SizedBox(),
                       trailing: Icon(Icons.more_vert),
