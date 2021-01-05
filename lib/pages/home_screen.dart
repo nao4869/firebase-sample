@@ -1,3 +1,4 @@
+import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/pages/home_screen_notifier.dart';
 import 'package:flutter/cupertino.dart';
@@ -180,6 +181,14 @@ class _HomeScreen extends StatelessWidget {
                 (DocumentSnapshot document) {
                   return Card(
                     child: ListTile(
+                      leading: CircularCheckBox(
+                        value: false,
+                        checkColor: Colors.white,
+                        activeColor: Colors.blue,
+                        inactiveColor: Colors.blue,
+                        disabledColor: Colors.grey,
+                        onChanged: (val) {},
+                      ),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -194,7 +203,10 @@ class _HomeScreen extends StatelessWidget {
                             ],
                           ),
                           Text(
-                            '作成日: ' + document['createdAt'].toString(),
+                            '作成日: ' +
+                                document['createdAt']
+                                    .toString()
+                                    .substring(0, 10),
                           ),
                         ],
                       ),
