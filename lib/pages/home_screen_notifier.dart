@@ -44,6 +44,14 @@ class HomeScreenNotifier extends ChangeNotifier {
     });
   }
 
+  // 単一のTodoを指定されたFireStore Collectionから削除します。
+  void deleteTodo(
+    String collection,
+    String documentId,
+  ) {
+    Firestore.instance.collection(collection).document(documentId).delete();
+  }
+
   void onNameChange(String text) {
     isValid = text.isNotEmpty;
     taskName = text;

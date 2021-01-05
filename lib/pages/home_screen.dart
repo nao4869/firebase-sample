@@ -43,17 +43,18 @@ class _HomeScreen extends StatelessWidget {
 
   /// 削除、編集などのダイアログの項目を表示します
   /// @param index : postListの該当index
-  Widget _buildDialogOptions(
+  Widget _buildDialogOptions({
     BuildContext context,
-    int index,
-  ) {
+    String collection,
+    String documentId,
+  }) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     return SimpleDialog(
       children: <Widget>[
         SimpleDialogOption(
           onPressed: () {
-            //notifier.deletePost(notifier.postList[index].id);
-            //Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            notifier.deleteTodo(collection, documentId);
           },
           child: Center(
             child: Text('削除'),
@@ -233,7 +234,11 @@ class _HomeScreen extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return _buildDialogOptions(context, 0);
+                            return _buildDialogOptions(
+                              context: context,
+                              collection: 'posts',
+                              documentId: document.documentID,
+                            );
                           },
                         );
                       },
