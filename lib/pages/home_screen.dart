@@ -11,7 +11,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_sample/extensions/created_at_format.dart';
 import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -37,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// 画像ファイルをストレージにアップロードする関数です
   Future uploadFile() async {
-    final notifier = Provider.of<PostProvider>(context, listen: false);
     _image = await ImagePicker.pickImage(
       source: ImageSource.gallery,
       maxHeight: 600,
@@ -52,23 +50,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
     storageReference.getDownloadURL().then((fileURL) {
       _uploadedFileURL = fileURL;
-
-      /// 保存するPostインスタンスを作成
-      final photo = Post(
-        id: notifier.postList.length.toString(),
-        name: taskName,
-        createdAt: DateTime.now().toIso8601String(),
-        imagePath: _uploadedFileURL,
-        videoPath: null,
-      );
-      notifier.addPost(photo);
+      Firestore.instance.collection('posts').add({
+        'name': taskName,
+        'createdAt': DateTime.now().toIso8601String(),
+        'imagePath': _uploadedFileURL,
+        'videoPath': null,
+      });
     });
   }
 
   /// 動画ファイルをストレージにアップロードする関数です
   Future uploadVideoToStorage() async {
     try {
-      final notifier = Provider.of<PostProvider>(context, listen: false);
       final file = await ImagePicker.pickVideo(source: ImageSource.gallery);
 
       StorageReference storageReference = FirebaseStorage.instance
@@ -82,15 +75,12 @@ class _HomeScreenState extends State<HomeScreen> {
       storageReference.getDownloadURL().then((fileURL) {
         _uploadedFileURL = fileURL;
 
-        /// 保存するPostインスタンスを作成
-        final photo = Post(
-          id: notifier.postList.length.toString(),
-          name: taskName,
-          createdAt: DateTime.now().toIso8601String(),
-          imagePath: null,
-          videoPath: _uploadedFileURL,
-        );
-        notifier.addPost(photo);
+        Firestore.instance.collection('posts').add({
+          'name': taskName,
+          'createdAt': DateTime.now().toIso8601String(),
+          'imagePath': null,
+          'videoPath': _uploadedFileURL,
+        });
       });
     } catch (error) {
       print(error);
@@ -98,31 +88,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void createPostWithoutImage() {
-    final notifier = Provider.of<PostProvider>(context, listen: false);
-
-    /// 保存するPostインスタンスを作成
-    final photo = Post(
-      id: notifier.postList.length.toString(),
-      name: taskName,
-      createdAt: DateTime.now().toIso8601String(),
-      imagePath: null,
-      videoPath: null,
-    );
-
     Firestore.instance.collection('posts').add({
       'name': taskName,
       'createdAt': DateTime.now().toIso8601String(),
       'imagePath': null,
       'videoPath': null,
     });
-
-    //notifier.addPost(photo);
   }
 
   void onNameChange(String text) {
     isValid = text.isNotEmpty;
     taskName = text;
-    setState(() {});
   }
 
   void resetNameTextField() {
@@ -156,67 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: _isLoading ? _buildProgressIndicator() : createListView(),
-//          : ListView.builder(
-//              shrinkWrap: true,
-//              itemCount: notifier.postList.length,
-//              itemBuilder: (BuildContext context, int index) {
-//                final formattedCreatedAt =
-//                    notifier.postList[index].createdAt.setCreatedAtFormat(
-//                  notifier.postList[index].createdAt,
-//                  isDisplayYear: true,
-//                );
-//                return Card(
-//                  child: ListTile(
-//                    title: Column(
-//                      crossAxisAlignment: CrossAxisAlignment.start,
-//                      children: [
-//                        Row(
-//                          children: [
-//                            Flexible(
-//                              child: Text(
-//                                'タスク詳細: ' + notifier.postList[index].name,
-//                                maxLines: 10,
-//                              ),
-//                            ),
-//                          ],
-//                        ),
-//                        Text(
-//                          '作成日: ' + formattedCreatedAt,
-//                        ),
-//                      ],
-//                    ),
-//                    // 画像部分の表示
-//                    subtitle: notifier.postList[index].imagePath != null
-//                        ? Padding(
-//                            padding: const EdgeInsets.only(top: 8.0),
-//                            child: Image.network(
-//                              notifier.postList[index].imagePath,
-//                              fit: BoxFit.cover,
-//                            ),
-//                          )
-//                        : notifier.postList[index].videoPath != null
-//                            ? Padding(
-//                                padding: const EdgeInsets.only(top: 8.0),
-//                                child: VideoPlayer(
-//                                  VideoPlayerController.network(
-//                                    notifier.postList[index].videoPath,
-//                                  ),
-//                                ),
-//                              )
-//                            : const SizedBox(),
-//                    trailing: Icon(Icons.more_vert),
-//                    onTap: () {
-//                      showDialog(
-//                        context: context,
-//                        builder: (context) {
-//                          return _buildDialogOptions(index);
-//                        },
-//                      );
-//                    },
-//                  ),
-//                );
-//              },
-//            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           showDialog(
@@ -414,9 +329,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   );
-//                  return ListTile(
-//                    title: Text(document['name']),
-//                  );
                 },
               ).toList(),
             );
