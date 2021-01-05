@@ -101,7 +101,7 @@ class HomeScreenNotifier extends ChangeNotifier {
 
     storageReference.getDownloadURL().then((fileURL) {
       _uploadedFileURL = fileURL;
-      Firestore.instance.collection('posts').add({
+      Firestore.instance.collection('to-dos').add({
         'name': taskName,
         'createdAt': DateTime.now().toIso8601String(),
         'imagePath': _uploadedFileURL,
@@ -127,7 +127,7 @@ class HomeScreenNotifier extends ChangeNotifier {
       storageReference.getDownloadURL().then((fileURL) {
         _uploadedFileURL = fileURL;
 
-        Firestore.instance.collection('posts').add({
+        Firestore.instance.collection('to-dos').add({
           'name': taskName,
           'createdAt': DateTime.now().toIso8601String(),
           'imagePath': null,
