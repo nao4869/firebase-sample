@@ -364,9 +364,59 @@ class _HomeScreenState extends State<HomeScreen> {
             return ListView(
               children: snapshot.data.documents.map(
                 (DocumentSnapshot document) {
-                  return ListTile(
-                    title: Text(document['name']),
+                  return Card(
+                    child: ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  'タスク詳細: ' + document['name'],
+                                  maxLines: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            '作成日: ' + document['createdAt'].toString(),
+                          ),
+                        ],
+                      ),
+                      // 画像部分の表示
+                      subtitle: document['imagePath'] != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Image.network(
+                                document['imagePath'],
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : document['videoPath'] != null
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: VideoPlayer(
+                                    VideoPlayerController.network(
+                                      document['videoPath'],
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
+                      trailing: Icon(Icons.more_vert),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return _buildDialogOptions(0);
+                          },
+                        );
+                      },
+                    ),
                   );
+//                  return ListTile(
+//                    title: Text(document['name']),
+//                  );
                 },
               ).toList(),
             );
