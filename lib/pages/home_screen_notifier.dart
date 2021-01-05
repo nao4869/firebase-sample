@@ -139,4 +139,40 @@ class HomeScreenNotifier extends ChangeNotifier {
       print(error);
     }
   }
+
+  void openModalBottomSheet() {
+    final size = MediaQuery.of(context).size;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 80,
+                width: size.width * .7,
+                child: ColoredBox(
+                  color: Colors.white,
+                  child: TextField(
+                    maxLines: 20,
+                    onChanged: (String text) {
+                     
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'to do',
+                      contentPadding: const EdgeInsets.all(10),
+                      // border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }ƒ
 }
