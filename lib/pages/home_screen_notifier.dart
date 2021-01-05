@@ -8,18 +8,13 @@ import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 
 class HomeScreenNotifier extends ChangeNotifier {
-  HomeScreenNotifier({
-    this.context,
-  }) {
+  HomeScreenNotifier() {
     textController.text = '';
     videoController = VideoPlayerController.network(
       'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
     );
     initializeVideoPlayerFuture = videoController.initialize();
   }
-
-  final BuildContext context;
-
   var isLoading = false;
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
@@ -38,10 +33,6 @@ class HomeScreenNotifier extends ChangeNotifier {
     textController.dispose();
     videoController.dispose();
     super.dispose();
-  }
-
-  void popDialog() {
-    Navigator.of(context, rootNavigator: true).pop('dialog');
   }
 
   void createPostWithoutImage() {

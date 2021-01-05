@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_sample/pages/edit_todo_screen.dart';
 import 'package:firebase_sample/pages/home_screen_notifier.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:firebase_sample/models/post_provider.dart';
 import 'package:firebase_sample/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,9 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomeScreenNotifier(
-        context: context,
-      ),
+      create: (_) => HomeScreenNotifier(),
       child: _HomeScreen(),
     );
   }
@@ -57,7 +53,7 @@ class _HomeScreen extends StatelessWidget {
         SimpleDialogOption(
           onPressed: () {
             //notifier.deletePost(notifier.postList[index].id);
-            Navigator.of(context).pop();
+            //Navigator.of(context).pop();
           },
           child: Center(
             child: Text('削除'),
@@ -66,7 +62,7 @@ class _HomeScreen extends StatelessWidget {
         SimpleDialogOption(
           onPressed: () {
             // 編集時のProviderの処理
-            Navigator.of(context).pop();
+            //Navigator.of(context).pop();
 //            Navigator.of(context, rootNavigator: true).push(
 //              CupertinoPageRoute(
 //                builder: (context) => EditTodoScreen(

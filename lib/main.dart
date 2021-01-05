@@ -1,5 +1,6 @@
 import 'package:firebase_sample/models/post_provider.dart';
 import 'package:firebase_sample/pages/home_screen.dart';
+import 'package:firebase_sample/pages/home_screen_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,9 @@ void main() {
           create: (_) => PostProvider(
             posts: [],
           ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HomeScreenNotifier(),
         ),
       ],
       child: MyApp(),
