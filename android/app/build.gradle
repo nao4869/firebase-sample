@@ -1,12 +1,5 @@
-apply plugin: 'com.android.application'
-// Add this line
-apply plugin: 'com.google.gms.google-services'
-
 dependencies {
-  // add the Firebase SDK for Google Analytics
   implementation 'com.google.firebase:firebase-analytics:17.5.0'
-  // add SDKs for any other desired Firebase products
-  // https://firebase.google.com/docs/android/setup#available-libraries
 }
 
 def localProperties = new Properties()
@@ -35,6 +28,9 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 28
@@ -54,6 +50,7 @@ android {
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {

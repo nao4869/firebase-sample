@@ -30,8 +30,8 @@ class PostProvider with ChangeNotifier {
 
       extractedData.forEach((postId, postData) {
         loadedPosts.add(Post(
-          //id: postData['id'],
-          id: postId,
+          id: postData['id'],
+          //id: postId,
           name: postData['name'],
           imagePath: postData['imagePath'],
           videoPath: postData['videoPath'],
