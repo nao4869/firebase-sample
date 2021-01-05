@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/pages/edit_todo_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as Path;
@@ -107,7 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
       imagePath: null,
       videoPath: null,
     );
-    notifier.addPost(photo);
+
+    Firestore.instance.collection('posts').add({
+      'name': taskName,
+      'createdAt': DateTime.now().toIso8601String(),
+      'imagePath': null,
+      'videoPath': null,
+    });
+
+    //notifier.addPost(photo);
   }
 
   void onNameChange(String text) {
@@ -125,18 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero).then((_) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<PostProvider>(context, listen: false)
-          .retrievePostData()
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    });
     textController.text = '';
     super.initState();
   }
@@ -158,69 +155,68 @@ class _HomeScreenState extends State<HomeScreen> {
     final notifier = Provider.of<PostProvider>(context);
     return Scaffold(
       appBar: AppBar(),
-      body: _isLoading
-          ? _buildProgressIndicator()
-          : ListView.builder(
-              shrinkWrap: true,
-              itemCount: notifier.postList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final formattedCreatedAt =
-                    notifier.postList[index].createdAt.setCreatedAtFormat(
-                  notifier.postList[index].createdAt,
-                  isDisplayYear: true,
-                );
-                return Card(
-                  child: ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                'タスク詳細: ' + notifier.postList[index].name,
-                                maxLines: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          '作成日: ' + formattedCreatedAt,
-                        ),
-                      ],
-                    ),
-                    // 画像部分の表示
-                    subtitle: notifier.postList[index].imagePath != null
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Image.network(
-                              notifier.postList[index].imagePath,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : notifier.postList[index].videoPath != null
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: VideoPlayer(
-                                  VideoPlayerController.network(
-                                    notifier.postList[index].videoPath,
-                                  ),
-                                ),
-                              )
-                            : const SizedBox(),
-                    trailing: Icon(Icons.more_vert),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return _buildDialogOptions(index);
-                        },
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+      body: _isLoading ? _buildProgressIndicator() : createListView(),
+//          : ListView.builder(
+//              shrinkWrap: true,
+//              itemCount: notifier.postList.length,
+//              itemBuilder: (BuildContext context, int index) {
+//                final formattedCreatedAt =
+//                    notifier.postList[index].createdAt.setCreatedAtFormat(
+//                  notifier.postList[index].createdAt,
+//                  isDisplayYear: true,
+//                );
+//                return Card(
+//                  child: ListTile(
+//                    title: Column(
+//                      crossAxisAlignment: CrossAxisAlignment.start,
+//                      children: [
+//                        Row(
+//                          children: [
+//                            Flexible(
+//                              child: Text(
+//                                'タスク詳細: ' + notifier.postList[index].name,
+//                                maxLines: 10,
+//                              ),
+//                            ),
+//                          ],
+//                        ),
+//                        Text(
+//                          '作成日: ' + formattedCreatedAt,
+//                        ),
+//                      ],
+//                    ),
+//                    // 画像部分の表示
+//                    subtitle: notifier.postList[index].imagePath != null
+//                        ? Padding(
+//                            padding: const EdgeInsets.only(top: 8.0),
+//                            child: Image.network(
+//                              notifier.postList[index].imagePath,
+//                              fit: BoxFit.cover,
+//                            ),
+//                          )
+//                        : notifier.postList[index].videoPath != null
+//                            ? Padding(
+//                                padding: const EdgeInsets.only(top: 8.0),
+//                                child: VideoPlayer(
+//                                  VideoPlayerController.network(
+//                                    notifier.postList[index].videoPath,
+//                                  ),
+//                                ),
+//                              )
+//                            : const SizedBox(),
+//                    trailing: Icon(Icons.more_vert),
+//                    onTap: () {
+//                      showDialog(
+//                        context: context,
+//                        builder: (context) {
+//                          return _buildDialogOptions(index);
+//                        },
+//                      );
+//                    },
+//                  ),
+//                );
+//              },
+//            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           showDialog(
@@ -344,6 +340,38 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.white,
         ),
       ),
+    );
+  }
+
+  Widget createListView() {
+    Firestore.instance.collection('posts').snapshots().listen((data) {
+      print(data);
+    });
+
+    return StreamBuilder(
+      stream: Firestore.instance.collection('posts').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        // エラーの場合
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        // 通信中の場合
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Text('Loading ...');
+          default:
+            return ListView(
+              children: snapshot.data.documents.map(
+                (DocumentSnapshot document) {
+                  return ListTile(
+                    title: Text(document['name']),
+                  );
+                },
+              ).toList(),
+            );
+        }
+      },
     );
   }
 }
