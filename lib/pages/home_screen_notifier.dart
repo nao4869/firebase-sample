@@ -36,12 +36,24 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   void createPostWithoutImage() {
-    Firestore.instance.collection('posts').add({
+    Firestore.instance.collection('to-dos').add({
       'name': taskName,
       'createdAt': DateTime.now().toIso8601String(),
       'imagePath': null,
       'videoPath': null,
+      'isChecked': false,
     });
+  }
+
+  void updateTodo(
+    String collection,
+    String documentId,
+    bool isChecked,
+  ) {
+    Firestore.instance
+        .collection(collection)
+        .document(documentId)
+        .updateData({"isChecked": isChecked});
   }
 
   // 単一のTodoを指定されたFireStore Collectionから削除します。
@@ -94,6 +106,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         'createdAt': DateTime.now().toIso8601String(),
         'imagePath': _uploadedFileURL,
         'videoPath': null,
+        'isChecked': false,
       });
     });
   }
@@ -119,6 +132,7 @@ class HomeScreenNotifier extends ChangeNotifier {
           'createdAt': DateTime.now().toIso8601String(),
           'imagePath': null,
           'videoPath': _uploadedFileURL,
+          'isChecked': false,
         });
       });
     } catch (error) {

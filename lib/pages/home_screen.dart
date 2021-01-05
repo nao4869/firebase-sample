@@ -159,12 +159,8 @@ class _HomeScreen extends StatelessWidget {
 
   Widget createListView(BuildContext context) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
-    Firestore.instance.collection('posts').snapshots().listen((data) {
-      print(data);
-    });
-
     return StreamBuilder(
-      stream: Firestore.instance.collection('posts').snapshots(),
+      stream: Firestore.instance.collection('to-dos').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // エラーの場合
         if (snapshot.hasError) {
@@ -183,12 +179,18 @@ class _HomeScreen extends StatelessWidget {
                     child: ListTile(
                       dense: true,
                       leading: CircularCheckBox(
-                        value: false,
+                        value: document['isChecked'],
                         checkColor: Colors.white,
                         activeColor: Colors.blue,
                         inactiveColor: Colors.blue,
                         disabledColor: Colors.grey,
-                        onChanged: (val) {},
+                        onChanged: (val) {
+                          notifier.updateTodo(
+                            'to-dos',
+                            document.documentID,
+                            !document['isChecked'],
+                          );
+                        },
                       ),
                       title: Row(
                         children: [
@@ -248,7 +250,7 @@ class _HomeScreen extends StatelessWidget {
                           builder: (context) {
                             return _buildDialogOptions(
                               context: context,
-                              collection: 'posts',
+                              collection: 'to-dos',
                               documentId: document.documentID,
                             );
                           },
