@@ -1,153 +1,42 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/pages/edit_todo_screen.dart';
+import 'package:firebase_sample/pages/home_screen_notifier.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path/path.dart' as Path;
-import 'package:firebase_sample/models/post.dart';
 import 'package:firebase_sample/models/post_provider.dart';
 import 'package:firebase_sample/widgets/text_form_field.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const routeName = '/home-screen';
-
+class HomeScreen extends StatelessWidget {
   const HomeScreen();
 
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  var _isLoading = false;
-
-  final nameFieldFormKey = GlobalKey<FormState>();
-  final textController = TextEditingController();
-
-  String taskName;
-  bool isValid = false;
-
-  File _image;
-  String _uploadedFileURL;
-
-  VideoPlayerController _videoController;
-  Future<void> _initializeVideoPlayerFuture;
-
-  /// 画像ファイルをストレージにアップロードする関数です
-  Future uploadFile() async {
-    _image = await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 600,
-      maxWidth: 800,
-    );
-
-    StorageReference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('images/${Path.basename(_image.path)}}');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-
-    storageReference.getDownloadURL().then((fileURL) {
-      _uploadedFileURL = fileURL;
-      Firestore.instance.collection('posts').add({
-        'name': taskName,
-        'createdAt': DateTime.now().toIso8601String(),
-        'imagePath': _uploadedFileURL,
-        'videoPath': null,
-      });
-    });
-  }
-
-  /// 動画ファイルをストレージにアップロードする関数です
-  Future uploadVideoToStorage() async {
-    try {
-      final file = await ImagePicker.pickVideo(source: ImageSource.gallery);
-
-      StorageReference storageReference = FirebaseStorage.instance
-          .ref()
-          .child('videos/${Path.basename(file.path)}}');
-
-      StorageUploadTask uploadTask = storageReference.putFile(
-          file, StorageMetadata(contentType: 'video/mp4'));
-      await uploadTask.onComplete;
-
-      storageReference.getDownloadURL().then((fileURL) {
-        _uploadedFileURL = fileURL;
-
-        Firestore.instance.collection('posts').add({
-          'name': taskName,
-          'createdAt': DateTime.now().toIso8601String(),
-          'imagePath': null,
-          'videoPath': _uploadedFileURL,
-        });
-      });
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  void createPostWithoutImage() {
-    Firestore.instance.collection('posts').add({
-      'name': taskName,
-      'createdAt': DateTime.now().toIso8601String(),
-      'imagePath': null,
-      'videoPath': null,
-    });
-  }
-
-  void onNameChange(String text) {
-    isValid = text.isNotEmpty;
-    taskName = text;
-  }
-
-  void resetNameTextField() {
-    onNameChange('');
-    nameFieldFormKey.currentState.reset();
-    taskName = '';
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    textController.text = '';
-
-    _videoController = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    );
-
-    _initializeVideoPlayerFuture = _videoController.initialize();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-    _videoController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildProgressIndicator() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
+  static String routeName = 'home-screen';
 
   @override
   Widget build(BuildContext context) {
-    final notifier = Provider.of<PostProvider>(context);
+    return ChangeNotifierProvider(
+      create: (_) => HomeScreenNotifier(
+        context: context,
+      ),
+      child: _HomeScreen(),
+    );
+  }
+}
+
+class _HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final notifier = Provider.of<HomeScreenNotifier>(context);
     return Scaffold(
       appBar: AppBar(),
-      body: _isLoading ? _buildProgressIndicator() : createListView(),
+      body: createListView(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           showDialog(
             context: context,
             builder: (context) {
-              return _buildAddTaskDialog();
+              return _buildAddTaskDialog(context);
             },
           );
         },
@@ -159,14 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
   /// 削除、編集などのダイアログの項目を表示します
   /// @param index : postListの該当index
   Widget _buildDialogOptions(
+    BuildContext context,
     int index,
   ) {
-    final notifier = Provider.of<PostProvider>(context);
+    final notifier = Provider.of<HomeScreenNotifier>(context);
     return SimpleDialog(
       children: <Widget>[
         SimpleDialogOption(
           onPressed: () {
-            notifier.deletePost(notifier.postList[index].id);
+            //notifier.deletePost(notifier.postList[index].id);
             Navigator.of(context).pop();
           },
           child: Center(
@@ -177,13 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             // 編集時のProviderの処理
             Navigator.of(context).pop();
-            Navigator.of(context, rootNavigator: true).push(
-              CupertinoPageRoute(
-                builder: (context) => EditTodoScreen(
-                  editingTodo: notifier.postList[index],
-                ),
-              ),
-            );
+//            Navigator.of(context, rootNavigator: true).push(
+//              CupertinoPageRoute(
+//                builder: (context) => EditTodoScreen(
+//                  editingTodo: notifier.postList[index],
+//                ),
+//              ),
+//            );
           },
           child: Center(
             child: Text('編集'),
@@ -194,7 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// TODOタスク追加時の表示ダイアログ
-  Widget _buildAddTaskDialog() {
+  Widget _buildAddTaskDialog(BuildContext context) {
+    final notifier = Provider.of<HomeScreenNotifier>(context);
     return SimpleDialog(
       children: <Widget>[
         SimpleDialogOption(
@@ -202,11 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               CustomTextFormField(
-                formKey: nameFieldFormKey,
+                formKey: notifier.nameFieldFormKey,
                 height: 80,
-                onChanged: onNameChange,
-                controller: textController,
-                resetTextField: resetNameTextField,
+                onChanged: notifier.onNameChange,
+                controller: notifier.textController,
+                resetTextField: notifier.resetNameTextField,
                 hintText: 'タスク名',
                 counterText: '50',
               ),
@@ -218,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       // ダイアログを閉じます
                       Navigator.of(context).pop();
-                      uploadFile();
+                      notifier.uploadFile();
                     },
                   ),
                   const SizedBox(width: 10),
@@ -227,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       // ダイアログを閉じます
                       Navigator.of(context).pop();
-                      createPostWithoutImage();
+                      notifier.createPostWithoutImage();
                     },
                   ),
                 ],
@@ -237,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   // ダイアログを閉じます
                   Navigator.of(context).pop();
-                  uploadVideoToStorage();
+                  notifier.uploadVideoToStorage();
                 },
               ),
               const SizedBox(width: 10),
@@ -268,7 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget createListView() {
+  Widget createListView(BuildContext context) {
+    final notifier = Provider.of<HomeScreenNotifier>(context);
     Firestore.instance.collection('posts').snapshots().listen((data) {
       print(data);
     });
@@ -320,27 +212,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             )
                           : document['videoPath'] != null
                               ? FutureBuilder(
-                                  future: _initializeVideoPlayerFuture,
+                                  future: notifier.initializeVideoPlayerFuture,
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.done) {
                                       return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            // If the video is playing, pause it.
-                                            if (_videoController
-                                                .value.isPlaying) {
-                                              _videoController.pause();
-                                            } else {
-                                              // If the video is paused, play it.
-                                              _videoController.play();
-                                            }
-                                          });
-                                        },
+                                        onTap: notifier.playAndPauseVideo,
                                         child: AspectRatio(
-                                          aspectRatio: _videoController
+                                          aspectRatio: notifier.videoController
                                               .value.aspectRatio,
-                                          child: VideoPlayer(_videoController),
+                                          child: VideoPlayer(
+                                              notifier.videoController),
                                         ),
                                       );
                                     } else {
@@ -355,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return _buildDialogOptions(0);
+                            return _buildDialogOptions(context, 0);
                           },
                         );
                       },
