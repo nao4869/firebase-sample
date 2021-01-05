@@ -181,6 +181,7 @@ class _HomeScreen extends StatelessWidget {
                 (DocumentSnapshot document) {
                   return Card(
                     child: ListTile(
+                      dense: true,
                       leading: CircularCheckBox(
                         value: false,
                         checkColor: Colors.white,
@@ -189,34 +190,33 @@ class _HomeScreen extends StatelessWidget {
                         disabledColor: Colors.grey,
                         onChanged: (val) {},
                       ),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      title: Row(
                         children: [
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  'タスク詳細: ' + document['name'],
-                                  maxLines: 10,
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Text(
+                                document['name'],
+                                maxLines: 10,
+                                style: TextStyle(
+                                  fontSize: 15.0,
                                 ),
                               ),
-                            ],
-                          ),
-                          Text(
-                            '作成日: ' +
-                                document['createdAt']
-                                    .toString()
-                                    .substring(0, 10),
+                            ),
                           ),
                         ],
                       ),
                       // 画像部分の表示
                       subtitle: document['imagePath'] != null
                           ? Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Image.network(
-                                document['imagePath'],
-                                fit: BoxFit.cover,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Image.network(
+                                  document['imagePath'],
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             )
                           : document['videoPath'] != null
@@ -240,7 +240,7 @@ class _HomeScreen extends StatelessWidget {
                                     }
                                   },
                                 )
-                              : const SizedBox(),
+                              : null,
                       trailing: Icon(Icons.more_vert),
                       onTap: () {
                         showDialog(
