@@ -8,13 +8,16 @@ import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 
 class HomeScreenNotifier extends ChangeNotifier {
-  HomeScreenNotifier() {
+  HomeScreenNotifier({
+    this.context,
+  }) {
     textController.text = '';
     videoController = VideoPlayerController.network(
       'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
     );
     initializeVideoPlayerFuture = videoController.initialize();
   }
+  final BuildContext context;
   var isLoading = false;
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
@@ -145,34 +148,66 @@ class HomeScreenNotifier extends ChangeNotifier {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          color: Colors.white,
+        return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 80,
-                width: size.width * .7,
-                child: ColoredBox(
-                  color: Colors.white,
-                  child: TextField(
-                    maxLines: 20,
-                    onChanged: (String text) {
-                     
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'to do',
-                      contentPadding: const EdgeInsets.all(10),
-                      // border: InputBorder.none,
+          child: SizedBox(
+            height: size.width * .9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: size.width * .9,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(5.0),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: TextField(
+                      maxLines: 20,
+                      autofocus: true,
+                      onChanged: (String text) {},
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(10.0),
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                SizedBox(
+                  height: 50,
+                  width: size.width * .9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      RaisedButton(
+                        onPressed: () {},
+                        color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        child: Text(
+                          '投稿',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         );
       },
     );
-  }ƒ
+  }
 }

@@ -15,7 +15,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomeScreenNotifier(),
+      create: (_) => HomeScreenNotifier(
+        context: context,
+      ),
       child: _HomeScreen(),
     );
   }
@@ -24,18 +26,20 @@ class HomeScreen extends StatelessWidget {
 class _HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final notifier = Provider.of<HomeScreenNotifier>(context);
     return Scaffold(
       appBar: AppBar(),
       body: createListView(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return _buildAddTaskDialog(context);
-            },
-          );
+          notifier.openModalBottomSheet();
+//          showDialog(
+//            context: context,
+//            builder: (context) {
+//              return _buildAddTaskDialog(context);
+//            },
+//          );
         },
         child: const Icon(Icons.add),
       ),
@@ -167,101 +171,94 @@ class _HomeScreen extends StatelessWidget {
           return Text('Error: ${snapshot.error}');
         }
 
-        // 通信中の場合
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Text('Loading ...');
-          default:
-            return ListView(
-              children: snapshot.data.documents.map(
-                (DocumentSnapshot document) {
-                  return Card(
-                    child: ListTile(
-                      dense: true,
-                      leading: CircularCheckBox(
-                        value: document['isChecked'],
-                        checkColor: Colors.white,
-                        activeColor: Colors.blue,
-                        inactiveColor: Colors.blue,
-                        disabledColor: Colors.grey,
-                        onChanged: (val) {
-                          notifier.updateTodo(
-                            'to-dos',
-                            document.documentID,
-                            !document['isChecked'],
-                          );
-                        },
-                      ),
-                      title: Row(
-                        children: [
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Text(
-                                document['name'],
-                                maxLines: 10,
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                ),
-                              ),
+        return ListView(
+          children: snapshot.data.documents.map(
+            (DocumentSnapshot document) {
+              return Card(
+                child: ListTile(
+                  dense: true,
+                  leading: CircularCheckBox(
+                    value: document['isChecked'],
+                    checkColor: Colors.white,
+                    activeColor: Colors.blue,
+                    inactiveColor: Colors.blue,
+                    disabledColor: Colors.grey,
+                    onChanged: (val) {
+                      notifier.updateTodo(
+                        'to-dos',
+                        document.documentID,
+                        !document['isChecked'],
+                      );
+                    },
+                  ),
+                  title: Row(
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Text(
+                            document['name'],
+                            maxLines: 10,
+                            style: TextStyle(
+                              fontSize: 15.0,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                      // 画像部分の表示
-                      subtitle: document['imagePath'] != null
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Image.network(
-                                  document['imagePath'],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                    ],
+                  ),
+                  // 画像部分の表示
+                  subtitle: document['imagePath'] != null
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                              document['imagePath'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : document['videoPath'] != null
+                          ? FutureBuilder(
+                              future: notifier.initializeVideoPlayerFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  return InkWell(
+                                    onTap: notifier.playAndPauseVideo,
+                                    child: AspectRatio(
+                                      aspectRatio: notifier
+                                          .videoController.value.aspectRatio,
+                                      child:
+                                          VideoPlayer(notifier.videoController),
+                                    ),
+                                  );
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              },
                             )
-                          : document['videoPath'] != null
-                              ? FutureBuilder(
-                                  future: notifier.initializeVideoPlayerFuture,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      return InkWell(
-                                        onTap: notifier.playAndPauseVideo,
-                                        child: AspectRatio(
-                                          aspectRatio: notifier.videoController
-                                              .value.aspectRatio,
-                                          child: VideoPlayer(
-                                              notifier.videoController),
-                                        ),
-                                      );
-                                    } else {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    }
-                                  },
-                                )
-                              : null,
-                      trailing: Icon(Icons.more_vert),
-                      onTap: () {
-                        showDialog(
+                          : null,
+                  trailing: Icon(Icons.more_vert),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return _buildDialogOptions(
                           context: context,
-                          builder: (context) {
-                            return _buildDialogOptions(
-                              context: context,
-                              collection: 'to-dos',
-                              documentId: document.documentID,
-                            );
-                          },
+                          collection: 'to-dos',
+                          documentId: document.documentID,
                         );
                       },
-                    ),
-                  );
-                },
-              ).toList(),
-            );
-        }
+                    );
+                  },
+                ),
+              );
+            },
+          ).toList(),
+        );
       },
     );
   }
