@@ -186,22 +186,19 @@ class HomeScreenNotifier extends ChangeNotifier {
                   height: 50,
                   width: size.width * .9,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      RaisedButton(
+                      _buildRaisedButton(
+                        title: '画像追加',
+                        onPressed: uploadFile,
+                      ),
+                      _buildRaisedButton(
+                        title: '動画追加',
+                        onPressed: uploadVideoToStorage,
+                      ),
+                      _buildRaisedButton(
+                        title: '投稿',
                         onPressed: createPostWithoutImage,
-                        color: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                        ),
-                        child: Text(
-                          '投稿',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -211,6 +208,27 @@ class HomeScreenNotifier extends ChangeNotifier {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildRaisedButton({
+    String title,
+    VoidCallback onPressed,
+  }) {
+    return RaisedButton(
+      onPressed: onPressed,
+      color: Colors.blue,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
