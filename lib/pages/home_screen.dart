@@ -26,10 +26,16 @@ class HomeScreen extends StatelessWidget {
 class _HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final notifier = Provider.of<HomeScreenNotifier>(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          Icon(Icons.folder_open),
+          const SizedBox(width: 20),
+          Icon(Icons.settings),
+          const SizedBox(width: 20),
+        ],
+      ),
       body: createListView(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -68,14 +74,7 @@ class _HomeScreen extends StatelessWidget {
         SimpleDialogOption(
           onPressed: () {
             // 編集時のProviderの処理
-            //Navigator.of(context).pop();
-//            Navigator.of(context, rootNavigator: true).push(
-//              CupertinoPageRoute(
-//                builder: (context) => EditTodoScreen(
-//                  editingTodo: notifier.postList[index],
-//                ),
-//              ),
-//            );
+            notifier.openModalBottomSheet();
           },
           child: Center(
             child: Text('編集'),
@@ -191,21 +190,29 @@ class _HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  title: Row(
-                    children: [
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Text(
-                            document['name'],
-                            maxLines: 10,
-                            style: TextStyle(
-                              fontSize: 15.0,
+                  title: InkWell(
+                    onTap: () {
+                      notifier.editTodo(document['name']);
+                    },
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Text(
+                              document['name'],
+                              maxLines: 10,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                decoration: document['isChecked']
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   // 画像部分の表示
                   subtitle: document['imagePath'] != null

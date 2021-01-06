@@ -211,6 +211,68 @@ class HomeScreenNotifier extends ChangeNotifier {
     );
   }
 
+  void editTodo(
+    String initialCValue,
+  ) {
+    final size = MediaQuery.of(context).size;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: size.width * .9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: size.width * .9,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(5.0),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: TextFormField(
+                      maxLines: 20,
+                      autofocus: true,
+                      initialValue: initialCValue,
+                      onChanged: (String text) {
+                        onNameChange(text);
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(10.0),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  height: 50,
+                  width: size.width * .9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _buildRaisedButton(
+                        title: '変更',
+                        onPressed: createPostWithoutImage,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildRaisedButton({
     String title,
     VoidCallback onPressed,
