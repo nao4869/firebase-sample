@@ -39,6 +39,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   void createPostWithoutImage() {
+    Navigator.of(context).pop();
     Firestore.instance.collection('to-dos').add({
       'name': taskName,
       'createdAt': DateTime.now().toIso8601String(),
@@ -170,7 +171,9 @@ class HomeScreenNotifier extends ChangeNotifier {
                     child: TextField(
                       maxLines: 20,
                       autofocus: true,
-                      onChanged: (String text) {},
+                      onChanged: (String text) {
+                        onNameChange(text);
+                      },
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(10.0),
                         border: InputBorder.none,
@@ -186,7 +189,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       RaisedButton(
-                        onPressed: () {},
+                        onPressed: createPostWithoutImage,
                         color: Colors.blue,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
