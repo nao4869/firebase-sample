@@ -173,96 +173,113 @@ class _HomeScreen extends StatelessWidget {
         return ListView(
           children: snapshot.data.documents.map(
             (DocumentSnapshot document) {
-              return Card(
-                child: ListTile(
-                  dense: true,
-                  leading: CircularCheckBox(
-                    value: document['isChecked'],
-                    checkColor: Colors.white,
-                    activeColor: Colors.blue,
-                    inactiveColor: Colors.blue,
-                    disabledColor: Colors.grey,
-                    onChanged: (val) {
-                      notifier.updateTodo(
-                        'to-dos',
-                        document.documentID,
-                        !document['isChecked'],
-                      );
-                    },
-                  ),
-                  title: InkWell(
-                    onTap: () {
-                      notifier.editTodo(document['name']);
-                    },
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Text(
-                              document['name'],
-                              maxLines: 10,
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                decoration: document['isChecked']
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none,
+              if (document == null) {
+                return Container();
+              } else {
+                return Card(
+                  child: ListTile(
+                    dense: true,
+                    leading: CircularCheckBox(
+                      value: document['isChecked'],
+                      checkColor: Colors.white,
+                      activeColor: Colors.blue,
+                      inactiveColor: Colors.blue,
+                      disabledColor: Colors.grey,
+                      onChanged: (val) {
+                        notifier.updateTodoIsChecked(
+                          'to-dos',
+                          document.documentID,
+                          !document['isChecked'],
+                        );
+                      },
+                    ),
+                    title: InkWell(
+                      onTap: () {
+                        notifier.editTodo(
+                          collection: 'to-dos',
+                          documentId: document.documentID,
+                          initialValue: document['name'],
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Text(
+                                document['name'],
+                                maxLines: 10,
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  decoration: document['isChecked']
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  // 画像部分の表示
-                  subtitle: document['imagePath'] != null
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                              document['imagePath'],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                      : document['videoPath'] != null
-                          ? FutureBuilder(
-                              future: notifier.initializeVideoPlayerFuture,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  return InkWell(
-                                    onTap: notifier.playAndPauseVideo,
-                                    child: AspectRatio(
-                                      aspectRatio: notifier
-                                          .videoController.value.aspectRatio,
-                                      child:
-                                          VideoPlayer(notifier.videoController),
-                                    ),
+                    // 画像部分の表示
+                    subtitle: document['imagePath'] != null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: InkWell(
+                                onTap: () {
+                                  notifier.editTodo(
+                                    collection: 'to-dos',
+                                    documentId: document.documentID,
+                                    initialValue: document['name'],
                                   );
-                                } else {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              },
-                            )
-                          : null,
-                  trailing: Icon(Icons.more_vert),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return _buildDialogOptions(
-                          context: context,
-                          collection: 'to-dos',
-                          documentId: document.documentID,
-                        );
-                      },
-                    );
-                  },
-                ),
-              );
+                                },
+                                child: Image.network(
+                                  document['imagePath'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          )
+                        : document['videoPath'] != null
+                            ? FutureBuilder(
+                                future: notifier.initializeVideoPlayerFuture,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return InkWell(
+                                      onTap: notifier.playAndPauseVideo,
+                                      child: AspectRatio(
+                                        aspectRatio: notifier
+                                            .videoController.value.aspectRatio,
+                                        child: VideoPlayer(
+                                            notifier.videoController),
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                },
+                              )
+                            : null,
+                    trailing: Icon(Icons.more_vert),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return _buildDialogOptions(
+                            context: context,
+                            collection: 'to-dos',
+                            documentId: document.documentID,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              }
             },
           ).toList(),
         );

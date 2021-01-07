@@ -49,7 +49,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     });
   }
 
-  void updateTodo(
+  void updateTodoIsChecked(
     String collection,
     String documentId,
     bool isChecked,
@@ -58,6 +58,16 @@ class HomeScreenNotifier extends ChangeNotifier {
         .collection(collection)
         .document(documentId)
         .updateData({"isChecked": isChecked});
+  }
+
+  void updateTodoName(
+    String collection,
+    String documentId,
+  ) {
+    Firestore.instance
+        .collection(collection)
+        .document(documentId)
+        .updateData({"name": taskName});
   }
 
   // 単一のTodoを指定されたFireStore Collectionから削除します。
@@ -211,9 +221,11 @@ class HomeScreenNotifier extends ChangeNotifier {
     );
   }
 
-  void editTodo(
-    String initialCValue,
-  ) {
+  void editTodo({
+    String collection,
+    String documentId,
+    String initialValue,
+  }) {
     final size = MediaQuery.of(context).size;
     showModalBottomSheet(
       context: context,
@@ -240,7 +252,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                     child: TextFormField(
                       maxLines: 20,
                       autofocus: true,
-                      initialValue: initialCValue,
+                      initialValue: initialValue,
                       onChanged: (String text) {
                         onNameChange(text);
                       },
@@ -260,7 +272,10 @@ class HomeScreenNotifier extends ChangeNotifier {
                     children: [
                       _buildRaisedButton(
                         title: '変更',
-                        onPressed: createPostWithoutImage,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          updateTodoName(collection, documentId);
+                        },
                       ),
                     ],
                   ),
