@@ -271,6 +271,14 @@ class HomeScreenNotifier extends ChangeNotifier {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       _buildRaisedButton(
+                        title: '削除',
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          deleteTodo(collection, documentId);
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      _buildRaisedButton(
                         title: '変更',
                         onPressed: () {
                           Navigator.of(context).pop();

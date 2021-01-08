@@ -40,122 +40,8 @@ class _HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           notifier.openModalBottomSheet();
-//          showDialog(
-//            context: context,
-//            builder: (context) {
-//              return _buildAddTaskDialog(context);
-//            },
-//          );
         },
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  /// 削除、編集などのダイアログの項目を表示します
-  /// @param index : postListの該当index
-  Widget _buildDialogOptions({
-    BuildContext context,
-    String collection,
-    String documentId,
-  }) {
-    final notifier = Provider.of<HomeScreenNotifier>(context);
-    return SimpleDialog(
-      children: <Widget>[
-        SimpleDialogOption(
-          onPressed: () {
-            Navigator.of(context).pop();
-            notifier.deleteTodo(collection, documentId);
-          },
-          child: Center(
-            child: Text('削除'),
-          ),
-        ),
-        SimpleDialogOption(
-          onPressed: () {
-            // 編集時のProviderの処理
-            notifier.openModalBottomSheet();
-          },
-          child: Center(
-            child: Text('編集'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// TODOタスク追加時の表示ダイアログ
-  Widget _buildAddTaskDialog(BuildContext context) {
-    final notifier = Provider.of<HomeScreenNotifier>(context);
-    return SimpleDialog(
-      children: <Widget>[
-        SimpleDialogOption(
-          onPressed: () {},
-          child: Column(
-            children: [
-              CustomTextFormField(
-                formKey: notifier.nameFieldFormKey,
-                height: 80,
-                onChanged: notifier.onNameChange,
-                controller: notifier.textController,
-                resetTextField: notifier.resetNameTextField,
-                hintText: 'タスク名',
-                counterText: '50',
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  _buildRaisedButton(
-                    title: '画像を追加する',
-                    onPressed: () {
-                      // ダイアログを閉じます
-                      Navigator.of(context).pop();
-                      notifier.uploadFile();
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  _buildRaisedButton(
-                    title: '投稿する',
-                    onPressed: () {
-                      // ダイアログを閉じます
-                      Navigator.of(context).pop();
-                      notifier.createPostWithoutImage();
-                    },
-                  ),
-                ],
-              ),
-              _buildRaisedButton(
-                title: '動画を追加する',
-                onPressed: () {
-                  // ダイアログを閉じます
-                  Navigator.of(context).pop();
-                  notifier.uploadVideoToStorage();
-                },
-              ),
-              const SizedBox(width: 10),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRaisedButton({
-    @required String title,
-    @required VoidCallback onPressed,
-  }) {
-    return RaisedButton(
-      color: Colors.blue,
-      elevation: 0,
-      onPressed: onPressed,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: Colors.white,
-        ),
       ),
     );
   }
@@ -250,11 +136,16 @@ class _HomeScreen extends StatelessWidget {
                                       ConnectionState.done) {
                                     return InkWell(
                                       onTap: notifier.playAndPauseVideo,
-                                      child: AspectRatio(
-                                        aspectRatio: notifier
-                                            .videoController.value.aspectRatio,
-                                        child: VideoPlayer(
-                                            notifier.videoController),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: AspectRatio(
+                                          aspectRatio: notifier.videoController
+                                              .value.aspectRatio,
+                                          child: VideoPlayer(
+                                            notifier.videoController,
+                                          ),
+                                        ),
                                       ),
                                     );
                                   } else {
@@ -264,19 +155,6 @@ class _HomeScreen extends StatelessWidget {
                                 },
                               )
                             : null,
-                    trailing: Icon(Icons.more_vert),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return _buildDialogOptions(
-                            context: context,
-                            collection: 'to-dos',
-                            documentId: document.documentID,
-                          );
-                        },
-                      );
-                    },
                   ),
                 );
               }
