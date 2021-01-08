@@ -2,7 +2,6 @@ import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/pages/home_screen_notifier.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:firebase_sample/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
