@@ -40,7 +40,7 @@ class _SwitchApplicationThemeState extends State<SwitchApplicationTheme> {
           child: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              size: 30,
+              size: 25,
               color: white,
             ),
             onPressed: () {
