@@ -92,7 +92,7 @@ class _HomeScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(3.0),
                               child: Text(
-                                document['name'],
+                                document['name'] ?? '',
                                 maxLines: 10,
                                 style: TextStyle(
                                   fontSize: 15.0,

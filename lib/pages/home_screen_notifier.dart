@@ -42,7 +42,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     Navigator.of(context).pop();
     Firestore.instance.collection('to-dos').add({
       'name': taskName,
-      'createdAt': DateTime.now().toIso8601String(),
+      'createdAt': Timestamp.fromDate(DateTime.now()),
       'imagePath': null,
       'videoPath': null,
       'isChecked': false,
