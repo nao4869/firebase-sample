@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/models/switch_app_theme_provider.dart';
+import 'package:firebase_sample/pages/settings_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 
@@ -36,6 +39,14 @@ class HomeScreenNotifier extends ChangeNotifier {
     textController.dispose();
     videoController.dispose();
     super.dispose();
+  }
+
+  void navigateSettingScreen() {
+    Navigator.of(context, rootNavigator: true).push(
+      CupertinoPageRoute(
+        builder: (context) => SettingsScreen(),
+      ),
+    );
   }
 
   void createPostWithoutImage() {
@@ -300,9 +311,10 @@ class HomeScreenNotifier extends ChangeNotifier {
     String title,
     VoidCallback onPressed,
   }) {
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return RaisedButton(
       onPressed: onPressed,
-      color: Colors.blue,
+      color: switchAppThemeNotifier.currentTheme,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(10.0),

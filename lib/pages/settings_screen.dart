@@ -1,10 +1,14 @@
 import 'package:firebase_sample/constants/colors.dart';
+import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/theme_provider.dart';
 import 'package:firebase_sample/pages/setting_row.dart';
 import 'package:firebase_sample/pages/settings_screen_notifier.dart';
+import 'package:firebase_sample/pages/switch_application_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../app_localizations.dart';
 
 class SettingsScreen extends StatelessWidget {
   static String routeName = 'settings-screen';
@@ -26,12 +30,13 @@ class SettingsScreen extends StatelessWidget {
 
 class _SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final theme = Provider.of<ThemeProvider>(context);
-    final notifier = Provider.of<SettingsScreenNotifier>(context);
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
       backgroundColor: theme.isLightTheme ? white : darkBlack,
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: switchAppThemeNotifier.currentTheme,
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -52,11 +57,11 @@ class _SettingsScreen extends StatelessWidget {
     final notifier = Provider.of<SettingsScreenNotifier>(context);
     return [
       SettingTitle(
-        title: 'ダークモード設定',
+        title: AppLocalizations.of(context).translate('accountSettings'),
       ),
       // ダークモードの切り替え - データベース更新
       SettingRow(
-        title: 'ダークモード',
+        title: AppLocalizations.of(context).translate('darkMode'),
         isEnable: notifier.themeNotifier.darkMode,
         onChange: notifier.updateDarkMode,
       ),
@@ -64,19 +69,18 @@ class _SettingsScreen extends StatelessWidget {
   }
 
   List<Widget> buildAppSettingsSection(BuildContext context) {
-    final notifier = Provider.of<SettingsScreenNotifier>(context);
     return [
       SettingTitle(
-        title: 'アプリテーマ',
+        title: AppLocalizations.of(context).translate('editAppTheme'),
       ),
       SettingRow(
-        title: 'テーマを設定',
+        title: AppLocalizations.of(context).translate('editDesignTheme'),
         onTap: () {
-//          Navigator.of(context, rootNavigator: true).push(
-//            CupertinoPageRoute(
-//              builder: (context) => SwitchApplicationTheme('ja'),
-//            ),
-//          );
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute(
+              builder: (context) => SwitchApplicationTheme(),
+            ),
+          );
         },
       ),
     ];

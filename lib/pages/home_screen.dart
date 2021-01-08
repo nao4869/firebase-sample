@@ -1,5 +1,6 @@
 import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home_screen_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,17 +27,23 @@ class _HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: switchAppThemeNotifier.currentTheme,
         actions: [
           Icon(Icons.folder_open),
           const SizedBox(width: 20),
-          Icon(Icons.settings),
+          InkWell(
+            onTap: notifier.navigateSettingScreen,
+            child: Icon(Icons.settings),
+          ),
           const SizedBox(width: 20),
         ],
       ),
       body: createListView(context),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: switchAppThemeNotifier.currentTheme,
         onPressed: () async {
           notifier.openModalBottomSheet();
         },
