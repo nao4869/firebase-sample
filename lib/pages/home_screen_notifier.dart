@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 
+import '../app_localizations.dart';
+
 class HomeScreenNotifier extends ChangeNotifier {
   HomeScreenNotifier({
     this.context,
@@ -210,15 +212,17 @@ class HomeScreenNotifier extends ChangeNotifier {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _buildRaisedButton(
-                        title: '画像追加',
+                        title:
+                            AppLocalizations.of(context).translate('addImage'),
                         onPressed: uploadFile,
                       ),
                       _buildRaisedButton(
-                        title: '動画追加',
+                        title:
+                            AppLocalizations.of(context).translate('addVideo'),
                         onPressed: uploadVideoToStorage,
                       ),
                       _buildRaisedButton(
-                        title: '投稿',
+                        title: AppLocalizations.of(context).translate('post'),
                         onPressed: createPostWithoutImage,
                       ),
                     ],
