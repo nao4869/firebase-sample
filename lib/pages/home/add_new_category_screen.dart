@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
 import 'package:firebase_sample/widgets/text_form_field.dart';
@@ -84,128 +85,115 @@ class _CategoryPhotoScreen extends StatelessWidget {
           )
         ],
       ),
-      body: ColoredBox(
-        color: theme.isLightTheme ? backgroundWhite : darkBlack,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: size.width * .8,
-                      height: 50,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: theme.isLightTheme ? white : black,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: colorList[0],
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    bottomLeft: Radius.circular(10.0),
-                                  ),
-                                ),
+      body: StreamBuilder(
+        stream: Firestore.instance.collection('category').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          // エラーの場合
+          if (snapshot.hasError || snapshot.data == null) {
+            return CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                notifier.switchAppThemeNotifier.currentTheme,
+              ),
+            );
+          } else {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {},
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: size.width * .8,
+                            height: 50,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: theme.isLightTheme ? white : black,
+                                borderRadius: BorderRadius.circular(20.0),
                               ),
-                            ),
-                            const SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () {
-                                if (index == 0) {
-                                  CmnDialog(context)
-                                      .showConfirmDialogSingleButton(
-                                    titleStr: AppLocalizations.of(context)
-                                        .translate('unableToEdit'),
-                                    titleColor: notifier
-                                        .switchAppThemeNotifier.currentTheme,
-                                    msgStr: AppLocalizations.of(context)
-                                        .translate('allCategoryUnableToEdit'),
-                                    positiveBtnStr: okay,
-                                    onPressedPositiveButton: null,
-                                  );
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return buildAddCategoryNameDialog(
-                                        context,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        color: notifier.switchAppThemeNotifier
+                                            .currentTheme,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10.0),
+                                          bottomLeft: Radius.circular(10.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (index == 0) {
+                                        CmnDialog(context)
+                                            .showConfirmDialogSingleButton(
+                                          titleStr: AppLocalizations.of(context)
+                                              .translate('unableToEdit'),
+                                          titleColor: notifier
+                                              .switchAppThemeNotifier
+                                              .currentTheme,
+                                          msgStr: AppLocalizations.of(context)
+                                              .translate(
+                                                  'allCategoryUnableToEdit'),
+                                          positiveBtnStr: okay,
+                                          onPressedPositiveButton: null,
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return buildAddCategoryNameDialog(
+                                              context,
 //                                        selectedCategory:
 //                                            category.categoriesList[index],
-                                      );
+                                            );
+                                          },
+                                        );
+                                      }
                                     },
-                                  );
-                                }
-                              },
-                              child: SizedBox(
-                                width: size.width * .6,
-                                height: size.width * .6,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-//                                  child: Text(
-//                                    category.categoriesList[index].name ==
-//                                                null ||
-//                                            category.categoriesList[index].name
-//                                                .isEmpty
-//                                        ? AppLocalizations.of(context)
-//                                            .translate('tapNotResponseMessage')
-//                                        : category.categoriesList[index].name,
-//                                    style: TextStyle(
-//                                      color: theme.isLightTheme
-//                                          ? category.categoriesList[index]
-//                                                          .name ==
-//                                                      null ||
-//                                                  category.categoriesList[index]
-//                                                      .name.isEmpty
-//                                              ? white
-//                                              : black
-//                                          : category.categoriesList[index]
-//                                                          .name ==
-//                                                      null ||
-//                                                  category.categoriesList[index]
-//                                                      .name.isEmpty
-//                                              ? black
-//                                              : white,
-//                                      fontWeight: FontWeight.bold,
-//                                      fontSize: 16.0,
-//                                    ),
-//                                  ),
-                                ),
+                                    child: SizedBox(
+                                      width: size.width * .6,
+                                      height: size.width * .6,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Text(
+                                          snapshot.data.documents[index]
+                                              .data['name'],
+                                          style: TextStyle(
+                                            color: black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                ],
                               ),
                             ),
-                            const SizedBox(width: 20),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
-        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            );
+          }
+        },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     notifier.editCategory(
-      //       category.categoriesList[notifier.currentTabIndex],
-      //     );
-      //   },
-      //   child: const Icon(
-      //     Icons.edit,
-      //   ),
-      //   backgroundColor: notifier.switchAppThemeNotifier.currentTheme,
-      // ),
     );
   }
 
