@@ -105,7 +105,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: notifier.displayActionSheet,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
@@ -133,48 +133,18 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (index == 0) {
-                                        CmnDialog(context)
-                                            .showConfirmDialogSingleButton(
-                                          titleStr: AppLocalizations.of(context)
-                                              .translate('unableToEdit'),
-                                          titleColor: notifier
-                                              .switchAppThemeNotifier
-                                              .currentTheme,
-                                          msgStr: AppLocalizations.of(context)
-                                              .translate(
-                                                  'allCategoryUnableToEdit'),
-                                          positiveBtnStr: okay,
-                                          onPressedPositiveButton: null,
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return buildAddCategoryNameDialog(
-                                              context,
-//                                        selectedCategory:
-//                                            category.categoriesList[index],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      width: size.width * .6,
-                                      height: size.width * .6,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Text(
-                                          snapshot.data.documents[index]
-                                              .data['name'],
-                                          style: TextStyle(
-                                            color: black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16.0,
-                                          ),
+                                  SizedBox(
+                                    width: size.width * .6,
+                                    height: size.width * .6,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Text(
+                                        snapshot.data.documents[index]
+                                            .data['name'],
+                                        style: TextStyle(
+                                          color: black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
                                         ),
                                       ),
                                     ),

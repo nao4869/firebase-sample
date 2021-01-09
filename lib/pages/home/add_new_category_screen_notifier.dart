@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_localizations.dart';
+
 class AddCategoryScreenNotifier extends ChangeNotifier {
   AddCategoryScreenNotifier({
     this.context,
@@ -61,6 +63,48 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       CupertinoPageRoute(
         builder: (context) => AddCategoryScreen(),
       ),
+    );
+  }
+
+  Future<void> displayActionSheet() {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              child: Text(
+                AppLocalizations.of(context).translate('edit'),
+                style: TextStyle(
+                  color: switchAppThemeNotifier.currentTheme,
+                ),
+              ),
+              onPressed: () {},
+            ),
+            CupertinoActionSheetAction(
+              child: Text(
+                AppLocalizations.of(context).translate('doDelete'),
+                style: TextStyle(
+                  color: switchAppThemeNotifier.currentTheme,
+                ),
+              ),
+              onPressed: () {},
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: Text(
+              AppLocalizations.of(context).translate('cancel'),
+              style: TextStyle(
+                color: switchAppThemeNotifier.currentTheme,
+              ),
+            ),
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
     );
   }
 
