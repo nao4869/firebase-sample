@@ -115,6 +115,7 @@ class _HomeScreen extends StatelessWidget {
     String categoryId,
   }) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return StreamBuilder(
       stream: Firestore.instance
           .collection('to-dos')
@@ -137,8 +138,8 @@ class _HomeScreen extends StatelessWidget {
                       leading: CircularCheckBox(
                         value: document['isChecked'],
                         checkColor: Colors.white,
-                        activeColor: Colors.blue,
-                        inactiveColor: Colors.blue,
+                        activeColor: switchAppThemeNotifier.currentTheme,
+                        inactiveColor: switchAppThemeNotifier.currentTheme,
                         disabledColor: Colors.grey,
                         onChanged: (val) {
                           notifier.updateTodoIsChecked(
