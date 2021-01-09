@@ -183,12 +183,12 @@ class HomeScreenNotifier extends ChangeNotifier {
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: SizedBox(
-            height: size.width * .9,
+            height: size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 50,
+                  height: size.width * .3,
                   width: size.width * .9,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
