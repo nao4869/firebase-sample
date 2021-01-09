@@ -75,7 +75,8 @@ class _HomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: Tab(
-                        text: 'カテゴリー$index',
+                        text:
+                            snapshot.data.documents[0].data['name'].toString(),
                       ),
                     ),
                   );
@@ -83,7 +84,11 @@ class _HomeScreen extends StatelessWidget {
                 pageBuilder: (context, index) {
                   return ColoredBox(
                     color: darkModeNotifier.isLightTheme ? white : darkBlack,
-                    child: createListView(context),
+                    child: createListView(
+                      context: context,
+                      categoryId:
+                          snapshot.data.documents[index].documentID.toString(),
+                    ),
                   );
                 },
                 onPositionChange: (index) {
@@ -104,19 +109,21 @@ class _HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget createListView(BuildContext context) {
+  Widget createListView({
+    BuildContext context,
+    String categoryId,
+  }) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return StreamBuilder(
-      stream: Firestore.instance.collection('to-dos').snapshots(),
+      stream: Firestore.instance
+          .collection('to-dos')
+          .where('categoryId', isEqualTo: '$categoryId')
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // エラーの場合
         if (snapshot.hasError || snapshot.data == null) {
-          return CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              switchAppThemeNotifier.currentTheme,
-            ),
-          );
+          return Container();
         } else {
           return ListView(
             children: snapshot.data.documents.map(
