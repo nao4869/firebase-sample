@@ -1,6 +1,6 @@
 import 'package:firebase_sample/models/post_provider.dart';
-import 'package:firebase_sample/pages/home_screen.dart';
-import 'package:firebase_sample/pages/home_screen_notifier.dart';
+import 'package:firebase_sample/pages/home/home_screen.dart';
+import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';

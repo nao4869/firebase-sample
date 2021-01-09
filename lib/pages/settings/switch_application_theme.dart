@@ -1,12 +1,12 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/theme_provider.dart';
-import 'package:firebase_sample/pages/setting_row.dart';
+import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../app_localizations.dart';
+import '../../app_localizations.dart';
 
 class SwitchApplicationTheme extends StatefulWidget {
   SwitchApplicationTheme();

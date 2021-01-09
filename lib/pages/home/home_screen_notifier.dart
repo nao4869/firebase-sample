@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
-import 'package:firebase_sample/pages/settings_screen.dart';
+import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 
-import '../app_localizations.dart';
+import '../../app_localizations.dart';
 
 class HomeScreenNotifier extends ChangeNotifier {
   HomeScreenNotifier({
