@@ -45,41 +45,55 @@ class _HomeScreen extends StatelessWidget {
           const SizedBox(width: 20),
         ],
       ),
-      body: CustomTabView(
-        initPosition: 0,
-        itemCount: 10,
-        tabBuilder: (context, index) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: 100,
-              maxHeight: 35,
-            ),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: switchAppThemeNotifier.currentTheme,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  topLeft: Radius.circular(10),
+      body: StreamBuilder(
+          stream: Firestore.instance.collection('category').snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            // エラーの場合
+            if (snapshot.hasError || snapshot.data == null) {
+              return CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  switchAppThemeNotifier.currentTheme,
                 ),
-              ),
-              child: Tab(
-                text: 'カテゴリー$index',
-              ),
-            ),
-          );
-        },
-        pageBuilder: (context, index) {
-          return ColoredBox(
-            color: darkModeNotifier.isLightTheme ? white : darkBlack,
-            child: createListView(context),
-          );
-        },
-        onPositionChange: (index) {
+              );
+            } else {
+              return CustomTabView(
+                initPosition: 0,
+                itemCount: snapshot.data.documents.length,
+                tabBuilder: (context, index) {
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: 100,
+                      maxHeight: 35,
+                    ),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: switchAppThemeNotifier.currentTheme,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          topLeft: Radius.circular(10),
+                        ),
+                      ),
+                      child: Tab(
+                        text: 'カテゴリー$index',
+                      ),
+                    ),
+                  );
+                },
+                pageBuilder: (context, index) {
+                  return ColoredBox(
+                    color: darkModeNotifier.isLightTheme ? white : darkBlack,
+                    child: createListView(context),
+                  );
+                },
+                onPositionChange: (index) {
 //          notifier.setCurrentIndex(index);
 //          notifier.initPosition = index;
-        },
-        onScroll: (position) {},
-      ),
+                },
+                onScroll: (position) {},
+              );
+            }
+          }),
       floatingActionButton: FloatingActionButton(
         backgroundColor: switchAppThemeNotifier.currentTheme,
         onPressed: () async {
@@ -156,7 +170,8 @@ class _HomeScreen extends StatelessWidget {
                         ),
                       ),
                       // 画像部分の表示
-                      subtitle: document['imagePath'] != null
+                      subtitle: document['imagePath'] != null &&
+                              document['imagePath'] != ''
                           ? Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
@@ -177,7 +192,8 @@ class _HomeScreen extends StatelessWidget {
                                 ),
                               ),
                             )
-                          : document['videoPath'] != null
+                          : document['videoPath'] != null &&
+                                  document['videoPath'] != ''
                               ? FutureBuilder(
                                   future: notifier.initializeVideoPlayerFuture,
                                   builder: (context, snapshot) {
