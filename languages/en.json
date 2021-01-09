@@ -177,5 +177,6 @@
   "goBackToPreviousScreen": "Do you want to navigate to previous screen?",
   "creatingPostWillBeDeleted": "Currently creating post will not be saved",
   "editReply": "Edit Reply",
-  "deleteReply": "Delete Reply"
+  "deleteReply": "Delete Reply",
+  "addCategory": "Add Category"
 }

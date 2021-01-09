@@ -176,5 +176,6 @@
   "goBackToPreviousScreen": "前画面に戻りますか？",
   "creatingPostWillBeDeleted": "作成中の投稿は削除されます",
   "editReply": "リプライを編集する",
-  "deleteReply": "リプライを削除する"
+  "deleteReply": "リプライを削除する",
+  "addCategory": "カテゴリー追加"
 }

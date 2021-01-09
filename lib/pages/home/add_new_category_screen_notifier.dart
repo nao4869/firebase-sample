@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
@@ -66,7 +67,10 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     );
   }
 
-  Future<void> displayActionSheet() {
+  Future<void> displayActionSheet({
+    String collection,
+    String documentId,
+  }) {
     return showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
@@ -88,7 +92,10 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
                   color: switchAppThemeNotifier.currentTheme,
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteCategory(collection, documentId);
+              },
             ),
           ],
           cancelButton: CupertinoActionSheetAction(
@@ -111,65 +118,100 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   /// カテゴリーを追加する関数
   /// colorのみ指定し、タスク名を追加は行わない
   void addCategory() {
-//    final categoryNotifier =
-//    Provider.of<CategoryProvider>(context, listen: false);
-//    final db = Provider.of<DataBaseProvider>(context, listen: false);
-//    final dbInstance = db.getDatabaseInfo();
-
-//    final category = Category(
-//      id: categoryNotifier.categoriesList.length,
-//      name: '',
-//      colorNumber: selectedColorIndex,
-//    );
-//    categoryNotifier.addCategory(category);
-//    db.insertCategory(category, dbInstance);
+    Navigator.of(context).pop();
+    Firestore.instance.collection('category').add({
+      'name': taskName,
+    });
     notifyListeners();
   }
 
-  /// カテゴリーを追加する関数
-  /// colorのみ指定し、タスク名を追加は行わない
-  void addCategoryName(
-      //Category selectedCategory,
-      ) {
-//    final categoryNotifier =
-//    Provider.of<CategoryProvider>(context, listen: false);
-//    final db = Provider.of<DataBaseProvider>(context, listen: false);
-//    final dbInstance = db.getDatabaseInfo();
-//
-//    final category = Category(
-//      id: selectedCategory.id,
-//      name: taskName,
-//      colorNumber: selectedCategory.colorNumber,
-//    );
-//
-//    categoryNotifier.updateCategory(category.id, category);
-//    db.updateCategory(category, dbInstance);
-//    taskName = '';
-//    notifyListeners();
+  // 単一のCategoryを指定されたFireStore Collectionから削除します。
+  void deleteCategory(
+    String collection,
+    String documentId,
+  ) {
+    Firestore.instance.collection(collection).document(documentId).delete();
   }
 
-  // カテゴリー編集、削除用のダイアログ
-  void editCategory() {
-//    CmnDialog(context).showThreeButtonsDialog(
-//      onFirstCallback: onFirstButtonPressed,
-//      firstBtnStr: '編集する',
-//      onSecondCallback: () {
-////        db.deleteCategory(selectedCategory.id);
-////        categoryNotifier.deleteCategory(selectedCategory.id);
-//
-//        CmnDialog(context).showConfirmDialog(
-//          msgStr: 'カテゴリーが削除されました',
-//          confirmBtnStr: okay,
-//          onConfirmCallback: null,
-//          btnTextColor: white,
-//          btnBgColor: switchAppThemeNotifier.currentTheme,
-//        );
-//      },
-//      secondBtnStr: '削除する',
-//      onLastCallback: () {},
-//      lastBtnStr: 'キャンセル',
-//      titleStr: selectedCategory.name,
-//      titleColor: switchAppThemeNotifier.currentTheme,
-//    );
+  void openModalBottomSheet() {
+    final size = MediaQuery.of(context).size;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: size.width * .85,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: size.width * .1,
+                  width: size.width * .9,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(5.0),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: TextField(
+                      maxLines: 20,
+                      autofocus: true,
+                      onChanged: (String text) {
+                        onNameChange(text);
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(10.0),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  height: 50,
+                  width: size.width * .9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _buildRaisedButton(
+                        title: AppLocalizations.of(context)
+                            .translate('addCategory'),
+                        onPressed: addCategory,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildRaisedButton({
+    String title,
+    VoidCallback onPressed,
+  }) {
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
+    return RaisedButton(
+      onPressed: onPressed,
+      color: switchAppThemeNotifier.currentTheme,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 }

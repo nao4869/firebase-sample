@@ -61,21 +61,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 15.0),
             child: GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return StatefulBuilder(
-                      builder: (context, setState) {
-                        return buildAddTaskDialog(
-                          context,
-                          setState,
-                        );
-                      },
-                    );
-                  },
-                );
-              },
+              onTap: notifier.openModalBottomSheet,
               child: Icon(
                 Icons.add,
                 color: white,
@@ -105,7 +91,13 @@ class _CategoryPhotoScreen extends StatelessWidget {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                        onTap: notifier.displayActionSheet,
+                        onTap: () {
+                          notifier.displayActionSheet(
+                            collection: 'category',
+                            documentId:
+                                snapshot.data.documents[index].documentID,
+                          );
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
@@ -139,8 +131,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Text(
-                                        snapshot.data.documents[index]
-                                            .data['name'],
+                                        snapshot
+                                            .data.documents[index].data['name'],
                                         style: TextStyle(
                                           color: black,
                                           fontWeight: FontWeight.bold,
