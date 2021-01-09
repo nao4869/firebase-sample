@@ -61,6 +61,8 @@ class _HomeScreen extends StatelessWidget {
                 initPosition: 0,
                 itemCount: snapshot.data.documents.length,
                 tabBuilder: (context, index) {
+                  notifier.updateCurrentTabId(
+                      snapshot.data.documents[index].documentID);
                   return ConstrainedBox(
                     constraints: BoxConstraints(
                       minWidth: 100,
@@ -75,8 +77,8 @@ class _HomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: Tab(
-                        text:
-                            snapshot.data.documents[0].data['name'].toString(),
+                        text: snapshot.data.documents[index].data['name']
+                            .toString(),
                       ),
                     ),
                   );
@@ -86,14 +88,13 @@ class _HomeScreen extends StatelessWidget {
                     color: darkModeNotifier.isLightTheme ? white : darkBlack,
                     child: createListView(
                       context: context,
-                      categoryId:
-                          snapshot.data.documents[index].documentID.toString(),
+                      categoryId: snapshot.data.documents[index].documentID,
                     ),
                   );
                 },
                 onPositionChange: (index) {
-//          notifier.setCurrentIndex(index);
-//          notifier.initPosition = index;
+                  notifier.updateCurrentTabId(
+                      snapshot.data.documents[index].documentID);
                 },
                 onScroll: (position) {},
               );
@@ -114,7 +115,6 @@ class _HomeScreen extends StatelessWidget {
     String categoryId,
   }) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
-    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return StreamBuilder(
       stream: Firestore.instance
           .collection('to-dos')

@@ -35,6 +35,7 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   VideoPlayerController videoController;
   Future<void> initializeVideoPlayerFuture;
+  String currentTabDocumentId = '';
 
   @override
   void dispose() {
@@ -51,6 +52,10 @@ class HomeScreenNotifier extends ChangeNotifier {
     );
   }
 
+  void updateCurrentTabId(String categoryId) {
+    currentTabDocumentId = categoryId;
+  }
+
   void createPostWithoutImage() {
     Navigator.of(context).pop();
     Firestore.instance.collection('to-dos').add({
@@ -59,6 +64,7 @@ class HomeScreenNotifier extends ChangeNotifier {
       'imagePath': null,
       'videoPath': null,
       'isChecked': false,
+      'categoryId': currentTabDocumentId,
     });
   }
 
@@ -134,6 +140,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         'imagePath': _uploadedFileURL,
         'videoPath': null,
         'isChecked': false,
+        'categoryId': currentTabDocumentId,
       });
     });
   }
@@ -160,6 +167,7 @@ class HomeScreenNotifier extends ChangeNotifier {
           'imagePath': null,
           'videoPath': _uploadedFileURL,
           'isChecked': false,
+          'categoryId': currentTabDocumentId,
         });
       });
     } catch (error) {
