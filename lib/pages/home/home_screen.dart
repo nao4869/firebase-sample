@@ -36,7 +36,10 @@ class _HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: switchAppThemeNotifier.currentTheme,
         actions: [
-          Icon(Icons.folder_open),
+          InkWell(
+            onTap: notifier.navigateAddCategoryScreen,
+            child: Icon(Icons.folder_open),
+          ),
           const SizedBox(width: 20),
           InkWell(
             onTap: notifier.navigateSettingScreen,
