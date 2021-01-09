@@ -46,7 +46,7 @@ class _HomeScreen extends StatelessWidget {
         ],
       ),
       body: CustomTabView(
-        initPosition: 1,
+        initPosition: 0,
         itemCount: 10,
         tabBuilder: (context, index) {
           return ConstrainedBox(
