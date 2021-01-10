@@ -175,130 +175,131 @@ class _HomeScreen extends StatelessWidget {
                   }
                   return Column(
                     children: [
-                      ListTile(
-                        dense: true,
-                        leading: CircularCheckBox(
-                          value: document['isChecked'],
-                          checkColor: Colors.white,
-                          activeColor: colorList[index],
-                          inactiveColor: colorList[index],
-                          disabledColor: Colors.grey,
-                          onChanged: (val) {
-                            notifier.updateTodoIsChecked(
-                              'to-dos',
-                              document.documentID,
-                              !document['isChecked'],
-                            );
-                          },
-                        ),
-                        title: InkWell(
-                          onTap: () {
-                            notifier.editTodo(
-                              collection: 'to-dos',
-                              documentId: document.documentID,
-                              initialValue: document['name'],
-                              createdData: createdAt,
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3.0),
-                                  child: Text(
-                                    document['name'] ?? '',
-                                    maxLines: 10,
-                                    style: TextStyle(
-                                      fontSize: 15.0,
-                                      color: darkModeNotifier.isLightTheme
-                                          ? black
-                                          : white,
-                                      decoration: document['isChecked']
-                                          ? TextDecoration.lineThrough
-                                          : TextDecoration.none,
+                      Card(
+                        child: ListTile(
+                          dense: true,
+                          leading: CircularCheckBox(
+                            value: document['isChecked'],
+                            checkColor: Colors.white,
+                            activeColor: colorList[index],
+                            inactiveColor: colorList[index],
+                            disabledColor: Colors.grey,
+                            onChanged: (val) {
+                              notifier.updateTodoIsChecked(
+                                'to-dos',
+                                document.documentID,
+                                !document['isChecked'],
+                              );
+                            },
+                          ),
+                          title: InkWell(
+                            onTap: () {
+                              notifier.editTodo(
+                                collection: 'to-dos',
+                                documentId: document.documentID,
+                                initialValue: document['name'],
+                                createdData: createdAt,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Text(
+                                      document['name'] ?? '',
+                                      maxLines: 10,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: darkModeNotifier.isLightTheme
+                                            ? black
+                                            : white,
+                                        decoration: document['isChecked']
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        // 画像部分の表示
-                        subtitle: document['imagePath'] != null &&
-                                document['imagePath'] != ''
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      notifier.navigateZoomImageScreen(
-                                        document['imagePath'],
-                                        document.documentID,
-                                      );
+                          // 画像部分の表示
+                          subtitle: document['imagePath'] != null &&
+                                  document['imagePath'] != ''
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        notifier.navigateZoomImageScreen(
+                                          document['imagePath'],
+                                          document.documentID,
+                                        );
 //                                    notifier.editTodo(
 //                                      collection: 'to-dos',
 //                                      documentId: document.documentID,
 //                                      initialValue: document['name'],
 //                                    );
-                                    },
-                                    child: Hero(
-                                      tag: document.documentID,
-                                      child: Image.network(
-                                        document['imagePath'],
-                                        fit: BoxFit.cover,
+                                      },
+                                      child: Hero(
+                                        tag: document.documentID,
+                                        child: Image.network(
+                                          document['imagePath'],
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              )
-                            : document['videoPath'] != null &&
-                                    document['videoPath'] != ''
-                                ? FutureBuilder(
-                                    future:
-                                        notifier.initializeVideoPlayerFuture,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                        return InkWell(
-                                          onTap: notifier.playAndPauseVideo,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 8.0),
-                                            child: AspectRatio(
-                                              aspectRatio: notifier
-                                                  .videoController
-                                                  .value
-                                                  .aspectRatio,
-                                              child: VideoPlayer(
-                                                notifier.videoController,
+                                )
+                              : document['videoPath'] != null &&
+                                      document['videoPath'] != ''
+                                  ? FutureBuilder(
+                                      future:
+                                          notifier.initializeVideoPlayerFuture,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.done) {
+                                          return InkWell(
+                                            onTap: notifier.playAndPauseVideo,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              child: AspectRatio(
+                                                aspectRatio: notifier
+                                                    .videoController
+                                                    .value
+                                                    .aspectRatio,
+                                                child: VideoPlayer(
+                                                  notifier.videoController,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                    },
-                                  )
-                                : null,
-                        trailing: InkWell(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: darkModeNotifier.getThemeData == lightTheme
-                                ? Colors.grey
-                                : warmGrey,
+                                          );
+                                        } else {
+                                          return Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        }
+                                      },
+                                    )
+                                  : null,
+                          trailing: InkWell(
+                            onTap: () {},
+                            child: SizedBox(
+                              height: 30,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Image.asset(
+                                  'assets/images/default_profile_image.png',
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      const Divider(
-                        color: Colors.grey,
-                        height: 1,
-                        indent: 0,
-                        thickness: .3,
                       ),
                     ],
                   );
