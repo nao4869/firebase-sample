@@ -44,6 +44,10 @@ class DatePickerBottomSheet extends StatelessWidget {
       child: DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
         ),
         child: Column(
           children: <Widget>[

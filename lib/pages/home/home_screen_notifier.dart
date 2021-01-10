@@ -223,17 +223,28 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   void showModalPicker() {
+    final size = MediaQuery.of(context).size;
     showModalBottomSheet<void>(
       context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
       builder: (BuildContext context) {
-        return DatePickerBottomSheet(
-          initialDateString: '',
-          isValid: isDateValid,
-          onPressedNext: null,
-          onPressedDone: () {
-            Navigator.of(context).pop();
-          },
-          onDateTimeChanged: _onSelectedItemChanged,
+        return SizedBox(
+          height: size.height * .65,
+          child: DatePickerBottomSheet(
+            initialDateString: '',
+            isValid: isDateValid,
+            onPressedNext: null,
+            onPressedDone: () {
+              Navigator.of(context).pop();
+            },
+            onDateTimeChanged: _onSelectedItemChanged,
+          ),
         );
       },
     );
