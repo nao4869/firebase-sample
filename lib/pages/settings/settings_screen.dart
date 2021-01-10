@@ -33,7 +33,7 @@ class _SettingsScreen extends StatelessWidget {
     final theme = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
-      backgroundColor: theme.isLightTheme ? white : darkBlack,
+      backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
       appBar: AppBar(
         backgroundColor: switchAppThemeNotifier.currentTheme,
       ),

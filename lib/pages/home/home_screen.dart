@@ -36,39 +36,39 @@ class _HomeScreen extends StatelessWidget {
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
-//      appBar: AppBar(
-//        backgroundColor: darkModeNotifier.isLightTheme ? white : darkBlack,
-//        elevation: 1.0,
-//        leading: Padding(
-//          padding: const EdgeInsets.only(left: 12.0),
-//          child: IconButton(
-//            onPressed: () {},
-//            icon: FaIcon(
-//              FontAwesomeIcons.bars,
-//              size: 20.0,
-//            ),
-//            color: switchAppThemeNotifier.currentTheme,
-//          ),
-//        ),
-//        actions: [
-//          InkWell(
-//            onTap: notifier.navigateAddCategoryScreen,
-//            child: Icon(
-//              Icons.folder_open,
-//              color: switchAppThemeNotifier.currentTheme,
-//            ),
-//          ),
-//          const SizedBox(width: 20),
-//          InkWell(
-//            onTap: notifier.navigateSettingScreen,
-//            child: Icon(
-//              Icons.settings,
-//              color: switchAppThemeNotifier.currentTheme,
-//            ),
-//          ),
-//          const SizedBox(width: 20),
-//        ],
-//      ),
+      appBar: AppBar(
+        backgroundColor: darkModeNotifier.isLightTheme ? themeColor : darkBlack,
+        elevation: 1.0,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: IconButton(
+            onPressed: () {},
+            icon: FaIcon(
+              FontAwesomeIcons.bars,
+              size: 20.0,
+            ),
+            color: switchAppThemeNotifier.currentTheme,
+          ),
+        ),
+        actions: [
+          InkWell(
+            onTap: notifier.navigateAddCategoryScreen,
+            child: Icon(
+              Icons.folder_open,
+              color: switchAppThemeNotifier.currentTheme,
+            ),
+          ),
+          const SizedBox(width: 20),
+          InkWell(
+            onTap: notifier.navigateSettingScreen,
+            child: Icon(
+              Icons.settings,
+              color: switchAppThemeNotifier.currentTheme,
+            ),
+          ),
+          const SizedBox(width: 20),
+        ],
+      ),
       body: SafeArea(
         child: StreamBuilder(
             stream: Firestore.instance.collection('category').snapshots(),
@@ -110,7 +110,7 @@ class _HomeScreen extends StatelessWidget {
                   },
                   pageBuilder: (context, index) {
                     return ColoredBox(
-                      color: darkModeNotifier.isLightTheme ? white : darkBlack,
+                      color: darkModeNotifier.isLightTheme ? themeColor : darkBlack,
                       child: createListView(
                         context: context,
                         categoryId: snapshot.data.documents[index].documentID,

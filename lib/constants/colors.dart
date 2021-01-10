@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+const themeColor = Color.fromRGBO(250, 245, 242, 1);
 const grey = Color(0xfff0f2f8);
 const darkGrey = Color(0xff989898);
 

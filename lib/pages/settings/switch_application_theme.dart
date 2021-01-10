@@ -24,7 +24,7 @@ class _SwitchApplicationThemeState extends State<SwitchApplicationTheme> {
     // final dbInstance = db.getDatabaseInfo();
     selectedThemeNumber = themeProvider.getCurrentThemeNumber();
     return Scaffold(
-      backgroundColor: theme.isLightTheme ? white : darkBlack,
+      backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
       appBar: AppBar(
         backgroundColor: themeProvider.currentTheme,
         title: Text(
@@ -52,7 +52,7 @@ class _SwitchApplicationThemeState extends State<SwitchApplicationTheme> {
       ),
       body: SingleChildScrollView(
         child: ColoredBox(
-          color: theme.isLightTheme ? white : darkBlack,
+          color: theme.isLightTheme ? themeColor : darkBlack,
           child: Column(
             children: <Widget>[
               const SizedBox(height: 10),

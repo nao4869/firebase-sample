@@ -37,6 +37,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
       appBar: AppBar(
         backgroundColor: notifier.switchAppThemeNotifier.currentTheme,
         centerTitle: true,
