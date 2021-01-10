@@ -208,17 +208,27 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   void openModalBottomSheet() {
     final size = MediaQuery.of(context).size;
+    final switchAppThemeNotifier =
+        Provider.of<SwitchAppThemeProvider>(context, listen: false);
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            height: size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
                   height: size.width * .3,
                   width: size.width * .9,
                   child: DecoratedBox(
@@ -243,37 +253,91 @@ class HomeScreenNotifier extends ChangeNotifier {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 50,
-                  width: size.width * .9,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildRaisedButton(
-                        title:
-                            AppLocalizations.of(context).translate('addImage'),
-                        onPressed: uploadFile,
+              ),
+              SizedBox(
+                height: 40,
+                width: size.width * .9,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    Text(
+                      'when?',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      _buildRaisedButton(
-                        title:
-                            AppLocalizations.of(context).translate('addVideo'),
-                        onPressed: uploadVideoToStorage,
+                    ),
+                    const SizedBox(width: 20),
+                    Text(
+                      'No remind date',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: switchAppThemeNotifier.currentTheme,
                       ),
-                      _buildRaisedButton(
-                        title: AppLocalizations.of(context).translate('post'),
-                        onPressed: createPostWithoutImage,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                width: size.width * .9,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    Text(
+                      'Who\'s task?',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    ),
+                    const SizedBox(width: 10),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(width: 10);
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {},
+                          child: SizedBox(
+                            height: 30,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Image.asset(
+                                'assets/images/default_profile_image.png',
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: 3,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 50,
+                width: size.width,
+                child: _buildFullWidthButton(
+                  title: AppLocalizations.of(context).translate('post'),
+                  onPressed: createPostWithoutImage,
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
+
+//  _buildRaisedButton(
+//  title: AppLocalizations.of(context).translate('addImage'),
+//  onPressed: uploadFile,
+//  ),
 
   void editTodo({
     String collection,
@@ -368,6 +432,25 @@ class HomeScreenNotifier extends ChangeNotifier {
         title,
         style: TextStyle(
           color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFullWidthButton({
+    String title,
+    VoidCallback onPressed,
+  }) {
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
+    return RaisedButton(
+      onPressed: onPressed,
+      color: switchAppThemeNotifier.currentTheme,
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
