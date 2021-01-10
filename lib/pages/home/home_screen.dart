@@ -8,6 +8,8 @@ import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -34,78 +36,99 @@ class _HomeScreen extends StatelessWidget {
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: switchAppThemeNotifier.currentTheme,
-        actions: [
-          InkWell(
-            onTap: notifier.navigateAddCategoryScreen,
-            child: Icon(Icons.folder_open),
-          ),
-          const SizedBox(width: 20),
-          InkWell(
-            onTap: notifier.navigateSettingScreen,
-            child: Icon(Icons.settings),
-          ),
-          const SizedBox(width: 20),
-        ],
-      ),
-      body: StreamBuilder(
-          stream: Firestore.instance.collection('category').snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            // エラーの場合
-            if (snapshot.hasError || snapshot.data == null) {
-              return CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  switchAppThemeNotifier.currentTheme,
-                ),
-              );
-            } else {
-              return CustomTabView(
-                initPosition: notifier.initPosition,
-                itemCount: snapshot.data.documents.length,
-                tabBuilder: (context, index) {
-                  notifier.updateCurrentTabId(
-                      snapshot.data.documents[index].documentID);
-                  return ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: 100,
-                      maxHeight: 35,
-                    ),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: switchAppThemeNotifier.currentTheme,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          topLeft: Radius.circular(10),
+//      appBar: AppBar(
+//        backgroundColor: darkModeNotifier.isLightTheme ? white : darkBlack,
+//        elevation: 1.0,
+//        leading: Padding(
+//          padding: const EdgeInsets.only(left: 12.0),
+//          child: IconButton(
+//            onPressed: () {},
+//            icon: FaIcon(
+//              FontAwesomeIcons.bars,
+//              size: 20.0,
+//            ),
+//            color: switchAppThemeNotifier.currentTheme,
+//          ),
+//        ),
+//        actions: [
+//          InkWell(
+//            onTap: notifier.navigateAddCategoryScreen,
+//            child: Icon(
+//              Icons.folder_open,
+//              color: switchAppThemeNotifier.currentTheme,
+//            ),
+//          ),
+//          const SizedBox(width: 20),
+//          InkWell(
+//            onTap: notifier.navigateSettingScreen,
+//            child: Icon(
+//              Icons.settings,
+//              color: switchAppThemeNotifier.currentTheme,
+//            ),
+//          ),
+//          const SizedBox(width: 20),
+//        ],
+//      ),
+      body: SafeArea(
+        child: StreamBuilder(
+            stream: Firestore.instance.collection('category').snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              // エラーの場合
+              if (snapshot.hasError || snapshot.data == null) {
+                return CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    switchAppThemeNotifier.currentTheme,
+                  ),
+                );
+              } else {
+                return CustomTabView(
+                  initPosition: notifier.initPosition,
+                  itemCount: snapshot.data.documents.length,
+                  tabBuilder: (context, index) {
+                    notifier.updateCurrentTabId(
+                        snapshot.data.documents[index].documentID);
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 100,
+                        maxHeight: 35,
+                      ),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: colorList[index],
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            topLeft: Radius.circular(10),
+                          ),
+                        ),
+                        child: Tab(
+                          text: snapshot.data.documents[index].data['name']
+                              .toString(),
                         ),
                       ),
-                      child: Tab(
-                        text: snapshot.data.documents[index].data['name']
-                            .toString(),
+                    );
+                  },
+                  pageBuilder: (context, index) {
+                    return ColoredBox(
+                      color: darkModeNotifier.isLightTheme ? white : darkBlack,
+                      child: createListView(
+                        context: context,
+                        categoryId: snapshot.data.documents[index].documentID,
+                        index: index,
                       ),
-                    ),
-                  );
-                },
-                pageBuilder: (context, index) {
-                  return ColoredBox(
-                    color: darkModeNotifier.isLightTheme ? white : darkBlack,
-                    child: createListView(
-                      context: context,
-                      categoryId: snapshot.data.documents[index].documentID,
-                    ),
-                  );
-                },
-                onPositionChange: (index) {
-                  notifier.setCurrentIndex(index);
-                  notifier.initPosition = index;
-                  notifier.updateCurrentTabId(
-                      snapshot.data.documents[index].documentID);
-                },
-                onScroll: (position) {},
-              );
-            }
-          }),
+                    );
+                  },
+                  onPositionChange: (index) {
+                    notifier.setCurrentIndex(index);
+                    notifier.initPosition = index;
+                    notifier.updateCurrentTabId(
+                        snapshot.data.documents[index].documentID);
+                  },
+                  onScroll: (position) {},
+                );
+              }
+            }),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: switchAppThemeNotifier.currentTheme,
         onPressed: () async {
@@ -119,6 +142,7 @@ class _HomeScreen extends StatelessWidget {
   Widget createListView({
     BuildContext context,
     String categoryId,
+    int index,
   }) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
@@ -139,6 +163,15 @@ class _HomeScreen extends StatelessWidget {
                 if (document == null) {
                   return Container();
                 } else {
+                  final data = document.data;
+                  DateTime createdAt;
+                  var createdAtHour;
+                  if (data['createdAt'] is Timestamp) {
+                    createdAt = data['createdAt'].toDate();
+                    createdAtHour = createdAt.hour.toString() +
+                        ':' +
+                        createdAt.minute.toString();
+                  }
                   return Column(
                     children: [
                       ListTile(
@@ -146,8 +179,8 @@ class _HomeScreen extends StatelessWidget {
                         leading: CircularCheckBox(
                           value: document['isChecked'],
                           checkColor: Colors.white,
-                          activeColor: switchAppThemeNotifier.currentTheme,
-                          inactiveColor: switchAppThemeNotifier.currentTheme,
+                          activeColor: colorList[index],
+                          inactiveColor: colorList[index],
                           disabledColor: Colors.grey,
                           onChanged: (val) {
                             notifier.updateTodoIsChecked(
@@ -163,6 +196,7 @@ class _HomeScreen extends StatelessWidget {
                               collection: 'to-dos',
                               documentId: document.documentID,
                               initialValue: document['name'],
+                              createdData: createdAt,
                             );
                           },
                           child: Row(
@@ -247,12 +281,12 @@ class _HomeScreen extends StatelessWidget {
                                   )
                                 : null,
                         trailing: InkWell(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           child: Icon(
                             Icons.keyboard_arrow_down,
-                            color:
-                            darkModeNotifier.getThemeData == lightTheme ? Colors.grey : warmGrey,
+                            color: darkModeNotifier.getThemeData == lightTheme
+                                ? Colors.grey
+                                : warmGrey,
                           ),
                         ),
                       ),

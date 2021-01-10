@@ -42,6 +42,15 @@ dependencies:
   # circular check box
   circular_check_box: ^1.0.4
 
+  # Date format
+  intl: ^0.16.1
+
+  # pull to refresh
+  pull_to_refresh: ^1.6.3
+
+  # アイコン
+  font_awesome_flutter: ^8.11.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

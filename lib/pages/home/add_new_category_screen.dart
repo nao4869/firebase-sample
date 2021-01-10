@@ -115,8 +115,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                     height: 50,
                                     child: DecoratedBox(
                                       decoration: BoxDecoration(
-                                        color: notifier.switchAppThemeNotifier
-                                            .currentTheme,
+                                        color: colorList[index],
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(10.0),
                                           bottomLeft: Radius.circular(10.0),
