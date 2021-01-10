@@ -42,6 +42,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   String currentTabDocumentId = '';
   int currentTabIndex = 0;
   int initPosition = 0;
+  bool isInitialLoadCompleted = false;
 
   @override
   void dispose() {
@@ -83,6 +84,15 @@ class HomeScreenNotifier extends ChangeNotifier {
         ),
       ),
     );
+  }
+
+  void setInitialTabId(String categoryId) {
+    if (!isInitialLoadCompleted) {
+      currentTabDocumentId = categoryId;
+    } else {
+      return;
+    }
+    isInitialLoadCompleted = true;
   }
 
   void updateCurrentTabId(String categoryId) {

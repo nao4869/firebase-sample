@@ -86,7 +86,7 @@ class _HomeScreen extends StatelessWidget {
                   initPosition: notifier.initPosition,
                   itemCount: snapshot.data.documents.length,
                   tabBuilder: (context, index) {
-                    notifier.updateCurrentTabId(
+                    notifier.setInitialTabId(
                         snapshot.data.documents[index].documentID);
                     return ConstrainedBox(
                       constraints: BoxConstraints(
