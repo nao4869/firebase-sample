@@ -61,7 +61,7 @@ class _HomeScreen extends StatelessWidget {
               );
             } else {
               return CustomTabView(
-                initPosition: 0,
+                initPosition: notifier.initPosition,
                 itemCount: snapshot.data.documents.length,
                 tabBuilder: (context, index) {
                   notifier.updateCurrentTabId(
@@ -96,10 +96,13 @@ class _HomeScreen extends StatelessWidget {
                   );
                 },
                 onPositionChange: (index) {
+                  notifier.setCurrentIndex(index);
+                  notifier.initPosition = index;
                   notifier.updateCurrentTabId(
                       snapshot.data.documents[index].documentID);
                 },
-                onScroll: (position) {},
+                onScroll: (position) {
+                },
               );
             }
           }),
@@ -190,15 +193,22 @@ class _HomeScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10.0),
                                 child: InkWell(
                                   onTap: () {
-                                    notifier.editTodo(
-                                      collection: 'to-dos',
-                                      documentId: document.documentID,
-                                      initialValue: document['name'],
+                                    notifier.navigateZoomImageScreen(
+                                      document['imagePath'],
+                                      document.documentID,
                                     );
+//                                    notifier.editTodo(
+//                                      collection: 'to-dos',
+//                                      documentId: document.documentID,
+//                                      initialValue: document['name'],
+//                                    );
                                   },
-                                  child: Image.network(
-                                    document['imagePath'],
-                                    fit: BoxFit.cover,
+                                  child: Hero(
+                                    tag: document.documentID,
+                                    child: Image.network(
+                                      document['imagePath'],
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
+import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,12 +38,19 @@ class HomeScreenNotifier extends ChangeNotifier {
   VideoPlayerController videoController;
   Future<void> initializeVideoPlayerFuture;
   String currentTabDocumentId = '';
+  int currentTabIndex = 0;
+  int initPosition = 0;
 
   @override
   void dispose() {
     textController.dispose();
     videoController.dispose();
     super.dispose();
+  }
+
+  void setCurrentIndex(int index) {
+    currentTabIndex = index;
+    notifyListeners();
   }
 
   void navigateSettingScreen() {
@@ -57,6 +65,20 @@ class HomeScreenNotifier extends ChangeNotifier {
     Navigator.of(context, rootNavigator: true).push(
       CupertinoPageRoute(
         builder: (context) => AddCategoryScreen(),
+      ),
+    );
+  }
+
+  void navigateZoomImageScreen(
+    String imagePath,
+    String heroTag,
+  ) {
+    Navigator.of(context, rootNavigator: true).push(
+      CupertinoPageRoute(
+        builder: (context) => ZoomImageScreen(
+          imagePath: imagePath,
+          heroTagName: heroTag,
+        ),
       ),
     );
   }
