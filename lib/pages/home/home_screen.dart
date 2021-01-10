@@ -110,7 +110,9 @@ class _HomeScreen extends StatelessWidget {
                   },
                   pageBuilder: (context, index) {
                     return ColoredBox(
-                      color: darkModeNotifier.isLightTheme ? themeColor : darkBlack,
+                      color: darkModeNotifier.isLightTheme
+                          ? themeColor
+                          : darkBlack,
                       child: createListView(
                         context: context,
                         categoryId: snapshot.data.documents[index].documentID,
@@ -146,7 +148,6 @@ class _HomeScreen extends StatelessWidget {
   }) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
-    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return StreamBuilder(
       stream: Firestore.instance
           .collection('to-dos')
@@ -209,6 +210,9 @@ class _HomeScreen extends StatelessWidget {
                                     maxLines: 10,
                                     style: TextStyle(
                                       fontSize: 15.0,
+                                      color: darkModeNotifier.isLightTheme
+                                          ? black
+                                          : white,
                                       decoration: document['isChecked']
                                           ? TextDecoration.lineThrough
                                           : TextDecoration.none,

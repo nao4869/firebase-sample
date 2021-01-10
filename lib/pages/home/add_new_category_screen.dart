@@ -34,7 +34,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
     final notifier =
         Provider.of<AddCategoryScreenNotifier>(context, listen: false);
     final theme = Provider.of<ThemeProvider>(context, listen: false);
-
+    final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
@@ -134,7 +134,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                         snapshot
                                             .data.documents[index].data['name'],
                                         style: TextStyle(
-                                          color: black,
+                                          color: darkModeNotifier.isLightTheme
+                                              ? black
+                                              : white,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16.0,
                                         ),
