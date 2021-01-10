@@ -4,6 +4,8 @@ import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
+import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
+import 'package:firebase_sample/widgets/buttons/raised_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -261,7 +263,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                   children: [
                     const SizedBox(width: 20),
                     Text(
-                      'when?',
+                      'When?',
                       style: TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
@@ -322,7 +324,7 @@ class HomeScreenNotifier extends ChangeNotifier {
               SizedBox(
                 height: 50,
                 width: size.width,
-                child: _buildFullWidthButton(
+                child: FullWidthButton(
                   title: AppLocalizations.of(context).translate('post'),
                   onPressed: createPostWithoutImage,
                 ),
@@ -389,7 +391,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      _buildRaisedButton(
+                      CommonRaisedButton(
                         title: '削除',
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -397,7 +399,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                         },
                       ),
                       const SizedBox(width: 10),
-                      _buildRaisedButton(
+                      CommonRaisedButton(
                         title: '変更',
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -412,47 +414,6 @@ class HomeScreenNotifier extends ChangeNotifier {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildRaisedButton({
-    String title,
-    VoidCallback onPressed,
-  }) {
-    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
-    return RaisedButton(
-      onPressed: onPressed,
-      color: switchAppThemeNotifier.currentTheme,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
-        ),
-      ),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFullWidthButton({
-    String title,
-    VoidCallback onPressed,
-  }) {
-    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
-    return RaisedButton(
-      onPressed: onPressed,
-      color: switchAppThemeNotifier.currentTheme,
-      child: Text(
-        title,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
     );
   }
 }
