@@ -4,6 +4,7 @@ import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
+import 'package:firebase_sample/widgets/bottom_sheet/date_picker_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:firebase_sample/widgets/buttons/raised_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -36,6 +37,9 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   File _image;
   String _uploadedFileURL;
+
+  String createdDate;
+  bool get isDateValid => createdDate != null;
 
   VideoPlayerController videoController;
   Future<void> initializeVideoPlayerFuture;
@@ -218,6 +222,28 @@ class HomeScreenNotifier extends ChangeNotifier {
     }
   }
 
+  void showModalPicker() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return DatePickerBottomSheet(
+          initialDateString: '',
+          isValid: isDateValid,
+          onPressedNext: null,
+          onPressedDone: () {
+            Navigator.of(context).pop();
+          },
+          onDateTimeChanged: _onSelectedItemChanged,
+        );
+      },
+    );
+  }
+
+  void _onSelectedItemChanged(String value) {
+    createdDate = value;
+    notifyListeners();
+  }
+
   void openModalBottomSheet() {
     final size = MediaQuery.of(context).size;
     final switchAppThemeNotifier =
@@ -266,29 +292,32 @@ class HomeScreenNotifier extends ChangeNotifier {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 40,
-                width: size.width * .9,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 20),
-                    Text(
-                      'When?',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: showModalPicker,
+                child: SizedBox(
+                  height: 40,
+                  width: size.width * .9,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 20),
+                      Text(
+                        'When?',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 20),
-                    Text(
-                      'No remind date',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: switchAppThemeNotifier.currentTheme,
+                      const SizedBox(width: 20),
+                      Text(
+                        createdDate.substring(0, 10) ?? 'No remind date',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: switchAppThemeNotifier.currentTheme,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
