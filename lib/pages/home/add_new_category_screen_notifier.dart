@@ -95,6 +95,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
               onPressed: () {
                 Navigator.of(context).pop();
                 deleteCategory(collection, documentId);
+                deleteCategoryTodoList(documentId);
               },
             ),
           ],
@@ -131,6 +132,24 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     String documentId,
   ) {
     Firestore.instance.collection(collection).document(documentId).delete();
+  }
+
+  void deleteCategoryTodoList(
+    String categoryId,
+  ) {
+    try {
+      Firestore.instance
+          .collection('to-dos')
+          .where('categoryId', isEqualTo: '$categoryId')
+          .getDocuments()
+          .then((snapshot) {
+        for (DocumentSnapshot ds in snapshot.documents) {
+          ds.reference.delete();
+        }
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 
   void openModalBottomSheet() {
