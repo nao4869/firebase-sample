@@ -37,7 +37,9 @@ class _HomeScreen extends StatelessWidget {
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: darkModeNotifier.isLightTheme ? themeColor : darkBlack,
+        backgroundColor: darkModeNotifier.isLightTheme
+            ? switchAppThemeNotifier.currentTheme
+            : darkBlack,
         elevation: 1.0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 12.0),
@@ -47,7 +49,7 @@ class _HomeScreen extends StatelessWidget {
               FontAwesomeIcons.bars,
               size: 20.0,
             ),
-            color: switchAppThemeNotifier.currentTheme,
+            color: white,
           ),
         ),
         actions: [
@@ -55,7 +57,7 @@ class _HomeScreen extends StatelessWidget {
             onTap: notifier.navigateAddCategoryScreen,
             child: Icon(
               Icons.folder_open,
-              color: switchAppThemeNotifier.currentTheme,
+              color: white,
             ),
           ),
           const SizedBox(width: 20),
@@ -63,7 +65,7 @@ class _HomeScreen extends StatelessWidget {
             onTap: notifier.navigateSettingScreen,
             child: Icon(
               Icons.settings,
-              color: switchAppThemeNotifier.currentTheme,
+              color: white,
             ),
           ),
           const SizedBox(width: 20),
