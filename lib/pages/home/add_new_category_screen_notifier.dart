@@ -126,7 +126,8 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   /// カテゴリーを追加する関数
   /// colorのみ指定し、タスク名を追加は行わない
   void addCategory() {
-    final groupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     Navigator.of(context).pop();
     Firestore.instance.collection('category').add({
       'name': taskName,
