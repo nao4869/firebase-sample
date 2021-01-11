@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/models/current_group_provider.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/add_category_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_localizations.dart';
 
@@ -124,9 +126,11 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   /// カテゴリーを追加する関数
   /// colorのみ指定し、タスク名を追加は行わない
   void addCategory() {
+    final groupNotifier = Provider.of<CurrentGroupProvider>(context);
     Navigator.of(context).pop();
     Firestore.instance.collection('category').add({
       'name': taskName,
+      'groupId': groupNotifier.groupId,
     });
     notifyListeners();
   }
