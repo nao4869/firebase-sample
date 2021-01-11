@@ -1,8 +1,6 @@
-import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/widgets/buttons/raised_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_localizations.dart';
 
@@ -18,7 +16,6 @@ class AddCategoryBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SizedBox(
@@ -63,7 +60,7 @@ class AddCategoryBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

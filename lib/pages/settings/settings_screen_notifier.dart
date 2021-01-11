@@ -1,5 +1,6 @@
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/theme_provider.dart';
+import 'package:firebase_sample/pages/settings/edit_user_name_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,5 +22,13 @@ class SettingsScreenNotifier extends ChangeNotifier {
   // ダークモード切り替え関数
   void updateDarkMode(bool val) {
     themeNotifier.setThemeData = !val;
+  }
+
+  void navigateEditUserNameScreen() {
+    Navigator.of(context, rootNavigator: true).push(
+      CupertinoPageRoute(
+        builder: (context) => EditUserNameScreen(),
+      ),
+    );
   }
 }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/current_group_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
-import 'package:firebase_sample/widgets/text_form_field.dart';
+import 'package:firebase_sample/widgets/text_form/text_form_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

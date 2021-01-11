@@ -35,11 +35,17 @@ class _SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
       appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: switchAppThemeNotifier.currentTheme,
-          title: Text(
-            'User Settings',
-          )),
+        centerTitle: true,
+        backgroundColor: switchAppThemeNotifier.currentTheme,
+        title: Text(
+          'User Settings',
+          style: TextStyle(
+            color: white,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -65,7 +71,7 @@ class _SettingsScreen extends StatelessWidget {
       // ダークモードの切り替え - データベース更新
       SettingRow(
         title: AppLocalizations.of(context).translate('editUserName'),
-        onTap: () {},
+        onTap: notifier.navigateEditUserNameScreen,
       ),
       SettingRow(
         title: AppLocalizations.of(context).translate('editUserIcon'),

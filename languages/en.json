@@ -181,5 +181,6 @@
   "addCategory": "Add Category",
   "editUserName": "Edit UserName",
   "editUserIcon": "Edit Icon",
-  "authenticatePhone": "Authenticate with phone number"
+  "authenticatePhone": "Authenticate with phone number",
+  "editProfileTitle": "Edit Profile"
 }
