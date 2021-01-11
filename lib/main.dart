@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
-import 'package:firebase_sample/models/current_group_provider.dart';
-import 'package:firebase_sample/models/device_id_provider.dart';
-import 'package:firebase_sample/models/post_provider.dart';
+import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/device_id_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +16,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'utility/device_data.dart';
 import 'app_localizations.dart';
 import 'constants/colors.dart';
-import 'models/switch_app_theme_provider.dart';
-import 'models/theme_provider.dart';
+import 'models/provider/switch_app_theme_provider.dart';
+import 'models/provider/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool firstTime = prefs.getBool('isInitial');
+  DocumentSnapshot referenceToUser;
   String groupId = '';
 
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -74,14 +75,21 @@ void main() async {
     });
   }
 
+  // ログイン中ユーザーへのReferenceを取得
+  Firestore.instance
+      .collection('users')
+      .where('deviceId', isEqualTo: deviceData['androidId'])
+      .getDocuments()
+      .then((snapshot) {
+    for (DocumentSnapshot documentSnapshot in snapshot.documents) {
+      referenceToUser = documentSnapshot;
+      print(referenceToUser.reference.documentID);
+    }
+  });
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => PostProvider(
-            posts: [],
-          ),
-        ),
         ChangeNotifierProvider(
           create: (_) => HomeScreenNotifier(),
         ),
@@ -99,6 +107,11 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => CurrentGroupProvider(
             groupId: groupId,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserReferenceProvider(
+            referenceToUser: referenceToUser,
           ),
         ),
         ChangeNotifierProvider(

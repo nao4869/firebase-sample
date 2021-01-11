@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,18 +65,11 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   // FireStoreの該当ユーザー名を更新
   // Todo: 該当ユーザーへのReferenceをProviderで保持する
   void updateUserName() {
-    final notifier = Provider.of<DeviceIdProvider>(context, listen: false);
+    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
     Firestore.instance
         .collection('users')
-        .where('deviceId', isEqualTo: notifier.androidUid)
-        .getDocuments()
-        .then((snapshot) {
-      for (DocumentSnapshot documentSnapshot in snapshot.documents) {
-        documentSnapshot.reference.updateData({
-          "name": name,
-        });
-      }
-    });
+        .document(notifier.referenceToUser.documentID)
+        .updateData({"name": name});
     Navigator.of(context).pop();
   }
 }
