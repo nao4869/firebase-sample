@@ -28,6 +28,8 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
 
       document.get().then((doc) {
         textController.text = doc['name'].toString();
+        textController.selection = TextSelection.fromPosition(
+            TextPosition(offset: textController.text.length));
       });
     });
   }
