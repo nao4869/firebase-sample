@@ -122,16 +122,6 @@ class _EditUserNameScreen extends StatelessWidget {
                               onChanged: notifier.onChange,
                               resetTextField: notifier.resetTextField,
                             ),
-//                            child: CustomTextFormField(
-//                              formKey: notifier.nameFieldFormKey,
-//                              height: notifier.textFormHeight,
-//                              onValidate: notifier.onValidate,
-//                              onChanged: notifier.onNameChange,
-//                              hintText: AppLocalizations.of(context)
-//                                  .translate('nameTitle'),
-//                              initialValue: notifier.name,
-//                              maxLines: 1,
-//                            ),
                           ),
                         ],
                       ),

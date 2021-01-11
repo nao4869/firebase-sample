@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_sample/models/current_group_provider.dart';
+import 'package:firebase_sample/models/device_id_provider.dart';
 import 'package:firebase_sample/models/post_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
@@ -98,6 +99,12 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => CurrentGroupProvider(
             groupId: groupId,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DeviceIdProvider(
+            androidUid: deviceData['androidId'],
+            iosUid: deviceData['identifierForVendor'],
           ),
         ),
       ],
