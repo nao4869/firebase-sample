@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_sample/constants/colors.dart';
-import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
-import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
-import 'package:firebase_sample/widgets/buttons/raised_button.dart';
-import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
+import 'package:firebase_sample/widgets/bottom_sheet/add_category_bottom_sheet.dart';
+import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../app_localizations.dart';
 
@@ -172,60 +168,14 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   }
 
   void openModalBottomSheet() {
-    final size = MediaQuery.of(context).size;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            height: size.width * .85,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: size.width * .1,
-                  width: size.width * .9,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: TextField(
-                      maxLines: 20,
-                      autofocus: true,
-                      onChanged: (String text) {
-                        onNameChange(text);
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(10.0),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 50,
-                  width: size.width * .9,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CommonRaisedButton(
-                        title: AppLocalizations.of(context)
-                            .translate('addCategory'),
-                        onPressed: addCategory,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
+        return AddCategoryBottomSheet(
+          onNameChange: (String text) {
+            onNameChange(text);
+          },
+          onPressed: addCategory,
         );
       },
     );
@@ -247,54 +197,17 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         ),
       ),
       builder: (BuildContext context) {
-        return Padding(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SizedBox(
-                  height: size.width * .2,
-                  width: size.width * .9,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: TextField(
-                      maxLines: 20,
-                      autofocus: true,
-                      onChanged: (String text) {
-                        onNameChange(text);
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(10.0),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 50,
-                width: size.width,
-                child: FullWidthButton(
-                  title: 'Update Category',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    updateCategory(collection, documentId);
-                  },
-                ),
-              ),
-            ],
-          ),
+        return EditCategoryBottomSheet(
+          collection: collection,
+          documentId: documentId,
+          initialValue: initialValue,
+          onPressed: () {
+            Navigator.of(context).pop();
+            updateCategory(collection, documentId);
+          },
+          onNameChange: (String text) {
+            onNameChange(text);
+          },
         );
       },
     );

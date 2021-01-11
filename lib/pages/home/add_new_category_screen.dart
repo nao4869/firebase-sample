@@ -6,9 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_sample/app_localizations.dart';
-import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/theme_provider.dart';
-import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:provider/provider.dart';
 
 class AddCategoryScreen extends StatelessWidget {
