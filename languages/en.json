@@ -178,5 +178,8 @@
   "creatingPostWillBeDeleted": "Currently creating post will not be saved",
   "editReply": "Edit Reply",
   "deleteReply": "Delete Reply",
-  "addCategory": "Add Category"
+  "addCategory": "Add Category",
+  "editUserName": "Edit UserName",
+  "editUserIcon": "Edit Icon",
+  "authenticatePhone": "Authenticate with phone number"
 }

@@ -52,39 +52,41 @@ class SettingRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final verticalPadding = onChange != null ? 4.0 : 12.0;
     final theme = Provider.of<ThemeProvider>(context);
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: verticalPadding,
-              horizontal: 20,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: theme.isLightTheme ? black : white,
-                    fontSize: 17.0,
+    return ColoredBox(
+      color: white,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: verticalPadding,
+                horizontal: 20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: theme.isLightTheme ? black : white,
+                      fontSize: 17.0,
+                    ),
                   ),
-                ),
-                isCheckBox
-                    ? buildRightCheckBox(context)
-                    : buildRightItem(context),
-              ],
+                  isCheckBox
+                      ? buildRightCheckBox(context)
+                      : buildRightItem(context),
+                ],
+              ),
             ),
-          ),
-          const Divider(
-            color: Colors.grey,
-            height: 1,
-            indent: 20,
-            thickness: .5,
-          ),
-        ],
+            const Divider(
+              height: 1,
+              indent: 20,
+              thickness: .5,
+            ),
+          ],
+        ),
       ),
     );
   }

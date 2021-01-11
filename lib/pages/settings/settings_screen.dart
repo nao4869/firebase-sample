@@ -35,8 +35,11 @@ class _SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
       appBar: AppBar(
-        backgroundColor: switchAppThemeNotifier.currentTheme,
-      ),
+          centerTitle: true,
+          backgroundColor: switchAppThemeNotifier.currentTheme,
+          title: Text(
+            'User Settings',
+          )),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -61,18 +64,32 @@ class _SettingsScreen extends StatelessWidget {
       ),
       // ダークモードの切り替え - データベース更新
       SettingRow(
-        title: AppLocalizations.of(context).translate('darkMode'),
-        isEnable: notifier.themeNotifier.darkMode,
-        onChange: notifier.updateDarkMode,
+        title: AppLocalizations.of(context).translate('editUserName'),
+        onTap: () {},
+      ),
+      SettingRow(
+        title: AppLocalizations.of(context).translate('editUserIcon'),
+        onTap: () {},
+      ),
+      SettingRow(
+        title: AppLocalizations.of(context).translate('authenticatePhone'),
+        onTap: () {},
       ),
     ];
   }
 
   List<Widget> buildAppSettingsSection(BuildContext context) {
+    final notifier = Provider.of<SettingsScreenNotifier>(context);
     return [
       SettingTitle(
-        title: AppLocalizations.of(context).translate('editAppTheme'),
+        title: AppLocalizations.of(context).translate('accountSettings'),
       ),
+      // ダークモードの切り替え - データベース更新
+//      SettingRow(
+//        title: AppLocalizations.of(context).translate('darkMode'),
+//        isEnable: notifier.themeNotifier.darkMode,
+//        onChange: notifier.updateDarkMode,
+//      ),
       SettingRow(
         title: AppLocalizations.of(context).translate('editDesignTheme'),
         onTap: () {

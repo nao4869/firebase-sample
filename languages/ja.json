@@ -177,5 +177,8 @@
   "creatingPostWillBeDeleted": "作成中の投稿は削除されます",
   "editReply": "リプライを編集する",
   "deleteReply": "リプライを削除する",
-  "addCategory": "カテゴリー追加"
+  "addCategory": "カテゴリー追加",
+  "editUserName": "ニックネーム変更",
+  "editUserIcon": "アイコン変更",
+  "authenticatePhone": "電話番号認証"
 }
