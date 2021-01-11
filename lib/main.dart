@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_sample/models/post_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'utility/device_data.dart';
 import 'app_localizations.dart';
 import 'constants/colors.dart';
 import 'models/switch_app_theme_provider.dart';
@@ -17,9 +22,34 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool firstTime = prefs.getBool('isInitial');
 
+  final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+
   if (firstTime == null || firstTime) {
+    Map<String, dynamic> deviceData;
+
+    try {
+      if (Platform.isAndroid) {
+        deviceData = readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+      } else if (Platform.isIOS) {
+        deviceData = readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
+      }
+    } on PlatformException {
+      deviceData = <String, dynamic>{
+        'Error:': 'Failed to get platform version.'
+      };
+    }
+
     // 初回起動時のみ、groupを追加
-    Firestore.instance.collection('groups').add({});
+    final documentReference =
+        await Firestore.instance.collection('groups').add({});
+    Firestore.instance.collection('users').add({
+      'name': 'Not Settings',
+      'imagePath': null,
+      'createdAt': Timestamp.fromDate(DateTime.now()),
+      'deviceId': deviceData['androidId'],
+      'groupId': documentReference.documentID,
+    });
+
     prefs.setBool('isInitial', false);
   }
 
