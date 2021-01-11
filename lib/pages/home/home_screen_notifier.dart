@@ -320,7 +320,9 @@ class HomeScreenNotifier extends ChangeNotifier {
                       ),
                       const SizedBox(width: 20),
                       Text(
-                        createdDate.substring(0, 10) ?? 'No remind date',
+                        createdDate != null
+                            ? createdDate.substring(0, 10)
+                            : 'No remind date',
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
