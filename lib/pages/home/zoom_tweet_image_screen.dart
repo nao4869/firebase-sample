@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
-import 'package:firebase_sample/models/theme_provider.dart';
+import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

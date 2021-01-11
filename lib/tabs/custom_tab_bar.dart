@@ -1,6 +1,6 @@
 import 'package:firebase_sample/constants/colors.dart';
-import 'package:firebase_sample/models/switch_app_theme_provider.dart';
-import 'package:firebase_sample/models/theme_provider.dart';
+import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,6 @@
 import 'package:firebase_sample/constants/colors.dart';
-import 'package:firebase_sample/models/switch_app_theme_provider.dart';
-import 'package:firebase_sample/models/theme_provider.dart';
+import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

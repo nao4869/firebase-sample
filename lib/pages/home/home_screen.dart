@@ -1,10 +1,9 @@
 import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
-import 'package:firebase_sample/constants/texts.dart';
-import 'package:firebase_sample/models/current_group_provider.dart';
-import 'package:firebase_sample/models/switch_app_theme_provider.dart';
-import 'package:firebase_sample/models/theme_provider.dart';
+import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:flutter/cupertino.dart';

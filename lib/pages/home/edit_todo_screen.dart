@@ -1,9 +1,8 @@
 import 'dart:io';
 
+import 'package:firebase_sample/models/provider/post_provider.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_sample/models/post.dart';
-import 'package:firebase_sample/models/post_provider.dart';
-import 'package:firebase_sample/widgets/text_form/text_form_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
