@@ -5,6 +5,7 @@ import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/date_picker_bottom_sheet.dart';
+import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:firebase_sample/widgets/buttons/raised_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -388,82 +389,26 @@ class HomeScreenNotifier extends ChangeNotifier {
     );
   }
 
-//  _buildRaisedButton(
-//  title: AppLocalizations.of(context).translate('addImage'),
-//  onPressed: uploadFile,
-//  ),
-
   void editTodo({
     String collection,
     String documentId,
     String initialValue,
-    DateTime createdData,
   }) {
-    final size = MediaQuery.of(context).size;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            height: size.width * .9,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 50,
-                  width: size.width * .9,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: TextFormField(
-                      maxLines: 20,
-                      autofocus: true,
-                      initialValue: initialValue,
-                      onChanged: (String text) {
-                        onNameChange(text);
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(10.0),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 50,
-                  width: size.width * .9,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CommonRaisedButton(
-                        title: '削除',
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          deleteTodo(collection, documentId);
-                        },
-                      ),
-                      const SizedBox(width: 10),
-                      CommonRaisedButton(
-                        title: '変更',
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          updateTodoName(collection, documentId);
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
+        return EditCategoryBottomSheet(
+          buttonTitle: 'Update Todo',
+          collection: collection,
+          documentId: documentId,
+          initialValue: initialValue,
+          onPressed: () {
+            Navigator.of(context).pop();
+            updateTodoName(collection, documentId);
+          },
+          onNameChange: (String text) {
+            onNameChange(text);
+          },
         );
       },
     );

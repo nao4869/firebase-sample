@@ -186,7 +186,6 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     String documentId,
     String initialValue,
   }) {
-    final size = MediaQuery.of(context).size;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -198,6 +197,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       ),
       builder: (BuildContext context) {
         return EditCategoryBottomSheet(
+          buttonTitle: 'Update Category',
           collection: collection,
           documentId: documentId,
           initialValue: initialValue,

@@ -198,7 +198,6 @@ class _HomeScreen extends StatelessWidget {
                                 collection: 'to-dos',
                                 documentId: document.documentID,
                                 initialValue: document['name'],
-                                createdData: createdAt,
                               );
                             },
                             child: Row(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class EditCategoryBottomSheet extends StatelessWidget {
   EditCategoryBottomSheet({
+    this.buttonTitle,
     this.collection,
     this.documentId,
     this.initialValue,
@@ -11,6 +12,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
     this.onNameChange,
   });
 
+  final String buttonTitle;
   final String collection;
   final String documentId;
   final String initialValue;
@@ -57,7 +59,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
             height: 50,
             width: size.width,
             child: FullWidthButton(
-              title: 'Update Category',
+              title: buttonTitle,
               onPressed: onPressed,
             ),
           ),
