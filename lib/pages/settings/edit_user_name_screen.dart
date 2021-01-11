@@ -25,6 +25,7 @@ class EditUserNameScreen extends StatelessWidget {
         context: context,
         switchAppThemeNotifier: Provider.of(context, listen: false),
         themeNotifier: Provider.of(context, listen: false),
+        userReference: Provider.of(context, listen: false),
       ),
       child: _EditUserNameScreen(),
     );
@@ -89,7 +90,7 @@ class _EditUserNameScreen extends StatelessWidget {
           ),
           body: SafeArea(
             child: ColoredBox(
-              color: theme.isLightTheme ? white : darkBlack,
+              color: theme.isLightTheme ? themeColor : darkBlack,
               child: Stack(
                 children: [
                   SingleChildScrollView(

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -16,9 +15,21 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
     this.context,
     this.switchAppThemeNotifier,
     this.themeNotifier,
+    this.userReference,
   }) {
     textController.text = '';
     profileFocusNode = FocusNode();
+
+    // ログイン中ユーザー名を取得
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      var document = Firestore.instance
+          .collection('users')
+          .document('${userReference.referenceToUser.documentID}');
+
+      document.get().then((doc) {
+        textController.text = doc['name'].toString();
+      });
+    });
   }
 
   final formKey = GlobalKey<FormState>();
@@ -34,6 +45,7 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
   final ThemeProvider themeNotifier;
+  final UserReferenceProvider userReference;
   final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
 
   String onValidate(String text) {
