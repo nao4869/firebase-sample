@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
+import 'package:firebase_sample/models/current_group_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
 import 'package:firebase_sample/widgets/text_form_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,6 +34,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
         Provider.of<AddCategoryScreenNotifier>(context, listen: false);
     final theme = Provider.of<ThemeProvider>(context, listen: false);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
+    final currentGroupNotifier = Provider.of<CurrentGroupProvider>(context);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
@@ -71,7 +73,10 @@ class _CategoryPhotoScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('category').snapshots(),
+        stream: Firestore.instance
+            .collection('category')
+            .where('groupId', isEqualTo: currentGroupNotifier.groupId)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
           if (snapshot.hasError || snapshot.data == null) {

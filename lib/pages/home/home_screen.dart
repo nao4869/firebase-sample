@@ -2,6 +2,7 @@ import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/constants/texts.dart';
+import 'package:firebase_sample/models/current_group_provider.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/theme_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
@@ -35,6 +36,7 @@ class _HomeScreen extends StatelessWidget {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
+    final currentGroupNotifier = Provider.of<CurrentGroupProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: darkModeNotifier.isLightTheme
@@ -73,7 +75,10 @@ class _HomeScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: StreamBuilder(
-            stream: Firestore.instance.collection('category').snapshots(),
+            stream: Firestore.instance
+                .collection('category')
+                .where('groupId', isEqualTo: currentGroupNotifier.groupId)
+                .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               // エラーの場合
