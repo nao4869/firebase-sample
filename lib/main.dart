@@ -1,16 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/post_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_localizations.dart';
 import 'constants/colors.dart';
 import 'models/switch_app_theme_provider.dart';
 import 'models/theme_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool firstTime = prefs.getBool('isInitial');
+
+  if (firstTime == null || firstTime) {
+    // 初回起動時のみ、groupを追加
+    Firestore.instance.collection('groups').add({});
+    prefs.setBool('isInitial', false);
+  }
+
   runApp(
     MultiProvider(
       providers: [
