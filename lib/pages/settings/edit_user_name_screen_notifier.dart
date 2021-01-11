@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/models/device_id_provider.dart';
 import 'package:firebase_sample/models/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_localizations.dart';
 
@@ -56,5 +59,23 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   void resetTextField() {
     onChange('');
     formKey.currentState.reset();
+  }
+
+  // FireStoreの該当ユーザー名を更新
+  // Todo: 該当ユーザーへのReferenceをProviderで保持する
+  void updateUserName() {
+    final notifier = Provider.of<DeviceIdProvider>(context, listen: false);
+    Firestore.instance
+        .collection('users')
+        .where('deviceId', isEqualTo: notifier.androidUid)
+        .getDocuments()
+        .then((snapshot) {
+      for (DocumentSnapshot documentSnapshot in snapshot.documents) {
+        documentSnapshot.reference.updateData({
+          "name": name,
+        });
+      }
+    });
+    Navigator.of(context).pop();
   }
 }

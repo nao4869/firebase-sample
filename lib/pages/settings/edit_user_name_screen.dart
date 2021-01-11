@@ -129,30 +129,13 @@ class _EditUserNameScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   RoundedBottomButton(
-                    isEnable: notifier.isValid,
+                    isEnable: notifier.name.isNotEmpty,
                     title: AppLocalizations.of(context).translate('decide'),
-                    color: themeProvider.currentTheme,
-                    onPressed: () {},
+                    color: notifier.name.isNotEmpty
+                        ? themeProvider.currentTheme
+                        : grey,
+                    onPressed: notifier.updateUserName,
                   ),
-//                  SizedBox(
-//                    width: size.width * .9,
-//                    height: 50,
-//                    child: RaisedButton(
-//                      onPressed: () {},
-//                      shape: RoundedRectangleBorder(
-//                        borderRadius: BorderRadius.circular(10),
-//                      ),
-//                      color: themeProvider.currentTheme,
-//                      child: Text(
-//                        AppLocalizations.of(context).translate('decide'),
-//                        style: TextStyle(
-//                          color: white,
-//                          fontSize: 20.0,
-//                          fontWeight: FontWeight.bold,
-//                        ),
-//                      ),
-//                    ),
-//                  ),
                 ],
               ),
             ),
