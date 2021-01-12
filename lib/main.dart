@@ -40,33 +40,43 @@ void main() async {
 
   if (firstTime == null || firstTime) {
     // 初回起動時のみ、groupを追加
-    final documentReference =
-        await Firestore.instance.collection('groups').add({
-      'deviceId': deviceData['androidId'],
+    final fireStoreInstance = Firestore.instance;
+    fireStoreInstance.collection('groups').add({
+      'name': 'Group Name',
       'createdAt': Timestamp.fromDate(DateTime.now()),
-    });
+      'deviceId': FieldValue.arrayUnion([
+        deviceData['androidId'],
+      ]),
+    }).then((value) {
+      fireStoreInstance
+          .collection('groups')
+          .document(value.documentID)
+          .collection('users')
+          .add({
+        // Groupのサブコレクションに、Userを作成
+        'name': 'UserName',
+        'imagePath': null,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+        'deviceId': deviceData['androidId'],
+      });
 
-    // groupIdを参照するuserを作成
-    Firestore.instance.collection('users').add({
-      'name': 'Not Settings',
-      'imagePath': null,
-      'createdAt': Timestamp.fromDate(DateTime.now()),
-      'deviceId': deviceData['androidId'],
-      'groupId': documentReference.documentID,
+      fireStoreInstance
+          .collection('groups')
+          .document(value.documentID)
+          .collection('categories')
+          .add({
+        // Groupのサブコレクションに、Categoryを作成
+        'name': 'Tutorial',
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
+      groupId = value.documentID;
     });
-
-    // groupIdを参照するcategoryを作成
-    Firestore.instance.collection('category').add({
-      'name': 'Tutorial',
-      'groupId': documentReference.documentID,
-    });
-    groupId = documentReference.documentID;
     prefs.setBool('isInitial', false);
   } else {
     // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
     Firestore.instance
         .collection('groups')
-        .where('deviceId', isEqualTo: deviceData['androidId'])
+        .where('deviceId', arrayContains: deviceData['androidId'])
         .getDocuments()
         .then((snapshot) {
       for (DocumentSnapshot ds in snapshot.documents) {
@@ -83,7 +93,6 @@ void main() async {
       .then((snapshot) {
     for (DocumentSnapshot documentSnapshot in snapshot.documents) {
       referenceToUser = documentSnapshot;
-      print(referenceToUser.reference.documentID);
     }
   });
 
