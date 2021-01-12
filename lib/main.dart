@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -21,6 +22,7 @@ import 'models/provider/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool firstTime = prefs.getBool('isInitial');
   DocumentSnapshot referenceToUser;
