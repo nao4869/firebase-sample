@@ -7,7 +7,7 @@ import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/date_picker_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -105,7 +105,7 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   void createPostWithoutImage() {
     Navigator.of(context).pop();
-    Firestore.instance.collection('to-dos').add({
+    FirebaseFirestore.instance.collection('to-dos').add({
       'name': taskName,
       'createdAt': Timestamp.fromDate(DateTime.now()),
       'imagePath': null,
@@ -120,20 +120,20 @@ class HomeScreenNotifier extends ChangeNotifier {
     String documentId,
     bool isChecked,
   ) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection(collection)
-        .document(documentId)
-        .updateData({"isChecked": isChecked});
+        .doc(documentId)
+        .update({"isChecked": isChecked});
   }
 
   void updateTodoName(
     String collection,
     String documentId,
   ) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection(collection)
-        .document(documentId)
-        .updateData({"name": taskName});
+        .doc(documentId)
+        .update({"name": taskName});
   }
 
   // 単一のTodoを指定されたFireStore Collectionから削除します。
@@ -141,7 +141,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     String collection,
     String documentId,
   ) {
-    Firestore.instance.collection(collection).document(documentId).delete();
+    FirebaseFirestore.instance.collection(collection).doc(documentId).delete();
   }
 
   void onNameChange(String text) {
@@ -173,15 +173,15 @@ class HomeScreenNotifier extends ChangeNotifier {
       maxWidth: 800,
     );
 
-    StorageReference storageReference = FirebaseStorage.instance
+    firebase_storage.Reference storageReference = firebase_storage
+        .FirebaseStorage.instance
         .ref()
         .child('images/${Path.basename(_image.path)}}');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
+    await storageReference.putFile(_image);
 
     storageReference.getDownloadURL().then((fileURL) {
       _uploadedFileURL = fileURL;
-      Firestore.instance.collection('to-dos').add({
+      FirebaseFirestore.instance.collection('to-dos').add({
         'name': taskName,
         'createdAt': DateTime.now().toIso8601String(),
         'imagePath': _uploadedFileURL,
@@ -197,18 +197,18 @@ class HomeScreenNotifier extends ChangeNotifier {
     try {
       final file = await ImagePicker.pickVideo(source: ImageSource.gallery);
 
-      StorageReference storageReference = FirebaseStorage.instance
+      firebase_storage.Reference storageReference = firebase_storage
+          .FirebaseStorage.instance
           .ref()
           .child('videos/${Path.basename(file.path)}}');
 
-      StorageUploadTask uploadTask = storageReference.putFile(
-          file, StorageMetadata(contentType: 'video/mp4'));
-      await uploadTask.onComplete;
+      await storageReference.putFile(
+          file, firebase_storage.SettableMetadata(contentType: 'video/mp4'));
 
       storageReference.getDownloadURL().then((fileURL) {
         _uploadedFileURL = fileURL;
 
-        Firestore.instance.collection('to-dos').add({
+        FirebaseFirestore.instance.collection('to-dos').add({
           'name': taskName,
           'createdAt': DateTime.now().toIso8601String(),
           'imagePath': null,

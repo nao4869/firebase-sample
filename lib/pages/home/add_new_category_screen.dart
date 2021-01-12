@@ -73,7 +73,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection('category')
             .where('groupId', isEqualTo: currentGroupNotifier.groupId)
             .snapshots(),
@@ -92,14 +92,13 @@ class _CategoryPhotoScreen extends StatelessWidget {
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: snapshot.data.documents.length,
+                    itemCount: snapshot.data.docs.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
                           notifier.displayActionSheet(
                             collection: 'category',
-                            documentId:
-                                snapshot.data.documents[index].documentID,
+                            documentId: snapshot.data.docs[index].id,
                           );
                         },
                         child: Padding(
@@ -134,8 +133,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Text(
-                                        snapshot
-                                            .data.documents[index].data['name'],
+                                        snapshot.data.docs[index].get(['name']),
                                         style: TextStyle(
                                           color: darkModeNotifier.isLightTheme
                                               ? black

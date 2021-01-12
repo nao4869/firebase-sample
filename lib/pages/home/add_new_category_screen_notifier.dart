@@ -129,7 +129,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     Navigator.of(context).pop();
-    Firestore.instance.collection('category').add({
+    FirebaseFirestore.instance.collection('category').add({
       'name': taskName,
       'groupId': groupNotifier.groupId,
     });
@@ -141,29 +141,29 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     String collection,
     String documentId,
   ) {
-    Firestore.instance.collection(collection).document(documentId).delete();
+    FirebaseFirestore.instance.collection(collection).doc(documentId).delete();
   }
 
   void updateCategory(
     String collection,
     String documentId,
   ) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection(collection)
-        .document(documentId)
-        .updateData({"name": taskName});
+        .doc(documentId)
+        .update({"name": taskName});
   }
 
   void deleteCategoryTodoList(
     String categoryId,
   ) {
     try {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection('to-dos')
           .where('categoryId', isEqualTo: '$categoryId')
-          .getDocuments()
+          .get()
           .then((snapshot) {
-        for (DocumentSnapshot ds in snapshot.documents) {
+        for (DocumentSnapshot ds in snapshot.docs) {
           ds.reference.delete();
         }
       });

@@ -40,7 +40,7 @@ void main() async {
 
   if (firstTime == null || firstTime) {
     // 初回起動時のみ、groupを追加
-    final fireStoreInstance = Firestore.instance;
+    final fireStoreInstance = FirebaseFirestore.instance;
     fireStoreInstance.collection('groups').add({
       'name': 'Group Name',
       'createdAt': Timestamp.fromDate(DateTime.now()),
@@ -50,7 +50,7 @@ void main() async {
     }).then((value) {
       fireStoreInstance
           .collection('groups')
-          .document(value.documentID)
+          .doc(value.id)
           .collection('users')
           .add({
         // Groupのサブコレクションに、Userを作成
@@ -62,36 +62,36 @@ void main() async {
 
       fireStoreInstance
           .collection('groups')
-          .document(value.documentID)
+          .doc(value.id)
           .collection('categories')
           .add({
         // Groupのサブコレクションに、Categoryを作成
         'name': 'Tutorial',
         'createdAt': Timestamp.fromDate(DateTime.now()),
       });
-      groupId = value.documentID;
+      groupId = value.id;
     });
     prefs.setBool('isInitial', false);
   } else {
     // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('groups')
         .where('deviceId', arrayContains: deviceData['androidId'])
-        .getDocuments()
+        .get()
         .then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.documents) {
-        groupId = ds.reference.documentID;
+      for (DocumentSnapshot ds in snapshot.docs) {
+        groupId = ds.reference.id;
       }
     });
   }
 
   // ログイン中ユーザーへのReferenceを取得
-  Firestore.instance
+  FirebaseFirestore.instance
       .collection('users')
       .where('deviceId', isEqualTo: deviceData['androidId'])
-      .getDocuments()
+      .get()
       .then((snapshot) {
-    for (DocumentSnapshot documentSnapshot in snapshot.documents) {
+    for (DocumentSnapshot documentSnapshot in snapshot.docs) {
       referenceToUser = documentSnapshot;
     }
   });

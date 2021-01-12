@@ -22,9 +22,9 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
 
     // ログイン中ユーザー名を取得
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      var document = Firestore.instance
+      var document = FirebaseFirestore.instance
           .collection('users')
-          .document('${userReference.referenceToUser.documentID}');
+          .doc('${userReference.referenceToUser.id}');
 
       document.get().then((doc) {
         textController.text = doc['name'].toString();
@@ -80,10 +80,10 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   // Todo: 該当ユーザーへのReferenceをProviderで保持する
   void updateUserName() {
     final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('users')
-        .document(notifier.referenceToUser.documentID)
-        .updateData({"name": name});
+        .doc(notifier.referenceToUser.id)
+        .update({"name": name});
     Navigator.of(context).pop();
   }
 }

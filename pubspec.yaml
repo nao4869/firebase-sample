@@ -40,10 +40,9 @@ dependencies:
   chewie:
 
   # ファイルストレージ
-  firebase_core: ^0.4.5
-  firebase_storage: ^3.0.3
-  firebase_auth: ^0.16.0
-  cloud_firestore: ^0.12.9+5
+  firebase_core: ^0.6.0
+  firebase_storage: ^6.0.0
+  cloud_firestore: ^0.15.0
 
   # circular check box
   circular_check_box: ^1.0.4

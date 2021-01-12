@@ -74,7 +74,7 @@ class _HomeScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: StreamBuilder(
-            stream: Firestore.instance
+            stream: FirebaseFirestore.instance
                 .collection('category')
                 .where('groupId', isEqualTo: currentGroupNotifier.groupId)
                 .snapshots(),
@@ -90,10 +90,9 @@ class _HomeScreen extends StatelessWidget {
               } else {
                 return CustomTabView(
                   initPosition: notifier.initPosition,
-                  itemCount: snapshot.data.documents.length,
+                  itemCount: snapshot.data.docs.length,
                   tabBuilder: (context, index) {
-                    notifier.setInitialTabId(
-                        snapshot.data.documents[index].documentID);
+                    notifier.setInitialTabId(snapshot.data.docs[index].id);
                     return ConstrainedBox(
                       constraints: BoxConstraints(
                         minWidth: 100,
@@ -108,8 +107,8 @@ class _HomeScreen extends StatelessWidget {
                           ),
                         ),
                         child: Tab(
-                          text: snapshot.data.documents[index].data['name']
-                              .toString(),
+                          text: snapshot.data.docs[index]
+                              .get(['name']).toString(),
                         ),
                       ),
                     );
@@ -121,7 +120,7 @@ class _HomeScreen extends StatelessWidget {
                           : darkBlack,
                       child: createListView(
                         context: context,
-                        categoryId: snapshot.data.documents[index].documentID,
+                        categoryId: snapshot.data.docs[index].id,
                         index: index,
                       ),
                     );
@@ -129,8 +128,7 @@ class _HomeScreen extends StatelessWidget {
                   onPositionChange: (index) {
                     notifier.setCurrentIndex(index);
                     notifier.initPosition = index;
-                    notifier.updateCurrentTabId(
-                        snapshot.data.documents[index].documentID);
+                    notifier.updateCurrentTabId(snapshot.data.docs[index].id);
                   },
                   onScroll: (position) {},
                 );
@@ -155,7 +153,7 @@ class _HomeScreen extends StatelessWidget {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     return StreamBuilder(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection('to-dos')
           .where('categoryId', isEqualTo: '$categoryId')
           .snapshots(),
@@ -165,20 +163,20 @@ class _HomeScreen extends StatelessWidget {
           return Container();
         } else {
           return ListView(
-            children: snapshot.data.documents.map(
+            children: snapshot.data.docs.map(
               (DocumentSnapshot document) {
                 if (document == null) {
                   return Container();
                 } else {
-                  final data = document.data;
-                  DateTime createdAt;
-                  var createdAtHour;
-                  if (data['createdAt'] is Timestamp) {
-                    createdAt = data['createdAt'].toDate();
-                    createdAtHour = createdAt.hour.toString() +
-                        ':' +
-                        createdAt.minute.toString();
-                  }
+//                  final data = document.data;
+//                  DateTime createdAt;
+//                  var createdAtHour;
+//                  if (data['createdAt'] is Timestamp) {
+//                    createdAt = data['createdAt'].toDate();
+//                    createdAtHour = createdAt.hour.toString() +
+//                        ':' +
+//                        createdAt.minute.toString();
+//                  }
                   return Column(
                     children: [
                       Card(
@@ -193,7 +191,7 @@ class _HomeScreen extends StatelessWidget {
                             onChanged: (val) {
                               notifier.updateTodoIsChecked(
                                 'to-dos',
-                                document.documentID,
+                                document.id,
                                 !document['isChecked'],
                               );
                             },
@@ -202,7 +200,7 @@ class _HomeScreen extends StatelessWidget {
                             onTap: () {
                               notifier.editTodo(
                                 collection: 'to-dos',
-                                documentId: document.documentID,
+                                documentId: document.id,
                                 initialValue: document['name'],
                               );
                             },
@@ -241,7 +239,7 @@ class _HomeScreen extends StatelessWidget {
                                       onTap: () {
                                         notifier.navigateZoomImageScreen(
                                           document['imagePath'],
-                                          document.documentID,
+                                          document.id,
                                         );
 //                                    notifier.editTodo(
 //                                      collection: 'to-dos',
@@ -250,7 +248,7 @@ class _HomeScreen extends StatelessWidget {
 //                                    );
                                       },
                                       child: Hero(
-                                        tag: document.documentID,
+                                        tag: document.id,
                                         child: Image.network(
                                           document['imagePath'],
                                           fit: BoxFit.cover,
