@@ -1,4 +1,4 @@
-import 'package:firebase_sample/widgets/buttons/raised_button.dart';
+import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,14 +17,15 @@ class AddCategoryBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SizedBox(
-        height: size.width * .85,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: size.width * .1,
+      padding: MediaQuery.of(context).viewInsets,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              height: size.width * .2,
               width: size.width * .9,
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -46,23 +47,17 @@ class AddCategoryBottomSheet extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 50,
-              width: size.width * .9,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CommonRaisedButton(
-                    title:
-                        AppLocalizations.of(context).translate('addCategory'),
-                    onPressed: onPressed,
-                  ),
-                ],
-              ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 50,
+            width: size.width,
+            child: FullWidthButton(
+              title: AppLocalizations.of(context).translate('addCategory'),
+              onPressed: onPressed,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
