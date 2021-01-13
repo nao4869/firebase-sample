@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -80,7 +81,11 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   // Todo: 該当ユーザーへのReferenceをProviderで保持する
   void updateUserName() {
     final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
         .collection('users')
         .doc(notifier.referenceToUser.id)
         .update({"name": name});

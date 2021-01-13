@@ -76,19 +76,20 @@ void main() async {
     prefs.setBool('isInitial', false);
   } else {
     // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
-    FirebaseFirestore.instance
+    var result = await FirebaseFirestore.instance
         .collection('groups')
         .where('deviceId', arrayContains: deviceData['androidId'])
-        .get()
-        .then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.docs) {
-        groupId = ds.reference.id;
-      }
+        .get();
+    result.docs.forEach((res) {
+      groupId = res.reference.id;
     });
   }
+  print('groupId:' + groupId);
 
   // ログイン中ユーザーへのReferenceを取得
   FirebaseFirestore.instance
+      .collection('groups')
+      .doc(groupId)
       .collection('users')
       .where('deviceId', isEqualTo: deviceData['androidId'])
       .get()
@@ -97,6 +98,7 @@ void main() async {
       referenceToUser = documentSnapshot;
     }
   });
+  print(referenceToUser);
 
   runApp(
     MultiProvider(
