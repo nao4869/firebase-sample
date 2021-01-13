@@ -25,7 +25,7 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       var document = FirebaseFirestore.instance
           .collection('users')
-          .doc('${userReference.referenceToUser.id}');
+          .doc('${userReference.referenceToUser}');
 
       document.get().then((doc) {
         textController.text = doc['name'].toString();
@@ -87,7 +87,7 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')
-        .doc(notifier.referenceToUser.id)
+        .doc(notifier.referenceToUser)
         .update({"name": name});
     Navigator.of(context).pop();
   }

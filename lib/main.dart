@@ -25,7 +25,7 @@ void main() async {
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool firstTime = prefs.getBool('isInitial');
-  DocumentSnapshot referenceToUser;
+  String referenceToUser;
   String groupId = '';
 
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -87,16 +87,15 @@ void main() async {
   print('groupId:' + groupId);
 
   // ログイン中ユーザーへのReferenceを取得
-  FirebaseFirestore.instance
+  var result = await FirebaseFirestore.instance
       .collection('groups')
       .doc(groupId)
       .collection('users')
       .where('deviceId', isEqualTo: deviceData['androidId'])
-      .get()
-      .then((snapshot) {
-    for (DocumentSnapshot documentSnapshot in snapshot.docs) {
-      referenceToUser = documentSnapshot;
-    }
+      .get();
+
+  result.docs.forEach((res) {
+    referenceToUser = res.reference.id;
   });
   print(referenceToUser);
 

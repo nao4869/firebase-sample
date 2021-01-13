@@ -6,5 +6,5 @@ class UserReferenceProvider with ChangeNotifier {
     this.referenceToUser,
   });
 
-  final DocumentSnapshot referenceToUser;
+  final String referenceToUser;
 }
