@@ -152,11 +152,16 @@ class _HomeScreen extends StatelessWidget {
     int index,
   }) {
     final notifier = Provider.of<HomeScreenNotifier>(context);
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection('groups')
+          .doc(groupNotifier.groupId)
+          .collection('categories')
+          .doc(categoryId)
           .collection('to-dos')
-          .where('categoryId', isEqualTo: '$categoryId')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // エラーの場合

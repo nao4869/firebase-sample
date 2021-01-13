@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
@@ -104,14 +105,22 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   void createPostWithoutImage() {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     Navigator.of(context).pop();
-    FirebaseFirestore.instance.collection('to-dos').add({
+    // GroupのサブコレクションのサブコレクションCategory下にTo-dosを作成
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('categories')
+        .doc(currentTabDocumentId)
+        .collection('to-dos')
+        .add({
       'name': taskName,
       'createdAt': Timestamp.fromDate(DateTime.now()),
       'imagePath': null,
       'videoPath': null,
       'isChecked': false,
-      'categoryId': currentTabDocumentId,
     });
   }
 
@@ -120,7 +129,13 @@ class HomeScreenNotifier extends ChangeNotifier {
     String documentId,
     bool isChecked,
   ) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('categories')
+        .doc(currentTabDocumentId)
         .collection(collection)
         .doc(documentId)
         .update({"isChecked": isChecked});
@@ -130,7 +145,13 @@ class HomeScreenNotifier extends ChangeNotifier {
     String collection,
     String documentId,
   ) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('categories')
+        .doc(currentTabDocumentId)
         .collection(collection)
         .doc(documentId)
         .update({"name": taskName});
@@ -141,7 +162,16 @@ class HomeScreenNotifier extends ChangeNotifier {
     String collection,
     String documentId,
   ) {
-    FirebaseFirestore.instance.collection(collection).doc(documentId).delete();
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('categories')
+        .doc(currentTabDocumentId)
+        .collection(collection)
+        .doc(documentId)
+        .delete();
   }
 
   void onNameChange(String text) {
