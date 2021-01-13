@@ -35,7 +35,8 @@ class _HomeScreen extends StatelessWidget {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
-    final currentGroupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: darkModeNotifier.isLightTheme
@@ -75,8 +76,9 @@ class _HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('category')
-                .where('groupId', isEqualTo: currentGroupNotifier.groupId)
+                .collection('groups')
+                .doc(groupNotifier.groupId)
+                .collection('categories')
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -107,8 +109,7 @@ class _HomeScreen extends StatelessWidget {
                           ),
                         ),
                         child: Tab(
-                          text: snapshot.data.docs[index]
-                              .get(['name']).toString(),
+                          text: snapshot.data.docs[index].data()['name'],
                         ),
                       ),
                     );

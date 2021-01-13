@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/add_category_bottom_sheet.dart';
@@ -129,9 +132,14 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     Navigator.of(context).pop();
-    FirebaseFirestore.instance.collection('category').add({
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('categories')
+        .add({
+      // Groupのサブコレクションに、Categoryを作成
       'name': taskName,
-      'groupId': groupNotifier.groupId,
+      'createdAt': Timestamp.fromDate(DateTime.now()),
     });
     notifyListeners();
   }
@@ -148,7 +156,11 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     String collection,
     String documentId,
   ) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
         .collection(collection)
         .doc(documentId)
         .update({"name": taskName});

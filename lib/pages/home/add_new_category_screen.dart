@@ -34,7 +34,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
         Provider.of<AddCategoryScreenNotifier>(context, listen: false);
     final theme = Provider.of<ThemeProvider>(context, listen: false);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
-    final currentGroupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
@@ -74,8 +75,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('category')
-            .where('groupId', isEqualTo: currentGroupNotifier.groupId)
+            .collection('groups')
+            .doc(groupNotifier.groupId)
+            .collection('categories')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
@@ -97,7 +99,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                       return GestureDetector(
                         onTap: () {
                           notifier.displayActionSheet(
-                            collection: 'category',
+                            collection: 'categories',
                             documentId: snapshot.data.docs[index].id,
                           );
                         },
@@ -133,7 +135,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Text(
-                                        snapshot.data.docs[index].get(['name']),
+                                        snapshot.data.docs[index]
+                                            .data()['name'],
                                         style: TextStyle(
                                           color: darkModeNotifier.isLightTheme
                                               ? black
