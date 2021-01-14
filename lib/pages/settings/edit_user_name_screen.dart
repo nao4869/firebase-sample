@@ -25,6 +25,7 @@ class EditUserNameScreen extends StatelessWidget {
         context: context,
         switchAppThemeNotifier: Provider.of(context, listen: false),
         themeNotifier: Provider.of(context, listen: false),
+        groupNotifier: Provider.of(context, listen: false),
         userReference: Provider.of(context, listen: false),
       ),
       child: _EditUserNameScreen(),
@@ -101,27 +102,19 @@ class _EditUserNameScreen extends StatelessWidget {
                         children: <Widget>[
                           const SizedBox(height: 15),
                           Center(
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: CircularUserIcon(
-                                iconSize: .3,
-                                imagePath: defaultImagePath,
+                            child: FractionallySizedBox(
+                              widthFactor: .9,
+                              child: _buildTextFormField(
+                                context,
+                                formKey: notifier.formKey,
+                                height: notifier.profileFocusNode.hasFocus
+                                    ? textFormHeight
+                                    : size.height * .7,
+                                editingController: notifier.textController,
+                                onValidate: notifier.onValidate,
+                                onChanged: notifier.onChange,
+                                resetTextField: notifier.resetTextField,
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          FractionallySizedBox(
-                            widthFactor: .9,
-                            child: _buildTextFormField(
-                              context,
-                              formKey: notifier.formKey,
-                              height: notifier.profileFocusNode.hasFocus
-                                  ? textFormHeight
-                                  : size.height * .7,
-                              editingController: notifier.textController,
-                              onValidate: notifier.onValidate,
-                              onChanged: notifier.onChange,
-                              resetTextField: notifier.resetTextField,
                             ),
                           ),
                         ],

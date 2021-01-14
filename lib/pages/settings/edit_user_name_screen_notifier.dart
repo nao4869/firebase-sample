@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
@@ -7,7 +8,9 @@ import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as Path;
 
 import '../../app_localizations.dart';
 
@@ -16,6 +19,7 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
     this.context,
     this.switchAppThemeNotifier,
     this.themeNotifier,
+    this.groupNotifier,
     this.userReference,
   }) {
     textController.text = '';
@@ -24,6 +28,8 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
     // ログイン中ユーザー名を取得
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       var document = FirebaseFirestore.instance
+          .collection('groups')
+          .doc(groupNotifier.groupId)
           .collection('users')
           .doc('${userReference.referenceToUser}');
 
@@ -41,6 +47,9 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   final textFormHeight = 50.0;
   FocusNode profileFocusNode;
 
+  File _image;
+  String _uploadedFileURL;
+
   bool isValid = false;
   String name = '';
   File image;
@@ -48,6 +57,7 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
   final ThemeProvider themeNotifier;
+  final CurrentGroupProvider groupNotifier;
   final UserReferenceProvider userReference;
   final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
 
@@ -91,4 +101,35 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
         .update({"name": name});
     Navigator.of(context).pop();
   }
+
+  // FireStoreの該当ユーザー画像を更新
+  // Todo: 該当ユーザーへのReferenceをProviderで保持する
+//  void updateUserProfileImage() async {
+//    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
+//    final groupNotifier =
+//        Provider.of<CurrentGroupProvider>(context, listen: false);
+//    _image = await ImagePicker.pickImage(
+//      source: ImageSource.gallery,
+//      maxHeight: 600,
+//      maxWidth: 600,
+//    );
+//
+//    firebase_storage.Reference storageReference = firebase_storage
+//        .FirebaseStorage.instance
+//        .ref()
+//        .child('images/${Path.basename(_image.path)}}');
+//    await storageReference.putFile(_image);
+//
+//    storageReference.getDownloadURL().then((fileURL) {
+//      _uploadedFileURL = fileURL;
+//
+//      FirebaseFirestore.instance
+//          .collection('groups')
+//          .doc(groupNotifier.groupId)
+//          .collection('users')
+//          .doc(notifier.referenceToUser)
+//          .update({'imagePath': _uploadedFileURL});
+//    });
+//    notifyListeners();
+//  }
 }
