@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
@@ -8,10 +7,7 @@ import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:path/path.dart' as Path;
-
 import '../../app_localizations.dart';
 
 class EditUserNameScreenNotifier extends ChangeNotifier {
@@ -46,9 +42,6 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
   final nameFieldFormKey = GlobalKey<FormState>();
   final textFormHeight = 50.0;
   FocusNode profileFocusNode;
-
-  File _image;
-  String _uploadedFileURL;
 
   bool isValid = false;
   String name = '';

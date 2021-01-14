@@ -26,12 +26,13 @@ class _SwitchApplicationThemeState extends State<SwitchApplicationTheme> {
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: themeProvider.currentTheme,
         title: Text(
           AppLocalizations.of(context).translate('editDesignTheme'),
           style: TextStyle(
             color: white,
-            fontSize: 20.0,
+            fontSize: 15.0,
             fontWeight: FontWeight.bold,
           ),
         ),

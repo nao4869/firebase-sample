@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:firebase_sample/constants/colors.dart';
-import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/settings/edit_user_name_screen_notifier.dart';
 import 'package:firebase_sample/widgets/buttons/rounded_bottom_button.dart';
-import 'package:firebase_sample/widgets/user/circular_user_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
