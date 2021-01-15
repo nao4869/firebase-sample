@@ -3,7 +3,6 @@ import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/settings/edit_user_icon_screen_notifier.dart';
-import 'package:firebase_sample/pages/settings/edit_user_name_screen_notifier.dart';
 import 'package:firebase_sample/widgets/buttons/rounded_bottom_button.dart';
 import 'package:firebase_sample/widgets/user/circular_user_icon.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,13 +37,6 @@ class _EditUserIconScreen extends StatelessWidget {
     final notifier = Provider.of<EditUserIconScreenNotifier>(context);
     final theme = Provider.of<ThemeProvider>(context, listen: false);
     final themeProvider = Provider.of<SwitchAppThemeProvider>(context);
-    final size = MediaQuery.of(context).size;
-
-    final keyBoardHeight = MediaQuery.of(context).viewInsets.bottom;
-    final safePadding = MediaQuery.of(context).padding.top;
-    final buttonHeight = 50;
-    final textFormHeight =
-        size.height * .85 - keyBoardHeight - buttonHeight - safePadding;
     return ColoredBox(
       color: theme.isLightTheme ? white : darkBlack,
       child: SafeArea(
@@ -96,10 +88,10 @@ class _EditUserIconScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   Center(
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: notifier.updateUserProfileImage,
                       child: CircularUserIcon(
                         iconSize: .3,
-                        imagePath: defaultPersonImage,
+                        imagePath: notifier.imagePath ?? defaultPersonImage,
                       ),
                     ),
                   ),

@@ -45,7 +45,6 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
 
   bool isValid = false;
   String name = '';
-  File image;
 
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
@@ -94,35 +93,4 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
         .update({"name": name});
     Navigator.of(context).pop();
   }
-
-  // FireStoreの該当ユーザー画像を更新
-  // Todo: 該当ユーザーへのReferenceをProviderで保持する
-//  void updateUserProfileImage() async {
-//    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
-//    final groupNotifier =
-//        Provider.of<CurrentGroupProvider>(context, listen: false);
-//    _image = await ImagePicker.pickImage(
-//      source: ImageSource.gallery,
-//      maxHeight: 600,
-//      maxWidth: 600,
-//    );
-//
-//    firebase_storage.Reference storageReference = firebase_storage
-//        .FirebaseStorage.instance
-//        .ref()
-//        .child('images/${Path.basename(_image.path)}}');
-//    await storageReference.putFile(_image);
-//
-//    storageReference.getDownloadURL().then((fileURL) {
-//      _uploadedFileURL = fileURL;
-//
-//      FirebaseFirestore.instance
-//          .collection('groups')
-//          .doc(groupNotifier.groupId)
-//          .collection('users')
-//          .doc(notifier.referenceToUser)
-//          .update({'imagePath': _uploadedFileURL});
-//    });
-//    notifyListeners();
-//  }
 }

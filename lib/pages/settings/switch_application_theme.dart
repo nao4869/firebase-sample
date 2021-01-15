@@ -21,7 +21,6 @@ class _SwitchApplicationThemeState extends State<SwitchApplicationTheme> {
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context);
     final themeProvider = Provider.of<SwitchAppThemeProvider>(context);
-    // final dbInstance = db.getDatabaseInfo();
     selectedThemeNumber = themeProvider.getCurrentThemeNumber();
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
