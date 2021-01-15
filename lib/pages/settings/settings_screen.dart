@@ -75,7 +75,7 @@ class _SettingsScreen extends StatelessWidget {
       ),
       SettingRow(
         title: AppLocalizations.of(context).translate('editUserIcon'),
-        onTap: () {},
+        onTap: notifier.navigateEditUserIconScreen,
       ),
       SettingRow(
         title: AppLocalizations.of(context).translate('authenticatePhone'),
