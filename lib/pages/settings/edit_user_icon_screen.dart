@@ -134,39 +134,44 @@ class _EditUserIconScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: 4,
                       itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: themeProvider.currentTheme,
+                        return SizedBox(
+                          width: 90,
+                          height: 90,
+                          child: Image.asset(
+                            'assets/images/person_icon_${index + 1}.png',
                           ),
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(width: 20);
+                        return const SizedBox(width: 10);
                       },
                     ),
                   ),
-                  SizedBox(
-                    height: 100,
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: themeProvider.currentTheme,
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(width: 20);
-                      },
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: SizedBox(
+                        height: 100,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 2,
+                          itemBuilder: (BuildContext context, int index) {
+                            return SizedBox(
+                              width: 90,
+                              height: 90,
+                              child: Image.asset(
+                                'assets/images/person_icon_${index + 5}.png',
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const SizedBox(width: 15);
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ],
