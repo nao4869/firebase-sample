@@ -91,4 +91,20 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
     });
     notifyListeners();
   }
+
+  // FireStoreの該当ユーザー画像を更新
+  // Assets内の画像を適用
+  void updateUserAssetProfile(String imagePath) async {
+    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(notifier.referenceToUser)
+        .update({'imagePath': imagePath});
+    notifyListeners();
+  }
 }

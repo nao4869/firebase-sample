@@ -126,11 +126,17 @@ class _EditUserIconScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: 4,
                       itemBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          width: 90,
-                          height: 90,
-                          child: Image.asset(
-                            'assets/images/person_icon_${index + 1}.png',
+                        return InkWell(
+                          onTap: () {
+                            notifier.updateUserAssetProfile(
+                                'assets/images/person_icon_${index + 1}.png');
+                          },
+                          child: SizedBox(
+                            width: 90,
+                            height: 90,
+                            child: Image.asset(
+                              'assets/images/person_icon_${index + 1}.png',
+                            ),
                           ),
                         );
                       },
@@ -151,11 +157,17 @@ class _EditUserIconScreen extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           itemCount: 2,
                           itemBuilder: (BuildContext context, int index) {
-                            return SizedBox(
-                              width: 90,
-                              height: 90,
-                              child: Image.asset(
-                                'assets/images/person_icon_${index + 5}.png',
+                            return InkWell(
+                              onTap: () {
+                                notifier.updateUserAssetProfile(
+                                    'assets/images/person_icon_${index + 5}.png');
+                              },
+                              child: SizedBox(
+                                width: 90,
+                                height: 90,
+                                child: Image.asset(
+                                  'assets/images/person_icon_${index + 5}.png',
+                                ),
                               ),
                             );
                           },

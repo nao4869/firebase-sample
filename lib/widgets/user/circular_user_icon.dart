@@ -16,21 +16,33 @@ class CircularUserIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final image = setImageWidget();
     return SizedBox(
       width: size.width * iconSize,
       height: size.width * iconSize,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100.0),
-        child: imagePath == null || imagePath == defaultPersonImage
-            ? Image.asset(
-                'assets/images/default_profile_image.png',
-                fit: BoxFit.cover,
-              )
-            : Image.network(
-                imagePath,
-                fit: BoxFit.cover,
-              ),
+        child: image,
       ),
     );
+  }
+
+  Widget setImageWidget() {
+    if (imagePath == null || imagePath == defaultPersonImage) {
+      return Image.asset(
+        'assets/images/default_profile_image.png',
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.contains('person')) {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+      );
+    }
   }
 }
