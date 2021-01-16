@@ -19,23 +19,8 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
     this.themeNotifier,
     this.groupNotifier,
     this.userReference,
-  }) {
-    // ログイン中ユーザー名を取得
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      var document = FirebaseFirestore.instance
-          .collection('groups')
-          .doc(groupNotifier.groupId)
-          .collection('users')
-          .doc('${userReference.referenceToUser}');
+  });
 
-      document.get().then((doc) {
-        imagePath = doc['imagePath'].toString();
-      });
-    });
-  }
-
-  String imagePath;
-  String _name = '';
   String _uploadedFileURL;
   File _image;
 
@@ -92,7 +77,6 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         .collection('users')
         .doc(notifier.referenceToUser)
         .update({'imagePath': path});
-    imagePath = path;
     notifyListeners();
   }
 }
