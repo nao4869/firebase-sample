@@ -182,5 +182,8 @@
   "editUserName": "Edit UserName",
   "editUserIcon": "Edit Icon",
   "authenticatePhone": "Authenticate with phone number",
-  "editProfileTitle": "Edit Profile"
+  "editProfileTitle": "Edit Profile",
+  "editGroupName": "Edit Group Name",
+  "groupName": "Group name",
+  "currentGroupMember": "Current group member"
 }

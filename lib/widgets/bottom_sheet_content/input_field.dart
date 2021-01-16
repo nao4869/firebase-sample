@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 class InputField extends StatelessWidget {
   InputField({
     this.onChanged,
+    this.height = .3,
+    this.width = .9,
   });
 
   final Function(String) onChanged;
+  final double height;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +18,8 @@ class InputField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SizedBox(
-        height: size.width * .3,
-        width: size.width * .9,
+        height: size.width * height,
+        width: size.width * width,
         child: DecoratedBox(
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,

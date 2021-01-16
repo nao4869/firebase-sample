@@ -180,5 +180,8 @@
   "addCategory": "カテゴリー追加",
   "editUserName": "ニックネーム変更",
   "editUserIcon": "アイコン変更",
-  "authenticatePhone": "電話番号認証"
+  "authenticatePhone": "電話番号認証",
+  "editGroupName": "編集する",
+  "groupName": "グループ名",
+  "currentGroupMember": "現在のグループメンバー"
 }

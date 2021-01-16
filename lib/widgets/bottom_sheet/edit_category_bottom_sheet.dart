@@ -5,16 +5,12 @@ import 'package:flutter/material.dart';
 class EditCategoryBottomSheet extends StatelessWidget {
   EditCategoryBottomSheet({
     this.buttonTitle,
-    this.collection,
-    this.documentId,
     this.initialValue,
     this.onPressed,
     this.onNameChange,
   });
 
   final String buttonTitle;
-  final String collection;
-  final String documentId;
   final String initialValue;
   final VoidCallback onPressed;
   final Function(String) onNameChange;
@@ -42,10 +38,11 @@ class EditCategoryBottomSheet extends StatelessWidget {
                     width: 1.0,
                   ),
                 ),
-                child: TextField(
+                child: TextFormField(
                   maxLines: 20,
                   autofocus: true,
                   onChanged: onNameChange,
+                  initialValue: initialValue,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(10.0),
                     border: InputBorder.none,

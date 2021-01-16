@@ -215,8 +215,6 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       builder: (BuildContext context) {
         return EditCategoryBottomSheet(
           buttonTitle: 'Update Category',
-          collection: collection,
-          documentId: documentId,
           initialValue: initialValue,
           onPressed: () {
             Navigator.of(context).pop();

@@ -4,6 +4,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
+import 'package:firebase_sample/pages/home/edit_group_name_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/date_picker_bottom_sheet.dart';
@@ -79,6 +80,14 @@ class HomeScreenNotifier extends ChangeNotifier {
     Navigator.of(context, rootNavigator: true).push(
       CupertinoPageRoute(
         builder: (context) => AddCategoryScreen(),
+      ),
+    );
+  }
+
+  void navigateEditGroupNameScreen() {
+    Navigator.of(context, rootNavigator: true).push(
+      CupertinoPageRoute(
+        builder: (context) => EditGroupNameScreen(),
       ),
     );
   }
@@ -447,8 +456,6 @@ class HomeScreenNotifier extends ChangeNotifier {
       builder: (BuildContext context) {
         return EditCategoryBottomSheet(
           buttonTitle: 'Update Todo',
-          collection: collection,
-          documentId: documentId,
           initialValue: initialValue,
           onPressed: () {
             Navigator.of(context).pop();

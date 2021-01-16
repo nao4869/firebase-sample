@@ -46,7 +46,7 @@ class _HomeScreen extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.only(left: 12.0),
           child: IconButton(
-            onPressed: () {},
+            onPressed: notifier.navigateEditGroupNameScreen,
             icon: FaIcon(
               FontAwesomeIcons.bars,
               size: 20.0,
