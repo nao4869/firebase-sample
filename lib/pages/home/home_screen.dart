@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:firebase_sample/extensions/set_image_path.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen();
@@ -173,15 +174,7 @@ class _HomeScreen extends StatelessWidget {
                 if (document == null) {
                   return Container();
                 } else {
-//                  final data = document.data;
-//                  DateTime createdAt;
-//                  var createdAtHour;
-//                  if (data['createdAt'] is Timestamp) {
-//                    createdAt = data['createdAt'].toDate();
-//                    createdAtHour = createdAt.hour.toString() +
-//                        ':' +
-//                        createdAt.minute.toString();
-//                  }
+                  final imageWidget = setImagePath(document['userImagePath']);
                   return Column(
                     children: [
                       Card(
@@ -301,9 +294,7 @@ class _HomeScreen extends StatelessWidget {
                               height: 30,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  'assets/images/default_profile_image.png',
-                                ),
+                                child: imageWidget,
                               ),
                             ),
                           ),

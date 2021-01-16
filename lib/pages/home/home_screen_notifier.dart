@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
@@ -109,10 +110,21 @@ class HomeScreenNotifier extends ChangeNotifier {
     currentTabDocumentId = categoryId;
   }
 
-  void createPostWithoutImage() {
+  Future<void> createPostWithoutImage() async {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    final userNotifier =
+        Provider.of<UserReferenceProvider>(context, listen: false);
     Navigator.of(context).pop();
+
+    // タスク担当ユーザーの参照を取得
+    final userReference = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .get();
+
     // GroupのサブコレクションのサブコレクションCategory下にTo-dosを作成
     FirebaseFirestore.instance
         .collection('groups')
@@ -126,6 +138,7 @@ class HomeScreenNotifier extends ChangeNotifier {
       'imagePath': null,
       'videoPath': null,
       'isChecked': false,
+      'userImagePath': userReference['imagePath'],
     });
   }
 
