@@ -23,6 +23,7 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
 
   String _uploadedFileURL;
   File _image;
+  bool isUploadingImage = false;
 
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
@@ -48,6 +49,8 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
           .FirebaseStorage.instance
           .ref()
           .child('images/${Path.basename(_image.path)}}');
+      isUploadingImage = true;
+      notifyListeners();
       await storageReference.putFile(_image);
 
       storageReference.getDownloadURL().then((fileURL) {
@@ -59,8 +62,9 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
             .collection('users')
             .doc(notifier.referenceToUser)
             .update({'imagePath': _uploadedFileURL});
+        isUploadingImage = false;
+        notifyListeners();
       });
-      notifyListeners();
     }
   }
 

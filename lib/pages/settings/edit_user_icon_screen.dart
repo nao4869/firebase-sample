@@ -81,119 +81,148 @@ class _EditUserIconScreen extends StatelessWidget {
             ],
           ),
           body: SafeArea(
-            child: ColoredBox(
-              color: theme.isLightTheme ? themeColor : darkBlack,
-              child: Column(
+            child: IgnorePointer(
+              ignoring: notifier.isUploadingImage ? true : false,
+              child: Stack(
                 children: [
-                  const SizedBox(height: 30),
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('groups')
-                        .doc(notifier.groupNotifier.groupId)
-                        .collection('users')
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      // エラーの場合
-                      if (snapshot.hasError || snapshot.data == null) {
-                        return Container();
-                      } else {
-                        // 該当ユーザーDocumentを取得
-                        final doc = snapshot.data.docs.firstWhere((element) =>
-                            element.id ==
-                            notifier.userReference.referenceToUser);
-                        return Center(
-                          child: GestureDetector(
-                            onTap: notifier.updateUserProfileImage,
-                            child: CircularUserIcon(
-                              iconSize: .3,
-                              imagePath: doc.data()['imagePath'],
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 15),
-                  FractionallySizedBox(
-                    widthFactor: .8,
-                    child: RoundedBottomButton(
-                      isEnable: true,
-                      title: AppLocalizations.of(context)
-                          .translate('selectImageFromGallery'),
-                      color: themeProvider.currentTheme,
-                      onPressed: notifier.updateUserProfileImage,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    children: [
-                      const SizedBox(width: 20),
-                      Text(
-                        'Select from icons',
-                        style: TextStyle(
-                          color: Colors.blueGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 100,
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            notifier.updateUserAssetProfile(
-                                'assets/images/person_icon_${index + 1}.png');
-                          },
-                          child: SizedBox(
-                            width: 90,
-                            height: 90,
-                            child: Image.asset(
-                              'assets/images/person_icon_${index + 1}.png',
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(width: 10);
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: SizedBox(
-                        height: 100,
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 2,
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              onTap: () {
-                                notifier.updateUserAssetProfile(
-                                    'assets/images/person_icon_${index + 5}.png');
-                              },
-                              child: SizedBox(
-                                width: 90,
-                                height: 90,
-                                child: Image.asset(
-                                  'assets/images/person_icon_${index + 5}.png',
+                  notifier.isUploadingImage
+                      ? Opacity(
+                          opacity: notifier.isUploadingImage ? 1.0 : 0,
+                          child: Center(
+                            child: ColoredBox(
+                              color: Colors.transparent,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  notifier.switchAppThemeNotifier.currentTheme,
                                 ),
                               ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const SizedBox(width: 15);
-                          },
-                        ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  Opacity(
+                    opacity: notifier.isUploadingImage ? 0.3 : 1.0,
+                    child: ColoredBox(
+                      color: theme.isLightTheme ? themeColor : darkBlack,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 30),
+                          StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('groups')
+                                .doc(notifier.groupNotifier.groupId)
+                                .collection('users')
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              // エラーの場合
+                              if (snapshot.hasError || snapshot.data == null) {
+                                return Container();
+                              } else {
+                                // 該当ユーザーDocumentを取得
+                                final doc = snapshot.data.docs.firstWhere(
+                                    (element) =>
+                                        element.id ==
+                                        notifier.userReference.referenceToUser);
+                                return Center(
+                                  child: GestureDetector(
+                                    onTap: notifier.updateUserProfileImage,
+                                    child: CircularUserIcon(
+                                      iconSize: .3,
+                                      imagePath: doc.data()['imagePath'],
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          FractionallySizedBox(
+                            widthFactor: .8,
+                            child: RoundedBottomButton(
+                              isEnable: true,
+                              title: AppLocalizations.of(context)
+                                  .translate('selectImageFromGallery'),
+                              color: themeProvider.currentTheme,
+                              onPressed: notifier.updateUserProfileImage,
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            children: [
+                              const SizedBox(width: 20),
+                              Text(
+                                'Select from icons',
+                                style: TextStyle(
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 100,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 4,
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                  onTap: () {
+                                    notifier.updateUserAssetProfile(
+                                        'assets/images/person_icon_${index + 1}.png');
+                                  },
+                                  child: SizedBox(
+                                    width: 90,
+                                    height: 90,
+                                    child: Image.asset(
+                                      'assets/images/person_icon_${index + 1}.png',
+                                    ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(width: 10);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: SizedBox(
+                                height: 100,
+                                child: ListView.separated(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 2,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        notifier.updateUserAssetProfile(
+                                            'assets/images/person_icon_${index + 5}.png');
+                                      },
+                                      child: SizedBox(
+                                        width: 90,
+                                        height: 90,
+                                        child: Image.asset(
+                                          'assets/images/person_icon_${index + 5}.png',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return const SizedBox(width: 15);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
