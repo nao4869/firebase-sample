@@ -46,21 +46,6 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
   final UserReferenceProvider userReference;
   final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
 
-  // FireStoreの該当ユーザー名を更新
-  // Todo: 該当ユーザーへのReferenceをProviderで保持する
-  void updateUserName() {
-    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
-    final groupNotifier =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
-    FirebaseFirestore.instance
-        .collection('groups')
-        .doc(groupNotifier.groupId)
-        .collection('users')
-        .doc(notifier.referenceToUser)
-        .update({"name": _name});
-    Navigator.of(context).pop();
-  }
-
   // FireStoreの該当ユーザー画像を更新
   // Todo: 該当ユーザーへのReferenceをProviderで保持する
   void updateUserProfileImage() async {
@@ -73,28 +58,30 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
       maxWidth: 600,
     );
 
-    firebase_storage.Reference storageReference = firebase_storage
-        .FirebaseStorage.instance
-        .ref()
-        .child('images/${Path.basename(_image.path)}}');
-    await storageReference.putFile(_image);
+    if (_image != null) {
+      firebase_storage.Reference storageReference = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('images/${Path.basename(_image.path)}}');
+      await storageReference.putFile(_image);
 
-    storageReference.getDownloadURL().then((fileURL) {
-      _uploadedFileURL = fileURL;
+      storageReference.getDownloadURL().then((fileURL) {
+        _uploadedFileURL = fileURL;
 
-      FirebaseFirestore.instance
-          .collection('groups')
-          .doc(groupNotifier.groupId)
-          .collection('users')
-          .doc(notifier.referenceToUser)
-          .update({'imagePath': _uploadedFileURL});
-    });
-    notifyListeners();
+        FirebaseFirestore.instance
+            .collection('groups')
+            .doc(groupNotifier.groupId)
+            .collection('users')
+            .doc(notifier.referenceToUser)
+            .update({'imagePath': _uploadedFileURL});
+      });
+      notifyListeners();
+    }
   }
 
   // FireStoreの該当ユーザー画像を更新
   // Assets内の画像を適用
-  void updateUserAssetProfile(String imagePath) async {
+  void updateUserAssetProfile(String path) async {
     final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
@@ -104,7 +91,8 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         .doc(groupNotifier.groupId)
         .collection('users')
         .doc(notifier.referenceToUser)
-        .update({'imagePath': imagePath});
+        .update({'imagePath': path});
+    imagePath = path;
     notifyListeners();
   }
 }

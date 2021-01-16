@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/constants/texts.dart';
+import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/settings/edit_user_icon_screen_notifier.dart';
@@ -86,14 +88,33 @@ class _EditUserIconScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 30),
-                  Center(
-                    child: GestureDetector(
-                      onTap: notifier.updateUserProfileImage,
-                      child: CircularUserIcon(
-                        iconSize: .3,
-                        imagePath: notifier.imagePath ?? defaultPersonImage,
-                      ),
-                    ),
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('groups')
+                        .doc(notifier.groupNotifier.groupId)
+                        .collection('users')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      // エラーの場合
+                      if (snapshot.hasError || snapshot.data == null) {
+                        return Container();
+                      } else {
+                        // 該当ユーザーDocumentを取得
+                        final doc = snapshot.data.docs.firstWhere((element) =>
+                            element.id ==
+                            notifier.userReference.referenceToUser);
+                        return Center(
+                          child: GestureDetector(
+                            onTap: notifier.updateUserProfileImage,
+                            child: CircularUserIcon(
+                              iconSize: .3,
+                              imagePath: doc.data()['imagePath'],
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 15),
                   FractionallySizedBox(
@@ -103,7 +124,7 @@ class _EditUserIconScreen extends StatelessWidget {
                       title: AppLocalizations.of(context)
                           .translate('selectImageFromGallery'),
                       color: themeProvider.currentTheme,
-                      onPressed: notifier.updateUserName,
+                      onPressed: notifier.updateUserProfileImage,
                     ),
                   ),
                   const SizedBox(height: 30),
