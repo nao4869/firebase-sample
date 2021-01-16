@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
@@ -8,6 +7,8 @@ import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/date_picker_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
+import 'package:firebase_sample/widgets/bottom_sheet_content/date_row.dart';
+import 'package:firebase_sample/widgets/bottom_sheet_content/input_field.dart';
 import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
+import 'package:firebase_sample/extensions/set_image_path.dart';
 
 import '../../app_localizations.dart';
 
@@ -290,6 +292,8 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   void openModalBottomSheet() {
     final size = MediaQuery.of(context).size;
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
     final switchAppThemeNotifier =
         Provider.of<SwitchAppThemeProvider>(context, listen: false);
     showModalBottomSheet(
@@ -310,123 +314,97 @@ class HomeScreenNotifier extends ChangeNotifier {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      height: size.width * .3,
-                      width: size.width * .9,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                        ),
-                        child: TextField(
-                          maxLines: 20,
-                          autofocus: true,
-                          onChanged: (String text) {
-                            onNameChange(text);
-                          },
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(10.0),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
+                  InputField(
+                    onChanged: (String text) {
+                      onNameChange(text);
+                    },
                   ),
-                  InkWell(
-                    onTap: showModalPicker,
-                    child: SizedBox(
-                      height: 40,
-                      width: size.width * .9,
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 20),
-                          Text(
-                            'When?',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Text(
-                            createdDate != null
-                                ? createdDate.substring(0, 10)
-                                : 'No remind date',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: switchAppThemeNotifier.currentTheme,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  DateRow(
+                    createdDate: createdDate,
+                    onPressed: showModalPicker,
                   ),
-                  SizedBox(
-                    height: 40,
-                    width: size.width * .9,
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 20),
-                        Text(
-                          'Who\'s task?',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('groups')
+                        .doc(groupNotifier.groupId)
+                        .collection('users')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      // エラーの場合
+                      if (snapshot.hasError || snapshot.data == null) {
+                        return CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            switchAppThemeNotifier.currentTheme,
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const SizedBox(width: 10);
-                          },
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              onTap: () {
-                                _selectedPersonIndex = index;
-                                setState(() {});
-                              },
-                              child: SizedBox(
-                                height: 30,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: Stack(
-                                    children: [
-                                      Image.asset(
-                                        'assets/images/default_profile_image.png',
-                                      ),
-                                      if (_selectedPersonIndex == index)
-                                        SizedBox(
-                                          height: 40,
-                                          width: 40,
-                                          child: DecoratedBox(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              color: switchAppThemeNotifier
-                                                  .currentTheme
-                                                  .withOpacity(0.5),
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
+                        );
+                      } else {
+                        return SizedBox(
+                          height: 40,
+                          width: size.width * .9,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 20),
+                              Text(
+                                'Who\'s task?',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            );
-                          },
-                          itemCount: 3,
-                        ),
-                      ],
-                    ),
+                              const SizedBox(width: 10),
+                              ListView.separated(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return const SizedBox(width: 10);
+                                },
+                                itemCount: snapshot.data.size,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final imageWidget = setImagePath(snapshot
+                                      .data.docs[index]
+                                      .data()['imagePath']);
+                                  return InkWell(
+                                    onTap: () {
+                                      _selectedPersonIndex = index;
+                                      setState(() {});
+                                    },
+                                    child: SizedBox(
+                                      height: 30,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Stack(
+                                          children: [
+                                            imageWidget,
+                                            if (_selectedPersonIndex == index)
+                                              SizedBox(
+                                                height: 40,
+                                                width: 40,
+                                                child: DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    color:
+                                                        switchAppThemeNotifier
+                                                            .currentTheme
+                                                            .withOpacity(0.5),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
