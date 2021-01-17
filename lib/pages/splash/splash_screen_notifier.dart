@@ -94,7 +94,7 @@ class SplashScreenNotifier extends ChangeNotifier {
             .collection('groups')
             .doc(value.id)
             .collection('users')
-            .where('deviceId', isEqualTo: _deviceId)
+            .where('deviceId', arrayContains: _deviceId)
             .get();
 
         userResult.docs.forEach((res) {
@@ -122,7 +122,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           .collection('groups')
           .doc(_groupId)
           .collection('users')
-          .where('deviceId', isEqualTo: _deviceId)
+          .where('deviceId', arrayContains: _deviceId)
           .get();
 
       userResult.docs.forEach((res) {

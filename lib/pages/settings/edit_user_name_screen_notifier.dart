@@ -25,7 +25,7 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('users')
-          .doc('${userReference.referenceToUser}');
+          .doc(userReference.referenceToUser);
 
       document.get().then((doc) {
         textController.text = doc['name'].toString();
