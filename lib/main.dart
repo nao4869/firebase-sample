@@ -40,6 +40,7 @@ void main() async {
     deviceData = <String, dynamic>{'Error:': 'Failed to get platform version.'};
   }
 
+  // TODO: 一度アプリを削除した際の処理をどうするか考慮する
   if (firstTime == null || firstTime) {
     // 初回起動時のみ、groupを追加
     final fireStoreInstance = FirebaseFirestore.instance;

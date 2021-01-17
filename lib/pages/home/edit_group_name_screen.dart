@@ -58,7 +58,8 @@ class _EditGroupNameScreen extends StatelessWidget {
             ...buildProfileSection(context),
             const SizedBox(height: 20),
             ...buildAppSettingsSection(context),
-            const SizedBox(height: 30)
+            const SizedBox(height: 30),
+            _buildInvitePersonTile(context),
           ],
         ),
       ),
@@ -235,5 +236,58 @@ class _EditGroupNameScreen extends StatelessWidget {
         },
       ),
     ];
+  }
+
+  Widget _buildInvitePersonTile(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return ColoredBox(
+      color: white,
+      child: SizedBox(
+        width: size.width * .8,
+        height: 150,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.asset(
+                'assets/images/persons.png',
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const SizedBox(width: 10),
+                        Text(
+                          'Invite new person',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        'Share your todo list, shopping list by sharing app link',
+                        maxLines: 5,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
