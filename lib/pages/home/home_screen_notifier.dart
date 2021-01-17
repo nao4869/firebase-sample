@@ -34,15 +34,15 @@ class HomeScreenNotifier extends ChangeNotifier {
     initializeVideoPlayerFuture = videoController.initialize();
   }
   final BuildContext context;
-  var isLoading = false;
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
 
-  String taskName;
-  bool isValid = false;
+  String _taskName;
+  bool _isValid = false;
 
   File _image;
   String _uploadedFileURL;
+  int _selectedPersonIndex;
 
   String createdDate;
   bool get isDateValid => createdDate != null;
@@ -53,14 +53,27 @@ class HomeScreenNotifier extends ChangeNotifier {
   int currentTabIndex = 0;
   int initPosition = 0;
   bool isInitialLoadCompleted = false;
-
-  int _selectedPersonIndex;
+  List<QueryDocumentSnapshot> todoList = [];
 
   @override
   void dispose() {
     textController.dispose();
     videoController.dispose();
     super.dispose();
+  }
+
+  // 完了済みタスク表示、非表示切り替え
+  void updateTodoList(
+    List<QueryDocumentSnapshot> snapshot,
+  ) {
+    final userNotifier =
+        Provider.of<UserReferenceProvider>(context, listen: false);
+    if (userNotifier.isDisplayCompletedTodo) {
+      todoList = snapshot;
+    } else {
+      todoList =
+          snapshot.where((element) => element['isChecked'] == false).toList();
+    }
   }
 
   void setCurrentIndex(int index) {
@@ -142,7 +155,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         .doc(currentTabDocumentId)
         .collection('to-dos')
         .add({
-      'name': taskName,
+      'name': _taskName,
       'createdAt': Timestamp.fromDate(DateTime.now()),
       'imagePath': null,
       'videoPath': null,
@@ -181,7 +194,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         .doc(currentTabDocumentId)
         .collection(collection)
         .doc(documentId)
-        .update({"name": taskName});
+        .update({"name": _taskName});
   }
 
   // 単一のTodoを指定されたFireStore Collectionから削除します。
@@ -202,14 +215,14 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   void onNameChange(String text) {
-    isValid = text.isNotEmpty;
-    taskName = text;
+    _isValid = text.isNotEmpty;
+    _taskName = text;
   }
 
   void resetNameTextField() {
     onNameChange('');
     nameFieldFormKey.currentState.reset();
-    taskName = '';
+    _taskName = '';
     notifyListeners();
   }
 
@@ -239,7 +252,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     storageReference.getDownloadURL().then((fileURL) {
       _uploadedFileURL = fileURL;
       FirebaseFirestore.instance.collection('to-dos').add({
-        'name': taskName,
+        'name': _taskName,
         'createdAt': DateTime.now().toIso8601String(),
         'imagePath': _uploadedFileURL,
         'videoPath': null,
@@ -266,7 +279,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         _uploadedFileURL = fileURL;
 
         FirebaseFirestore.instance.collection('to-dos').add({
-          'name': taskName,
+          'name': _taskName,
           'createdAt': DateTime.now().toIso8601String(),
           'imagePath': null,
           'videoPath': _uploadedFileURL,

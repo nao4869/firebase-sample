@@ -4,6 +4,7 @@ import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -169,10 +170,11 @@ class _HomeScreen extends StatelessWidget {
         if (snapshot.hasError || snapshot.data == null) {
           return Container();
         } else {
+          notifier.updateTodoList(snapshot.data.docs);
           return Padding(
             padding: const EdgeInsets.all(3.0),
             child: ListView(
-              children: snapshot.data.docs.map(
+              children: notifier.todoList.map(
                 (DocumentSnapshot document) {
                   if (document == null) {
                     return Container();

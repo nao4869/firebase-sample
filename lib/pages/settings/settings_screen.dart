@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
+import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/pages/settings/settings_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/switch_application_theme.dart';
@@ -22,6 +25,7 @@ class SettingsScreen extends StatelessWidget {
         context: context,
         switchAppThemeNotifier: Provider.of(context, listen: false),
         themeNotifier: Provider.of(context, listen: false),
+        userNotifier: Provider.of(context, listen: false),
       ),
       child: _SettingsScreen(),
     );
@@ -86,6 +90,10 @@ class _SettingsScreen extends StatelessWidget {
 
   List<Widget> buildAppSettingsSection(BuildContext context) {
     final notifier = Provider.of<SettingsScreenNotifier>(context);
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    final userNotifier =
+        Provider.of<UserReferenceProvider>(context, listen: false);
     return [
       SettingTitle(
         title: AppLocalizations.of(context).translate('accountSettings'),
@@ -106,6 +114,37 @@ class _SettingsScreen extends StatelessWidget {
           );
         },
       ),
+      StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('groups')
+            .doc(groupNotifier.groupId)
+            .collection('users')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          // エラーの場合
+          if (snapshot.hasError || snapshot.data == null) {
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  notifier.switchAppThemeNotifier.currentTheme,
+                ),
+              ),
+            );
+          } else {
+            DocumentSnapshot currentUserSetting = snapshot.data.docs.firstWhere(
+                (element) => element.id == userNotifier.referenceToUser,
+                orElse: null);
+            return SettingRow(
+              title: AppLocalizations.of(context)
+                  .translate('displayCompletedTodo'),
+              onChange: (bool value) {
+                notifier.updateIsDisplayCompletedTodo(value);
+              },
+              isEnable: currentUserSetting['displayCompletedTodo'],
+            );
+          }
+        },
+      )
     ];
   }
 }

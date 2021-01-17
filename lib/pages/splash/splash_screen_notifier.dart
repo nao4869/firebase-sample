@@ -28,6 +28,7 @@ class SplashScreenNotifier extends ChangeNotifier {
 
   bool _isLoading = false;
   String _referenceToUser;
+  bool _isDisplayCompletedTodo = false;
   String _groupId = '';
 
   Future<void> initialize() async {
@@ -75,6 +76,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           'imagePath': null,
           'createdAt': Timestamp.fromDate(DateTime.now()),
           'deviceId': FieldValue.arrayUnion([_deviceId]),
+          'displayCompletedTodo': true,
         });
 
         final reference = await fireStoreInstance
@@ -102,6 +104,7 @@ class SplashScreenNotifier extends ChangeNotifier {
         });
         // ProviderのUser参照を更新
         userNotifier.updateUserReference(_referenceToUser);
+        userNotifier.updateCompletedTodo(true);
         addTutorialTodoList(reference);
       });
     } else {
@@ -125,11 +128,13 @@ class SplashScreenNotifier extends ChangeNotifier {
           .where('deviceId', arrayContains: _deviceId)
           .get();
 
-      userResult.docs.forEach((res) {
-        _referenceToUser = res.reference.id;
+      userResult.docs.forEach((snapshot) {
+        _referenceToUser = snapshot.reference.id;
+        _isDisplayCompletedTodo = snapshot['displayCompletedTodo'];
       });
       // ProviderのUser参照を更新
       userNotifier.updateUserReference(_referenceToUser);
+      userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
     }
     if (groupNotifier.groupId != null && groupNotifier.groupId.isNotEmpty) {
       // ホーム画面遷移
