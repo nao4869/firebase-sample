@@ -84,9 +84,11 @@ class _HomeScreen extends StatelessWidget {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               // エラーの場合
               if (snapshot.hasError || snapshot.data == null) {
-                return CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    switchAppThemeNotifier.currentTheme,
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      switchAppThemeNotifier.currentTheme,
+                    ),
                   ),
                 );
               } else {

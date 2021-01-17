@@ -8,6 +8,7 @@ import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
+import 'package:firebase_sample/pages/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,10 +24,6 @@ import 'models/provider/theme_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool firstTime = prefs.getBool('isInitial');
-  String referenceToUser;
-  String groupId = '';
 
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> deviceData;
@@ -39,66 +36,6 @@ void main() async {
   } on PlatformException {
     deviceData = <String, dynamic>{'Error:': 'Failed to get platform version.'};
   }
-
-  // TODO: 一度アプリを削除した際の処理をどうするか考慮する
-  if (firstTime == null || firstTime) {
-    // 初回起動時のみ、groupを追加
-    final fireStoreInstance = FirebaseFirestore.instance;
-    fireStoreInstance.collection('groups').add({
-      'name': 'Group Name',
-      'createdAt': Timestamp.fromDate(DateTime.now()),
-      'deviceId': FieldValue.arrayUnion([
-        deviceData['androidId'],
-      ]),
-    }).then((value) {
-      fireStoreInstance
-          .collection('groups')
-          .doc(value.id)
-          .collection('users')
-          .add({
-        // Groupのサブコレクションに、Userを作成
-        'name': 'UserName',
-        'imagePath': null,
-        'createdAt': Timestamp.fromDate(DateTime.now()),
-        'deviceId': deviceData['androidId'],
-      });
-
-      fireStoreInstance
-          .collection('groups')
-          .doc(value.id)
-          .collection('categories')
-          .add({
-        // Groupのサブコレクションに、Categoryを作成
-        'name': 'Tutorial',
-        'createdAt': Timestamp.fromDate(DateTime.now()),
-      });
-      groupId = value.id;
-    });
-    prefs.setBool('isInitial', false);
-  } else {
-    // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
-    var result = await FirebaseFirestore.instance
-        .collection('groups')
-        .where('deviceId', arrayContains: deviceData['androidId'])
-        .get();
-    result.docs.forEach((res) {
-      groupId = res.reference.id;
-    });
-  }
-  print('groupId:' + groupId);
-
-  // ログイン中ユーザーへのReferenceを取得
-  var result = await FirebaseFirestore.instance
-      .collection('groups')
-      .doc(groupId)
-      .collection('users')
-      .where('deviceId', isEqualTo: deviceData['androidId'])
-      .get();
-
-  result.docs.forEach((res) {
-    referenceToUser = res.reference.id;
-  });
-  print(referenceToUser);
 
   runApp(
     MultiProvider(
@@ -119,12 +56,12 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => CurrentGroupProvider(
-            groupId: groupId,
+            groupId: '',
           ),
         ),
         ChangeNotifierProvider(
           create: (_) => UserReferenceProvider(
-            referenceToUser: referenceToUser,
+            referenceToUser: '',
           ),
         ),
         ChangeNotifierProvider(
@@ -174,7 +111,10 @@ class MyApp extends StatelessWidget {
         // from the list (English, in this case).
         return supportedLocales.first;
       },
-      home: HomeScreen(),
+      home: SplashScreen(),
+      routes: <String, WidgetBuilder>{
+        'home-screen': (_) => HomeScreen(),
+      },
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class UserReferenceProvider with ChangeNotifier {
@@ -6,5 +5,9 @@ class UserReferenceProvider with ChangeNotifier {
     this.referenceToUser,
   });
 
-  final String referenceToUser;
+  String referenceToUser;
+
+  void updateUserReference(String newUserReference) {
+    referenceToUser = newUserReference;
+  }
 }
