@@ -6,10 +6,12 @@ import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/home/edit_group_name_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
+import 'package:firebase_sample/widgets/buttons/rounded_bottom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_sample/extensions/set_image_path.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../app_localizations.dart';
 
@@ -239,52 +241,91 @@ class _EditGroupNameScreen extends StatelessWidget {
   }
 
   Widget _buildInvitePersonTile(BuildContext context) {
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
+    final groupNotifier = Provider.of<CurrentGroupProvider>(context);
     final size = MediaQuery.of(context).size;
-    return ColoredBox(
-      color: white,
-      child: SizedBox(
-        width: size.width * .8,
-        height: 150,
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset(
-                'assets/images/persons.png',
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Text(
-                          'Invite new person',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        'Share your todo list, shopping list by sharing app link',
-                        maxLines: 5,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                  ],
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: SizedBox(
+                width: size.width * .7,
+                height: size.width * .7,
+                child: QrImage(
+                  data: groupNotifier.groupId,
+                  backgroundColor: white,
+                  foregroundColor: switchAppThemeNotifier.currentTheme,
+                  version: QrVersions.auto,
+                  size: 320,
+                  gapless: false,
                 ),
               ),
-            ],
+              content: Text(
+                'Steps for joining\n\n(Invited person)\n1. Download the app\n2. Scan QR code by camera or QR code reader',
+              ),
+              contentPadding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
+              actions: <Widget>[
+                RoundedBottomButton(
+                  isEnable: true,
+                  title: 'Okay',
+                  color: switchAppThemeNotifier.currentTheme,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: ColoredBox(
+        color: white,
+        child: SizedBox(
+          width: size.width * .8,
+          height: 150,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/images/persons.png',
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          Text(
+                            'Invite new person',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'Share your todo list, shopping list with family members and friends',
+                          maxLines: 5,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

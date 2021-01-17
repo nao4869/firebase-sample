@@ -56,6 +56,9 @@ dependencies:
   # アイコン
   font_awesome_flutter: ^8.11.0
 
+  # QRコード作成
+  qr_flutter: ^3.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
