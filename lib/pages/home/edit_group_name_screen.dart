@@ -183,44 +183,53 @@ class _EditGroupNameScreen extends StatelessWidget {
               ),
             );
           } else {
-            return ColoredBox(
-              color: white,
-              child: SizedBox(
-                height: 60,
-                width: size.width,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(width: 10);
-                    },
-                    itemCount: snapshot.data.size,
-                    itemBuilder: (BuildContext context, int index) {
-                      final imageWidget = setImagePath(
-                          snapshot.data.docs[index].data()['imagePath']);
-                      return Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color:
-                                  notifier.switchAppThemeNotifier.currentTheme,
-                              width: 10.0,
+            return ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(width: 10);
+              },
+              itemCount: snapshot.data.size,
+              itemBuilder: (BuildContext context, int index) {
+                final imageWidget =
+                    setImagePath(snapshot.data.docs[index].data()['imagePath']);
+                return ColoredBox(
+                  color: white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 45,
+                          height: 45,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: notifier
+                                    .switchAppThemeNotifier.currentTheme,
+                                width: 10.0,
+                              ),
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: imageWidget,
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: imageWidget,
+                              ),
+                            ),
                           ),
                         ),
-                      );
-                    },
+                        const SizedBox(width: 10),
+                        Text(
+                          snapshot.data.docs[index].data()['name'] ?? '',
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             );
           }
         },
