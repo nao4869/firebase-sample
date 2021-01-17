@@ -16,6 +16,8 @@ class SplashScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => SplashScreenNotifier(
         context: context,
+        groupNotifier: Provider.of(context),
+        userNotifier: Provider.of(context, listen: false),
       ),
       child: _SplashScreen(),
     );

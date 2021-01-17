@@ -7,7 +7,8 @@ class CurrentGroupProvider with ChangeNotifier {
 
   String groupId;
 
-  void updateGroupId(String newgGroupId) {
-    groupId = newgGroupId;
+  void updateGroupId(String newGroupId) {
+    groupId = newGroupId;
+    notifyListeners();
   }
 }

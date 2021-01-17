@@ -35,8 +35,7 @@ class _HomeScreen extends StatelessWidget {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
-    final groupNotifier =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
+    final groupNotifier = Provider.of<CurrentGroupProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: darkModeNotifier.isLightTheme

@@ -183,5 +183,8 @@
   "authenticatePhone": "電話番号認証",
   "editGroupName": "編集する",
   "groupName": "グループ名",
-  "currentGroupMember": "現在のグループメンバー"
+  "currentGroupMember": "現在のグループメンバー",
+  "tutorialTodo1": "左上のアイコンから家族、友達をグループに招待し、Todoを共有できます。",
+  "tutorialTodo2": "右上設定アイコンからユーザー名、プロフィール画像、アプリテーマ色を変更いただけます。",
+  "tutorialTodo3": "右上フォルダーアイコンより、カテゴリーを追加、編集、削除できます。"
 }

@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
-import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/add_category_bottom_sheet.dart';
