@@ -149,7 +149,14 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     String collection,
     String documentId,
   ) {
-    FirebaseFirestore.instance.collection(collection).doc(documentId).delete();
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection(collection)
+        .doc(documentId)
+        .delete();
   }
 
   void updateCategory(
