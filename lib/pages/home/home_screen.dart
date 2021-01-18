@@ -38,6 +38,7 @@ class _HomeScreen extends StatelessWidget {
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
     return Scaffold(
+      backgroundColor: switchAppThemeNotifier.currentTheme,
       appBar: AppBar(
         backgroundColor: darkModeNotifier.isLightTheme
             ? switchAppThemeNotifier.currentTheme
@@ -119,7 +120,7 @@ class _HomeScreen extends StatelessWidget {
                   pageBuilder: (context, index) {
                     return ColoredBox(
                       color: darkModeNotifier.isLightTheme
-                          ? themeColor
+                          ? switchAppThemeNotifier.currentTheme
                           : darkBlack,
                       child: createListView(
                         context: context,
@@ -139,11 +140,15 @@ class _HomeScreen extends StatelessWidget {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: switchAppThemeNotifier.currentTheme,
+        elevation: 1.0,
+        backgroundColor: white,
         onPressed: () async {
           notifier.openModalBottomSheet();
         },
-        child: const Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: switchAppThemeNotifier.currentTheme,
+        ),
       ),
     );
   }
@@ -185,6 +190,9 @@ class _HomeScreen extends StatelessWidget {
                         FractionallySizedBox(
                           widthFactor: .95,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
                             child: ListTile(
                               leading: CircularCheckBox(
                                 value: document['isChecked'],

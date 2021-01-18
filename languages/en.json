@@ -18,7 +18,7 @@
   "darkModeSettings": "Dark Mode settings",
   "findOtherApps": "Developers other apps",
   "editAppTheme": "Change theme color",
-  "editDesignTheme": "Change design theme",
+  "editDesignTheme": "Change background theme",
   "displayCompletedTodo": "Display completed to-dos",
   "directMessageScreen": "Direct message screen",
   "editNameFontSize": "Font size - Account name",
@@ -189,5 +189,8 @@
   "currentGroupMember": "Current group member",
   "tutorialTodo1": "From left app bar icon, you can invite share your todo list and invite person to group",
   "tutorialTodo2": "From settings icon, you can update user name, icon and application theme color",
-  "tutorialTodo3": "From folder icon, you are able to manage categories"
+  "tutorialTodo3": "From folder icon, you are able to manage categories",
+  "backgroundDesign": "Background design",
+  "selectDesign": "Select design",
+  "select": "Select"
 }

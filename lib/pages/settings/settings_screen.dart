@@ -4,6 +4,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/pages/settings/select_design_screen.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/pages/settings/settings_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/switch_application_theme.dart';
@@ -105,11 +106,21 @@ class _SettingsScreen extends StatelessWidget {
 //        onChange: notifier.updateDarkMode,
 //      ),
       SettingRow(
-        title: AppLocalizations.of(context).translate('editDesignTheme'),
+        title: AppLocalizations.of(context).translate('editAppTheme'),
         onTap: () {
           Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute(
               builder: (context) => SwitchApplicationTheme(),
+            ),
+          );
+        },
+      ),
+      SettingRow(
+        title: AppLocalizations.of(context).translate('editDesignTheme'),
+        onTap: () {
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute(
+              builder: (context) => SelectDesignScreen(),
             ),
           );
         },
