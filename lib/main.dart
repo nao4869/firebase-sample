@@ -49,6 +49,7 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => SwitchAppThemeProvider(
             currentTheme: colorList[6],
+            selectedImagePath: '',
           ),
         ),
         ChangeNotifierProvider(

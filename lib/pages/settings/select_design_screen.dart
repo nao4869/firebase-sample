@@ -18,121 +18,116 @@ class SelectDesignScreen extends StatefulWidget {
 class _SelectDesignScreenState extends State<SelectDesignScreen> {
   int selectedIndex = 0;
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<SwitchAppThemeProvider>(context);
-    final theme = Provider.of<ThemeProvider>(context);
+    final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     final size = MediaQuery.of(context).size;
-    selectedIndex = themeProvider.getCurrentThemeNumber();
+    final currentThemeId = switchAppThemeProvider.getCurrentThemeNumber();
     return Scaffold(
-      //bottomNavigationBar: banner,
-      backgroundColor: theme.isLightTheme ? const Color(0xfff8f9fd) : black,
-      appBar: AppBar(
-        backgroundColor: themeProvider.currentTheme,
-        brightness: Brightness.dark,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          color:
+              currentThemeId < 9 ? switchAppThemeProvider.currentTheme : white,
+          image: switchAppThemeProvider.selectedImagePath.isNotEmpty
+              ? DecorationImage(
+                  image: AssetImage(imageList[currentThemeId]),
+                  fit: BoxFit.cover,
+                )
+              : null,
         ),
-        title: Text(
-          AppLocalizations.of(context).translate('selectDesign'),
-          style: TextStyle(
-            color: white,
-            fontWeight: FontWeight.bold,
-            fontSize: 14.0,
-          ),
-        ),
-        centerTitle: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 18.0),
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  CmnDialog(context).showYesNoDialog(
-                    titleStr: AppLocalizations.of(context)
-                        .translate('selectingBackgroundImage'),
-                    titleColor: themeProvider.currentTheme,
-                    //msgStr: '変更はまだ保存されていません。',
-                    onPositiveCallback: () {
-                      // ポップ時にDBのアプリテーマを更新
-//                      db.updateCurrentTheme(
-//                        CurrentTheme(
-//                          id: 0,
-//                          themeNumber: selectedIndex,
-//                        ),
-//                        dbInstance,
-//                      )
-//
-//                      // 色を選択した際には、画像のisImageSelectedの値も変更する
-//                      db.updateTalkRoomImage(
-//                        TalkBackgroundImage(
-//                          id: 0,
-//                          backGroundImagePath: '',
-//                          isImageSelected: 0,
-//                        ),
-//                        dbInstance,
-//                      );
-                      Navigator.of(context).pop();
-                    },
-                    positiveBtnStr:
-                        AppLocalizations.of(context).translate('apply'),
-                    onNegativeCallback: null,
-                    negativeBtnStr:
-                        AppLocalizations.of(context).translate('cancel'),
-                  );
-                },
-                child: Text(
-                  AppLocalizations.of(context).translate('select'),
-                  style: const TextStyle(
-                    color: white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.0,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: ColoredBox(
-        color: themeColor,
         child: Column(
           children: [
-            const SizedBox(height: 20),
-            Center(
-              child: SizedBox(
-                width: size.width * .9,
-                height: size.height * .7,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      _buildRoundedButton('Select from free design'),
-                      const SizedBox(height: 20),
-                      _buildDesignLisView(startIndex: 0),
-                      const SizedBox(height: 20),
-                      _buildDesignLisView(startIndex: 4),
-                      const SizedBox(height: 20),
-                      _buildImageLisView(
-                        startIndex: 0,
-                        length: 4,
+            Column(
+              children: [
+                const SizedBox(height: 50),
+                Center(
+                  child: SizedBox(
+                    width: size.width * .9,
+                    height: size.height * .7,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(25.0),
                       ),
-                      const SizedBox(height: 20),
-                      _buildImageLisView(
-                        startIndex: 4,
-                        length: 1,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          _buildRoundedButton('Free design'),
+                          const SizedBox(height: 20),
+                          _buildDesignLisView(startIndex: 0),
+                          const SizedBox(height: 10),
+                          _buildDesignLisView(startIndex: 4),
+                          const SizedBox(height: 10),
+                          _buildImageLisView(
+                            startIndex: 0,
+                            length: 4,
+                          ),
+                          const SizedBox(height: 10),
+                          _buildImageLisView(
+                            startIndex: 4,
+                            length: 1,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: size.width * .42,
+                  height: 50,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      side: BorderSide(
+                        color: switchAppThemeProvider.currentTheme,
+                        width: 3,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    elevation: 0.0,
+                    color: white,
+                    child: Text(
+                      AppLocalizations.of(context).translate('cancel'),
+                      style: TextStyle(
+                        color: switchAppThemeProvider.currentTheme,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                SizedBox(
+                  width: size.width * .42,
+                  height: 50,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      side: BorderSide(
+                        color: white,
+                        width: 3,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    elevation: 0.0,
+                    color: switchAppThemeProvider.currentTheme,
+                    child: Text(
+                      AppLocalizations.of(context).translate('save'),
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -142,19 +137,21 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
 
   Widget _buildRoundedButton(String title) {
     final size = MediaQuery.of(context).size;
+    final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     return SizedBox(
-      width: size.width * .85,
+      width: size.width * .87,
       height: 50,
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
         onPressed: () {},
-        color: black,
+        color: switchAppThemeProvider.currentTheme,
         child: Text(
           title,
           style: TextStyle(
             color: white,
+            fontSize: 18.0,
           ),
         ),
       ),
@@ -166,6 +163,7 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
     int startIndex = 0,
   }) {
     final size = MediaQuery.of(context).size;
+    final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: SizedBox(
@@ -175,12 +173,20 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
           scrollDirection: Axis.horizontal,
           itemCount: 4,
           itemBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              width: 80,
-              height: 80,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: colorList[index + startIndex],
+            return InkWell(
+              onTap: () {
+                switchAppThemeProvider.switchTheme(
+                  colorList[index + startIndex],
+                );
+              },
+              child: SizedBox(
+                width: 80,
+                height: 80,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: colorList[index + startIndex],
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
                 ),
               ),
             );
@@ -199,6 +205,7 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
     int length = 0,
   }) {
     final size = MediaQuery.of(context).size;
+    final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: SizedBox(
@@ -208,12 +215,22 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
           scrollDirection: Axis.horizontal,
           itemCount: length,
           itemBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              width: 80,
-              height: 80,
-              child: Image.asset(
-                imageList[index + startIndex],
-                fit: BoxFit.cover,
+            return InkWell(
+              onTap: () {
+                switchAppThemeProvider.updateSelectedImagePath(
+                  imageList[index + startIndex],
+                );
+              },
+              child: SizedBox(
+                width: 80,
+                height: 80,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: Image.asset(
+                    imageList[index + startIndex],
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             );
           },

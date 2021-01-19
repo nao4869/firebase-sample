@@ -52,8 +52,6 @@ List<Color> colorList = [
   Color(0xffff88b3),
   Colors.purpleAccent,
   Colors.orangeAccent,
-  Colors.yellow,
-  blue,
   lightBlue,
 ];
 

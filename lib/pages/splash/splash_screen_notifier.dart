@@ -77,6 +77,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           'createdAt': Timestamp.fromDate(DateTime.now()),
           'deviceId': FieldValue.arrayUnion([_deviceId]),
           'displayCompletedTodo': true,
+          'backgroundDesignId': 0,
         });
 
         final reference = await fireStoreInstance
