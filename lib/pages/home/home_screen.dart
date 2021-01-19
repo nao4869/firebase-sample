@@ -75,69 +75,84 @@ class _HomeScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('groups')
-                .doc(groupNotifier.groupId)
-                .collection('categories')
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              // エラーの場合
-              if (snapshot.hasError || snapshot.data == null) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      switchAppThemeNotifier.currentTheme,
-                    ),
-                  ),
-                );
-              } else {
-                return CustomTabView(
-                  initPosition: notifier.initPosition,
-                  itemCount: snapshot.data.docs.length,
-                  tabBuilder: (context, index) {
-                    notifier.setInitialTabId(snapshot.data.docs[index].id);
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 100,
-                        maxHeight: 35,
+        child: Stack(
+          children: [
+            Image.asset(
+              'assets/images/sky_forest.jpg',
+              fit: BoxFit.cover,
+            ),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('groups')
+                    .doc(groupNotifier.groupId)
+                    .collection('categories')
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  // エラーの場合
+                  if (snapshot.hasError || snapshot.data == null) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          switchAppThemeNotifier.currentTheme,
+                        ),
                       ),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: colorList[index],
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10),
+                    );
+                  } else {
+                    return CustomTabView(
+                      initPosition: notifier.initPosition,
+                      itemCount: snapshot.data.docs.length,
+                      tabBuilder: (context, index) {
+                        notifier.setInitialTabId(snapshot.data.docs[index].id);
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: 100,
+                            maxHeight: 35,
                           ),
-                        ),
-                        child: Tab(
-                          text: snapshot.data.docs[index].data()['name'],
-                        ),
-                      ),
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: colorList[index],
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10),
+                              ),
+                            ),
+                            child: Tab(
+                              text: snapshot.data.docs[index].data()['name'],
+                            ),
+                          ),
+                        );
+                      },
+                      pageBuilder: (context, index) {
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/tropical_flowers.jpg'),
+                              fit: BoxFit.cover,
+                            ),
+                            color: darkModeNotifier.isLightTheme
+                                ? switchAppThemeNotifier.currentTheme
+                                : darkBlack,
+                          ),
+                          child: createListView(
+                            context: context,
+                            categoryId: snapshot.data.docs[index].id,
+                            index: index,
+                          ),
+                        );
+                      },
+                      onPositionChange: (index) {
+                        notifier.setCurrentIndex(index);
+                        notifier.initPosition = index;
+                        notifier
+                            .updateCurrentTabId(snapshot.data.docs[index].id);
+                      },
+                      onScroll: (position) {},
                     );
-                  },
-                  pageBuilder: (context, index) {
-                    return ColoredBox(
-                      color: darkModeNotifier.isLightTheme
-                          ? switchAppThemeNotifier.currentTheme
-                          : darkBlack,
-                      child: createListView(
-                        context: context,
-                        categoryId: snapshot.data.docs[index].id,
-                        index: index,
-                      ),
-                    );
-                  },
-                  onPositionChange: (index) {
-                    notifier.setCurrentIndex(index);
-                    notifier.initPosition = index;
-                    notifier.updateCurrentTabId(snapshot.data.docs[index].id);
-                  },
-                  onScroll: (position) {},
-                );
-              }
-            }),
+                  }
+                }),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         elevation: 1.0,
