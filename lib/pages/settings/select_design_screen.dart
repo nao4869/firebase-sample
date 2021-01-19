@@ -64,7 +64,7 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
 //                          themeNumber: selectedIndex,
 //                        ),
 //                        dbInstance,
-//                      );
+//                      )
 //
 //                      // 色を選択した際には、画像のisImageSelectedの値も変更する
 //                      db.updateTalkRoomImage(
@@ -98,54 +98,127 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
         ],
       ),
       body: ColoredBox(
-        color: theme.isLightTheme ? backgroundWhite : black,
-        child: GridView.builder(
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: .5,
-            mainAxisSpacing: .5,
-          ),
-          itemCount: colorList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return index == selectedIndex
-                ? Column(
+        color: themeColor,
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: size.width * .9,
+                height: size.height * .7,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  child: Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: size.width * .4,
-                            height: size.width * .332,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: colorList[index],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 5,
-                            right: 5,
-                            child: Icon(
-                              Icons.check_circle,
-                              color: Colors.black54,
-                            ),
-                          )
-                        ],
+                      const SizedBox(height: 20),
+                      _buildRoundedButton('Select from free design'),
+                      const SizedBox(height: 20),
+                      _buildDesignLisView(startIndex: 0),
+                      const SizedBox(height: 20),
+                      _buildDesignLisView(startIndex: 4),
+                      const SizedBox(height: 20),
+                      _buildImageLisView(
+                        startIndex: 0,
+                        length: 4,
+                      ),
+                      const SizedBox(height: 20),
+                      _buildImageLisView(
+                        startIndex: 4,
+                        length: 1,
                       ),
                     ],
-                  )
-                : GestureDetector(
-                    onTap: () {
-                      themeProvider.switchTheme(colorList[index]);
-                      selectedIndex = index;
-                    },
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: colorList[index],
-                      ),
-                    ),
-                  );
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRoundedButton(String title) {
+    final size = MediaQuery.of(context).size;
+    return SizedBox(
+      width: size.width * .85,
+      height: 50,
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        onPressed: () {},
+        color: black,
+        child: Text(
+          title,
+          style: TextStyle(
+            color: white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 背景色表示用ListView
+  Widget _buildDesignLisView({
+    int startIndex = 0,
+  }) {
+    final size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: SizedBox(
+        width: size.width * .85,
+        height: 80,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 4,
+          itemBuilder: (BuildContext context, int index) {
+            return SizedBox(
+              width: 80,
+              height: 80,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: colorList[index + startIndex],
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(width: 10);
+          },
+        ),
+      ),
+    );
+  }
+
+  // 背景画像表示用ListView
+  Widget _buildImageLisView({
+    int startIndex = 0,
+    int length = 0,
+  }) {
+    final size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: SizedBox(
+        width: size.width * .85,
+        height: 80,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: length,
+          itemBuilder: (BuildContext context, int index) {
+            return SizedBox(
+              width: 80,
+              height: 80,
+              child: Image.asset(
+                imageList[index + startIndex],
+                fit: BoxFit.cover,
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(width: 10);
           },
         ),
       ),

@@ -57,6 +57,15 @@ List<Color> colorList = [
   lightBlue,
 ];
 
+//--- アプリテーマ 背景色
+List<String> imageList = [
+  'assets/images/tropical_flowers.jpg',
+  'assets/images/sky_forest.jpg',
+  'assets/images/flower.jpg',
+  'assets/images/variety_flowers.jpg',
+  'assets/images/solar_system.jpg',
+];
+
 const red = Color.fromRGBO(239, 43, 118, 1.0);
 const lightRed = Colors.redAccent;
 const lightGreen = Color.fromRGBO(55, 227, 178, 1.0);
