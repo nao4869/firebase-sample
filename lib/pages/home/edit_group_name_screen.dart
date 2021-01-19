@@ -77,7 +77,11 @@ class _EditGroupNameScreen extends StatelessWidget {
         title: AppLocalizations.of(context).translate('groupName'),
       ),
       StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('groups').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('versions')
+            .doc('v1')
+            .collection('groups')
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
           if (snapshot.hasError || snapshot.data == null) {

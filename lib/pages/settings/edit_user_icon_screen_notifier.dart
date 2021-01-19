@@ -57,6 +57,8 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         _uploadedFileURL = fileURL;
 
         FirebaseFirestore.instance
+            .collection('versions')
+            .doc('v1')
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('users')
@@ -76,6 +78,8 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
 
     FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')

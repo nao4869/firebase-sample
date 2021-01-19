@@ -127,6 +127,8 @@ class _SettingsScreen extends StatelessWidget {
       ),
       StreamBuilder(
         stream: FirebaseFirestore.instance
+            .collection('versions')
+            .doc('v1')
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('users')

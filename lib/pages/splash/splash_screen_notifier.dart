@@ -51,6 +51,8 @@ class SplashScreenNotifier extends ChangeNotifier {
     var isUserExist;
     try {
       isUserExist = await FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
           .collection('groups')
           .where('deviceId', arrayContains: _deviceId)
           .get();
@@ -61,12 +63,18 @@ class SplashScreenNotifier extends ChangeNotifier {
     // TODO: 一度アプリを削除した際の処理をどうするか考慮する
     if (isUserExist.size == 0 || isUserExist == null) {
       // 初回起動時のみ、groupを追加
-      fireStoreInstance.collection('groups').add({
+      fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .add({
         'name': 'Group Name',
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'deviceId': FieldValue.arrayUnion([_deviceId]),
       }).then((value) async {
         fireStoreInstance
+            .collection('versions')
+            .doc('v1')
             .collection('groups')
             .doc(value.id)
             .collection('users')
@@ -81,6 +89,8 @@ class SplashScreenNotifier extends ChangeNotifier {
         });
 
         final reference = await fireStoreInstance
+            .collection('versions')
+            .doc('v1')
             .collection('groups')
             .doc(value.id)
             .collection('categories')
@@ -93,7 +103,9 @@ class SplashScreenNotifier extends ChangeNotifier {
         groupNotifier.updateGroupId(value.id);
 
         // ログイン中ユーザーへのReferenceを取得
-        var userResult = await FirebaseFirestore.instance
+        var userResult = await fireStoreInstance
+            .collection('versions')
+            .doc('v1')
             .collection('groups')
             .doc(value.id)
             .collection('users')
@@ -110,7 +122,9 @@ class SplashScreenNotifier extends ChangeNotifier {
       });
     } else {
       // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
-      var result = await FirebaseFirestore.instance
+      var result = await fireStoreInstance
+          .collection('versions')
+          .doc('v1')
           .collection('groups')
           .where('deviceId', arrayContains: _deviceId)
           .get();
@@ -123,6 +137,8 @@ class SplashScreenNotifier extends ChangeNotifier {
 
       // ログイン中ユーザーへのReferenceを取得
       var userResult = await FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
           .collection('groups')
           .doc(_groupId)
           .collection('users')

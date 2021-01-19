@@ -65,6 +65,8 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .update({'name': groupName});

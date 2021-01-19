@@ -78,6 +78,8 @@ class _HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: StreamBuilder(
             stream: FirebaseFirestore.instance
+                .collection('versions')
+                .doc('v1')
                 .collection('groups')
                 .doc(groupNotifier.groupId)
                 .collection('categories')
@@ -176,6 +178,8 @@ class _HomeScreen extends StatelessWidget {
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('categories')

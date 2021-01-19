@@ -141,6 +141,8 @@ class HomeScreenNotifier extends ChangeNotifier {
 
     // タスク担当ユーザーの参照を取得
     final userReference = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')
@@ -149,6 +151,8 @@ class HomeScreenNotifier extends ChangeNotifier {
 
     // GroupのサブコレクションのサブコレクションCategory下にTo-dosを作成
     FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
@@ -172,6 +176,8 @@ class HomeScreenNotifier extends ChangeNotifier {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
@@ -188,6 +194,8 @@ class HomeScreenNotifier extends ChangeNotifier {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
@@ -205,6 +213,8 @@ class HomeScreenNotifier extends ChangeNotifier {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')

@@ -75,6 +75,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
+            .collection('versions')
+            .doc('v1')
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('categories')
