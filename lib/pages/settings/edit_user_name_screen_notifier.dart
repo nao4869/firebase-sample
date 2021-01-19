@@ -22,6 +22,8 @@ class EditUserNameScreenNotifier extends ChangeNotifier {
     // ログイン中ユーザー名を取得
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       var document = FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('users')
