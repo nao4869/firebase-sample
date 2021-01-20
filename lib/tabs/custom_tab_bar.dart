@@ -104,61 +104,46 @@ class _CustomTabsState extends State<CustomTabView>
     final currentThemeId = switchAppThemeNotifier.getCurrentThemeNumber();
 
     if (widget.itemCount < 1) return widget.stub ?? Container();
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        image: switchAppThemeNotifier.selectedImagePath.isNotEmpty
-            ? DecorationImage(
-                image: AssetImage(
-                  imageList[currentThemeId],
-                ),
-                fit: BoxFit.cover,
-              )
-            : null,
-        color: darkModeNotifier.isLightTheme
-            ? switchAppThemeNotifier.currentTheme
-            : darkBlack,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          const SizedBox(height: 10),
-          Container(
-            alignment: Alignment.center,
-            child: TabBar(
-              isScrollable: true,
-              controller: controller,
-              labelPadding: EdgeInsets.all(0.5),
-              labelColor: white, // 内部の文字色
-              labelStyle: TextStyle(
-                color: white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0,
-              ),
-              unselectedLabelColor: white,
-              indicatorColor: themeProvider.currentTheme,
-              tabs: List.generate(
-                widget.itemCount,
-                (index) => widget.tabBuilder(
-                  context,
-                  index,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        const SizedBox(height: 10),
+        Container(
+          alignment: Alignment.center,
+          child: TabBar(
+            isScrollable: true,
+            controller: controller,
+            labelPadding: EdgeInsets.all(0.5),
+            labelColor: white, // 内部の文字色
+            labelStyle: TextStyle(
+              color: white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14.0,
+            ),
+            unselectedLabelColor: white,
+            indicatorColor: themeProvider.currentTheme,
+            tabs: List.generate(
+              widget.itemCount,
+              (index) => widget.tabBuilder(
+                context,
+                index,
               ),
             ),
           ),
-          Expanded(
-            child: TabBarView(
-              controller: controller,
-              children: List.generate(
-                widget.itemCount,
-                (index) => widget.pageBuilder(
-                  context,
-                  index,
-                ),
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: controller,
+            children: List.generate(
+              widget.itemCount,
+              (index) => widget.pageBuilder(
+                context,
+                index,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

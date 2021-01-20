@@ -96,59 +96,58 @@ class _HomeScreen extends StatelessWidget {
                   ),
                 );
               } else {
-                return CustomTabView(
-                  initPosition: notifier.initPosition,
-                  itemCount: snapshot.data.docs.length,
-                  tabBuilder: (context, index) {
-                    notifier.setInitialTabId(snapshot.data.docs[index].id);
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 100,
-                        maxHeight: 35,
-                      ),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: colorList[index],
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10),
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    image: switchAppThemeNotifier.selectedImagePath.isNotEmpty
+                        ? DecorationImage(
+                            image: AssetImage(
+                              imageList[currentThemeId],
+                            ),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                    color: darkModeNotifier.isLightTheme
+                        ? switchAppThemeNotifier.currentTheme
+                        : darkBlack,
+                  ),
+                  child: CustomTabView(
+                    initPosition: notifier.initPosition,
+                    itemCount: snapshot.data.docs.length,
+                    tabBuilder: (context, index) {
+                      notifier.setInitialTabId(snapshot.data.docs[index].id);
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 100,
+                          maxHeight: 35,
+                        ),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: colorList[index],
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              topLeft: Radius.circular(10),
+                            ),
+                          ),
+                          child: Tab(
+                            text: snapshot.data.docs[index].data()['name'],
                           ),
                         ),
-                        child: Tab(
-                          text: snapshot.data.docs[index].data()['name'],
-                        ),
-                      ),
-                    );
-                  },
-                  pageBuilder: (context, index) {
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        image:
-                            switchAppThemeNotifier.selectedImagePath.isNotEmpty
-                                ? DecorationImage(
-                                    image: AssetImage(
-                                      imageList[currentThemeId],
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
-                                : null,
-                        color: darkModeNotifier.isLightTheme
-                            ? switchAppThemeNotifier.currentTheme
-                            : darkBlack,
-                      ),
-                      child: createListView(
+                      );
+                    },
+                    pageBuilder: (context, index) {
+                      return createListView(
                         context: context,
                         categoryId: snapshot.data.docs[index].id,
                         index: index,
-                      ),
-                    );
-                  },
-                  onPositionChange: (index) {
-                    notifier.setCurrentIndex(index);
-                    notifier.initPosition = index;
-                    notifier.updateCurrentTabId(snapshot.data.docs[index].id);
-                  },
-                  onScroll: (position) {},
+                      );
+                    },
+                    onPositionChange: (index) {
+                      notifier.setCurrentIndex(index);
+                      notifier.initPosition = index;
+                      notifier.updateCurrentTabId(snapshot.data.docs[index].id);
+                    },
+                    onScroll: (position) {},
+                  ),
                 );
               }
             }),
