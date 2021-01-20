@@ -9,6 +9,7 @@ import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -204,128 +205,162 @@ class _HomeScreen extends StatelessWidget {
                       children: [
                         FractionallySizedBox(
                           widthFactor: .95,
-                          child: Card(
-                            color: white.withOpacity(0.9),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                          child: Slidable(
+                            key: Key(document.id),
+                            actionPane: SlidableDrawerActionPane(),
+                            actionExtentRatio: 1.0,
+                            dismissal: SlidableDismissal(
+                              child: SlidableDrawerDismissal(),
+                              onDismissed: (actionType) {
+                                notifier.showSnackBar(
+                                  context,
+                                  actionType == SlideActionType.primary
+                                      ? 'Dismiss Archive'
+                                      : 'Todo deleted',
+                                );
+                                notifier.deleteTodo(
+                                  'to-dos',
+                                  document.id,
+                                );
+                              },
                             ),
-                            child: ListTile(
-                              leading: CircularCheckBox(
-                                value: document['isChecked'],
-                                checkColor: Colors.white,
-                                activeColor: colorList[index],
-                                inactiveColor: colorList[index],
-                                disabledColor: Colors.grey,
-                                onChanged: (val) {
-                                  notifier.updateTodoIsChecked(
-                                    'to-dos',
-                                    document.id,
-                                    !document['isChecked'],
-                                  );
-                                },
+                            secondaryActions: <Widget>[
+                              IconSlideAction(
+                                caption: 'Delete',
+                                color: Colors.red,
+                                icon: Icons.delete,
+                                onTap: () => notifier.showSnackBar(
+                                  context,
+                                  'Delete',
+                                ),
                               ),
-                              title: InkWell(
-                                onTap: () {
-                                  notifier.editTodo(
-                                    collection: 'to-dos',
-                                    documentId: document.id,
-                                    initialValue: document['name'],
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: Text(
-                                          document['name'] ?? '',
-                                          maxLines: 10,
-                                          style: TextStyle(
-                                            fontSize: 15.0,
-                                            color: darkModeNotifier.isLightTheme
-                                                ? black
-                                                : white,
-                                            decoration: document['isChecked']
-                                                ? TextDecoration.lineThrough
-                                                : TextDecoration.none,
+                            ],
+                            child: Card(
+                              color: white.withOpacity(0.9),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ListTile(
+                                leading: CircularCheckBox(
+                                  value: document['isChecked'],
+                                  checkColor: Colors.white,
+                                  activeColor: colorList[index],
+                                  inactiveColor: colorList[index],
+                                  disabledColor: Colors.grey,
+                                  onChanged: (val) {
+                                    notifier.updateTodoIsChecked(
+                                      'to-dos',
+                                      document.id,
+                                      !document['isChecked'],
+                                    );
+                                  },
+                                ),
+                                title: InkWell(
+                                  onTap: () {
+                                    notifier.editTodo(
+                                      collection: 'to-dos',
+                                      documentId: document.id,
+                                      initialValue: document['name'],
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: Text(
+                                            document['name'] ?? '',
+                                            maxLines: 10,
+                                            style: TextStyle(
+                                              fontSize: 15.0,
+                                              color:
+                                                  darkModeNotifier.isLightTheme
+                                                      ? black
+                                                      : white,
+                                              decoration: document['isChecked']
+                                                  ? TextDecoration.lineThrough
+                                                  : TextDecoration.none,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              // 画像部分の表示
-                              subtitle: document['imagePath'] != null &&
-                                      document['imagePath'] != ''
-                                  ? Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        child: InkWell(
-                                          onTap: () {
-                                            notifier.navigateZoomImageScreen(
-                                              document['imagePath'],
-                                              document.id,
-                                            );
+                                // 画像部分の表示
+                                subtitle: document['imagePath'] != null &&
+                                        document['imagePath'] != ''
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              notifier.navigateZoomImageScreen(
+                                                document['imagePath'],
+                                                document.id,
+                                              );
 //                                    notifier.editTodo(
 //                                      collection: 'to-dos',
 //                                      documentId: document.documentID,
 //                                      initialValue: document['name'],
 //                                    );
-                                          },
-                                          child: Hero(
-                                            tag: document.id,
-                                            child: Image.network(
-                                              document['imagePath'],
-                                              fit: BoxFit.cover,
+                                            },
+                                            child: Hero(
+                                              tag: document.id,
+                                              child: Image.network(
+                                                document['imagePath'],
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  : document['videoPath'] != null &&
-                                          document['videoPath'] != ''
-                                      ? FutureBuilder(
-                                          future: notifier
-                                              .initializeVideoPlayerFuture,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.done) {
-                                              return InkWell(
-                                                onTap:
-                                                    notifier.playAndPauseVideo,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 8.0),
-                                                  child: AspectRatio(
-                                                    aspectRatio: notifier
-                                                        .videoController
-                                                        .value
-                                                        .aspectRatio,
-                                                    child: VideoPlayer(
-                                                      notifier.videoController,
+                                      )
+                                    : document['videoPath'] != null &&
+                                            document['videoPath'] != ''
+                                        ? FutureBuilder(
+                                            future: notifier
+                                                .initializeVideoPlayerFuture,
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                return InkWell(
+                                                  onTap: notifier
+                                                      .playAndPauseVideo,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 8.0),
+                                                    child: AspectRatio(
+                                                      aspectRatio: notifier
+                                                          .videoController
+                                                          .value
+                                                          .aspectRatio,
+                                                      child: VideoPlayer(
+                                                        notifier
+                                                            .videoController,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            } else {
-                                              return Center(
-                                                  child:
-                                                      CircularProgressIndicator());
-                                            }
-                                          },
-                                        )
-                                      : null,
-                              trailing: InkWell(
-                                onTap: () {},
-                                child: SizedBox(
-                                  height: 35,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: imageWidget,
+                                                );
+                                              } else {
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+                                            },
+                                          )
+                                        : null,
+                                trailing: InkWell(
+                                  onTap: () {},
+                                  child: SizedBox(
+                                    height: 35,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: imageWidget,
+                                    ),
                                   ),
                                 ),
                               ),

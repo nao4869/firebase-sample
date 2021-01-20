@@ -15,6 +15,7 @@ import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -32,6 +33,11 @@ class HomeScreenNotifier extends ChangeNotifier {
       'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
     );
     initializeVideoPlayerFuture = videoController.initialize();
+
+    slidableController = SlidableController(
+      onSlideAnimationChanged: handleSlideAnimationChanged,
+      onSlideIsOpenChanged: handleSlideIsOpenChanged,
+    );
   }
   final BuildContext context;
   final nameFieldFormKey = GlobalKey<FormState>();
@@ -47,6 +53,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   String createdDate;
   bool get isDateValid => createdDate != null;
 
+  SlidableController slidableController;
   VideoPlayerController videoController;
   Future<void> initializeVideoPlayerFuture;
   String currentTabDocumentId = '';
@@ -55,11 +62,24 @@ class HomeScreenNotifier extends ChangeNotifier {
   bool isInitialLoadCompleted = false;
   List<QueryDocumentSnapshot> todoList = [];
 
+  Animation<double> _rotationAnimation;
+  Color _fabColor = Colors.blue;
+
   @override
   void dispose() {
     textController.dispose();
     videoController.dispose();
     super.dispose();
+  }
+
+  void handleSlideAnimationChanged(Animation<double> slideAnimation) {
+    _rotationAnimation = slideAnimation;
+    notifyListeners();
+  }
+
+  void handleSlideIsOpenChanged(bool isOpen) {
+    _fabColor = isOpen ? Colors.green : Colors.blue;
+    notifyListeners();
   }
 
   // 完了済みタスク表示、非表示切り替え
@@ -489,6 +509,62 @@ class HomeScreenNotifier extends ChangeNotifier {
           },
         );
       },
+    );
+  }
+
+  static Widget getActionPane(int index) {
+    switch (index % 4) {
+      case 0:
+        return SlidableBehindActionPane();
+      case 1:
+        return SlidableStrechActionPane();
+      case 2:
+        return SlidableScrollActionPane();
+      case 3:
+        return SlidableDrawerActionPane();
+      default:
+        return null;
+    }
+  }
+
+  static Color getAvatarColor(int index) {
+    switch (index % 4) {
+      case 0:
+        return Colors.red;
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.blue;
+      case 3:
+        return Colors.indigoAccent;
+      default:
+        return null;
+    }
+  }
+
+  static String getSubtitle(int index) {
+    switch (index % 4) {
+      case 0:
+        return 'SlidableBehindActionPane';
+      case 1:
+        return 'SlidableStrechActionPane';
+      case 2:
+        return 'SlidableScrollActionPane';
+      case 3:
+        return 'SlidableDrawerActionPane';
+      default:
+        return null;
+    }
+  }
+
+  void showSnackBar(
+    BuildContext context,
+    String text,
+  ) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+      ),
     );
   }
 }
