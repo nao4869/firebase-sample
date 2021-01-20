@@ -99,11 +99,25 @@ class _CustomTabsState extends State<CustomTabView>
   Widget build(BuildContext context) {
     final themeProvider =
         Provider.of<SwitchAppThemeProvider>(context, listen: false);
-    final theme = Provider.of<ThemeProvider>(context, listen: false);
+    final darkModeNotifier = Provider.of<ThemeProvider>(context);
+    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
+    final currentThemeId = switchAppThemeNotifier.getCurrentThemeNumber();
 
     if (widget.itemCount < 1) return widget.stub ?? Container();
-    return ColoredBox(
-      color: theme.isLightTheme ? white : darkBlack,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        image: switchAppThemeNotifier.selectedImagePath.isNotEmpty
+            ? DecorationImage(
+                image: AssetImage(
+                  imageList[currentThemeId],
+                ),
+                fit: BoxFit.cover,
+              )
+            : null,
+        color: darkModeNotifier.isLightTheme
+            ? switchAppThemeNotifier.currentTheme
+            : darkBlack,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -121,15 +135,6 @@ class _CustomTabsState extends State<CustomTabView>
                 fontSize: 14.0,
               ),
               unselectedLabelColor: white,
-              // indicator: ShapeDecoration(
-              //   color: themeProvider.currentTheme,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.only(
-              //       topRight: Radius.circular(10),
-              //       topLeft: Radius.circular(10),
-              //     ),
-              //   ),
-              // ),
               indicatorColor: themeProvider.currentTheme,
               tabs: List.generate(
                 widget.itemCount,
