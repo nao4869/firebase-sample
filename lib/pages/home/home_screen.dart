@@ -205,6 +205,7 @@ class _HomeScreen extends StatelessWidget {
                         FractionallySizedBox(
                           widthFactor: .95,
                           child: Card(
+                            color: white.withOpacity(0.9),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
