@@ -192,5 +192,7 @@
   "tutorialTodo3": "From folder icon, you are able to manage categories",
   "backgroundDesign": "Background design",
   "selectDesign": "Select design",
-  "select": "Select"
+  "select": "Select",
+  "deleteCategory": "Delete category",
+  "confirmDeleteCategoryTodo": "To-dos in this category will also be deleted. Does it okay?"
 }

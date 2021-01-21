@@ -190,5 +190,7 @@
   "tutorialTodo3": "右上フォルダーアイコンより、カテゴリーを追加、編集、削除できます。",
   "backgroundDesign": "背景画像",
   "selectDesign": "デザインを選択する",
-  "select": "選択する"
+  "select": "選択する",
+  "deleteCategory": "カテゴリーを削除",
+  "confirmDeleteCategoryTodo": "カテゴリー内の全てのTodoも削除されます。よろしいですか？"
 }

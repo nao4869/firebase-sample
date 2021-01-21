@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/add_category_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
+import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,8 +103,10 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                deleteCategory(collection, documentId);
-                deleteCategoryTodoList(documentId);
+                deleteConfirmDialog(
+                  collection,
+                  documentId,
+                );
               },
             ),
           ],
@@ -141,6 +145,27 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       'createdAt': Timestamp.fromDate(DateTime.now()),
     });
     notifyListeners();
+  }
+
+  void deleteConfirmDialog(
+    String collection,
+    String documentId,
+  ) {
+    CmnDialog(context).showYesNoDialog(
+      onPositiveCallback: () {
+        deleteCategory(
+          collection,
+          documentId,
+        );
+        deleteCategoryTodoList(documentId);
+      },
+      titleStr: AppLocalizations.of(context).translate('deleteCategory'),
+      titleColor: switchAppThemeNotifier.currentTheme,
+      msgStr:
+          AppLocalizations.of(context).translate('confirmDeleteCategoryTodo'),
+      positiveBtnStr: cmnOkay,
+      negativeBtnStr: AppLocalizations.of(context).translate('cancel'),
+    );
   }
 
   // 単一のCategoryを指定されたFireStore Collectionから削除します。
