@@ -243,6 +243,82 @@ class CmnDialog {
     );
   }
 
+  Widget showDialogWidget({
+    @required Function onPositiveCallback,
+    String msgStr,
+    String titleStr,
+    Color titleColor,
+    String positiveBtnStr,
+    String negativeBtnStr,
+    bool isPositiveCloseDialog = true,
+    Function onNegativeCallback,
+  }) {
+    final themeProvider =
+        Provider.of<SwitchAppThemeProvider>(context, listen: false);
+    final theme = Provider.of<ThemeProvider>(context, listen: false);
+    return Dialog(
+      backgroundColor: theme.isLightTheme ? white : black,
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(DIALOG_CORNER_ROUND), // Dialog自体の四隅角丸設定
+      ),
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 20,
+        ),
+        child: IntrinsicWidth(
+          child: IntrinsicHeight(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                const SizedBox(
+                  height: 10,
+                ), // スペーサー
+
+                // ダイアログタイトル表示設定
+                _getTitleTextWidget(titleStr: titleStr, titleColor: titleColor),
+                if (null != titleStr)
+                  const SizedBox(
+                    height: 20,
+                  ), // Title が設定されているなら、スペース空ける
+
+                // ダイアログメッセージ本文表示設定
+                _getMsgTextWidget(msgStr: msgStr),
+                if (null != msgStr)
+                  const SizedBox(
+                    height: 30,
+                  ), // 本文が設定されているなら、スペース空ける
+
+                //--- 以下ボタンエリア -----------------
+                Column(
+                  children: <Widget>[
+                    _getBtn(
+                      // PositiveButton
+                      btnStr: positiveBtnStr,
+                      btnBgColor: themeProvider.currentTheme,
+                      btnTextColor: COLOR_WHITE,
+                      isCloseDialog: isPositiveCloseDialog,
+                      onPressedCallback: onPositiveCallback,
+                    ),
+                    _getBtn(
+                      // NegativeButton
+                      btnStr: negativeBtnStr,
+                      btnBgColor: secondButtonColor,
+                      btnTextColor: COLOR_DLGBTN_ACCENT_NONE,
+                      onPressedCallback: onNegativeCallback,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<bool> showAppQuitConfirmDlg() async {
     if (Platform.isAndroid) {
       showYesNoDialog(

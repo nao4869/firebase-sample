@@ -4,7 +4,6 @@ import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
-import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:flutter/cupertino.dart';

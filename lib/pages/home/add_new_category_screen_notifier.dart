@@ -8,6 +8,7 @@ import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.
 import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_localizations.dart';
@@ -18,6 +19,10 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     this.switchAppThemeNotifier,
   }) {
     /// Notifier生成時に、ログインユーザーを取得
+    slidableController = SlidableController(
+      onSlideAnimationChanged: handleSlideAnimationChanged,
+      onSlideIsOpenChanged: handleSlideIsOpenChanged,
+    );
   }
 
   final BuildContext context;
@@ -26,11 +31,25 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
 
+  SlidableController slidableController;
   String taskName;
   int currentTabIndex = 0;
   int initPosition = 0;
   int selectedColorIndex = 0;
   bool isValid = false;
+
+  Animation<double> _rotationAnimation;
+  Color _fabColor = Colors.blue;
+
+  void handleSlideAnimationChanged(Animation<double> slideAnimation) {
+    _rotationAnimation = slideAnimation;
+    notifyListeners();
+  }
+
+  void handleSlideIsOpenChanged(bool isOpen) {
+    _fabColor = isOpen ? Colors.green : Colors.blue;
+    notifyListeners();
+  }
 
   void pop() {
     Navigator.of(context).pop();
@@ -70,6 +89,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   }
 
   Future<void> displayActionSheet({
+    SlideActionType actionType,
     String collection,
     String documentId,
   }) {
@@ -104,6 +124,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
               onPressed: () {
                 Navigator.of(context).pop();
                 deleteConfirmDialog(
+                  actionType,
                   collection,
                   documentId,
                 );
@@ -147,18 +168,26 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteConfirmDialog(
+  Widget deleteConfirmDialog(
+    SlideActionType actionType,
     String collection,
     String documentId,
   ) {
-    CmnDialog(context).showYesNoDialog(
+    return CmnDialog(context).showDialogWidget(
       onPositiveCallback: () {
         deleteCategory(
           collection,
           documentId,
         );
         deleteCategoryTodoList(documentId);
+        showSnackBar(
+          context,
+          actionType == SlideActionType.primary
+              ? 'Dismiss Archive'
+              : 'Todo deleted',
+        );
       },
+      onNegativeCallback: () {},
       titleStr: AppLocalizations.of(context).translate('deleteCategory'),
       titleColor: switchAppThemeNotifier.currentTheme,
       msgStr:
@@ -260,6 +289,62 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
           },
         );
       },
+    );
+  }
+
+  static Widget getActionPane(int index) {
+    switch (index % 4) {
+      case 0:
+        return SlidableBehindActionPane();
+      case 1:
+        return SlidableStrechActionPane();
+      case 2:
+        return SlidableScrollActionPane();
+      case 3:
+        return SlidableDrawerActionPane();
+      default:
+        return null;
+    }
+  }
+
+  static Color getAvatarColor(int index) {
+    switch (index % 4) {
+      case 0:
+        return Colors.red;
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.blue;
+      case 3:
+        return Colors.indigoAccent;
+      default:
+        return null;
+    }
+  }
+
+  static String getSubtitle(int index) {
+    switch (index % 4) {
+      case 0:
+        return 'SlidableBehindActionPane';
+      case 1:
+        return 'SlidableStrechActionPane';
+      case 2:
+        return 'SlidableScrollActionPane';
+      case 3:
+        return 'SlidableDrawerActionPane';
+      default:
+        return null;
+    }
+  }
+
+  void showSnackBar(
+    BuildContext context,
+    String text,
+  ) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+      ),
     );
   }
 }
