@@ -132,6 +132,8 @@ class _SettingsScreen extends StatelessWidget {
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('users')
+            .doc(userNotifier.referenceToUser)
+            .collection('userSettings')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
@@ -144,16 +146,14 @@ class _SettingsScreen extends StatelessWidget {
               ),
             );
           } else {
-            DocumentSnapshot currentUserSetting = snapshot.data.docs.firstWhere(
-                (element) => element.id == userNotifier.referenceToUser,
-                orElse: null);
+            DocumentSnapshot currentUserSetting = snapshot?.data?.docs?.first;
             return SettingRow(
               title: AppLocalizations.of(context)
                   .translate('displayCompletedTodo'),
               onChange: (bool value) {
                 notifier.updateIsDisplayCompletedTodo(value);
               },
-              isEnable: currentUserSetting['displayCompletedTodo'],
+              isEnable: currentUserSetting['displayCompletedTodo'] ?? false,
             );
           }
         },

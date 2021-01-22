@@ -30,38 +30,22 @@ class SplashScreenNotifier extends ChangeNotifier {
   String _referenceToUser;
   bool _isDisplayCompletedTodo = false;
   String _groupId = '';
+  String _deviceId;
+  DocumentReference _userReference;
+  QuerySnapshot _isUserExist;
 
   Future<void> initialize() async {
     if (_isLoading) {
       return;
     }
-
-    final deviceNotifier =
-        Provider.of<DeviceIdProvider>(context, listen: false);
     _isLoading = true;
-
     final fireStoreInstance = FirebaseFirestore.instance;
-    String _deviceId;
-    if (Platform.isAndroid) {
-      _deviceId = deviceNotifier.androidUid;
-    } else {
-      _deviceId = deviceNotifier.iosUid;
-    }
 
-    var isUserExist;
-    try {
-      isUserExist = await FirebaseFirestore.instance
-          .collection('versions')
-          .doc('v1')
-          .collection('groups')
-          .where('deviceId', arrayContains: _deviceId)
-          .get();
-    } catch (error) {
-      debugPrint('Group id does not exist');
-    }
+    initDeviceId();
+    await initUserReference();
 
     // TODO: 一度アプリを削除した際の処理をどうするか考慮する
-    if (isUserExist.size == 0 || isUserExist == null) {
+    if (_isUserExist.size == 0 || _isUserExist == null) {
       // 初回起動時のみ、groupを追加
       fireStoreInstance
           .collection('versions')
@@ -72,7 +56,7 @@ class SplashScreenNotifier extends ChangeNotifier {
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'deviceId': FieldValue.arrayUnion([_deviceId]),
       }).then((value) async {
-        fireStoreInstance
+        _userReference = await fireStoreInstance
             .collection('versions')
             .doc('v1')
             .collection('groups')
@@ -84,11 +68,11 @@ class SplashScreenNotifier extends ChangeNotifier {
           'imagePath': null,
           'createdAt': Timestamp.fromDate(DateTime.now()),
           'deviceId': FieldValue.arrayUnion([_deviceId]),
-          'displayCompletedTodo': true,
-          'backgroundDesignId': 0,
         });
+        addUserSettings(value.id);
 
-        final reference = await fireStoreInstance
+        // チュートリアルCategoryを追加
+        final _reference = await fireStoreInstance
             .collection('versions')
             .doc('v1')
             .collection('groups')
@@ -118,7 +102,7 @@ class SplashScreenNotifier extends ChangeNotifier {
         // ProviderのUser参照を更新
         userNotifier.updateUserReference(_referenceToUser);
         userNotifier.updateCompletedTodo(true);
-        addTutorialTodoList(reference);
+        addTutorialTodoList(_reference);
       });
     } else {
       // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
@@ -136,7 +120,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       groupNotifier.updateGroupId(_groupId);
 
       // ログイン中ユーザーへのReferenceを取得
-      var userResult = await FirebaseFirestore.instance
+      final userResult = await FirebaseFirestore.instance
           .collection('versions')
           .doc('v1')
           .collection('groups')
@@ -147,11 +131,26 @@ class SplashScreenNotifier extends ChangeNotifier {
 
       userResult.docs.forEach((snapshot) {
         _referenceToUser = snapshot.reference.id;
-        _isDisplayCompletedTodo = snapshot['displayCompletedTodo'];
       });
+
+      String _userSettingsReference;
+      final userSettingsReference = await FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(_groupId)
+          .collection('users')
+          .doc(_referenceToUser)
+          .collection('userSettings')
+          .get();
+      userSettingsReference.docs.forEach((snapshot) {
+        _userSettingsReference = snapshot.reference.id;
+      });
+
       // ProviderのUser参照を更新
       userNotifier.updateUserReference(_referenceToUser);
       userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
+      userNotifier.updateUserSettingsReference(_userSettingsReference);
     }
     if (groupNotifier.groupId != null && groupNotifier.groupId.isNotEmpty) {
       // ホーム画面遷移
@@ -159,6 +158,51 @@ class SplashScreenNotifier extends ChangeNotifier {
     } else {
       _isLoading = false;
     }
+  }
+
+  // デバイスIDを設定
+  void initDeviceId() {
+    final deviceNotifier =
+        Provider.of<DeviceIdProvider>(context, listen: false);
+    if (Platform.isAndroid) {
+      _deviceId = deviceNotifier.androidUid;
+    } else {
+      _deviceId = deviceNotifier.iosUid;
+    }
+  }
+
+  // 初回ログイン判定
+  void initUserReference() async {
+    try {
+      _isUserExist = await FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .where('deviceId', arrayContains: _deviceId)
+          .get();
+    } catch (error) {
+      debugPrint('Group id does not exist');
+    }
+  }
+
+  void addUserSettings(String documentId) async {
+    // UserSettingsコレクションを追加
+    final reference = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .doc(documentId)
+        .collection('users')
+        .doc(_userReference.id)
+        .collection('userSettings')
+        .add({
+      // UserSettingsドキュメントを追加
+      'createdAt': Timestamp.fromDate(DateTime.now()),
+      'displayCompletedTodo': true,
+      'backgroundDesignId': 0,
+      'backgroundImagePath': '',
+    });
+    userNotifier.updateUserSettingsReference(reference.id);
   }
 
   // 初回起動時にチュートリアルを追加

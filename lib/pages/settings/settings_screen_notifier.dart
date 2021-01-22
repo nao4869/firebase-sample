@@ -56,6 +56,8 @@ class SettingsScreenNotifier extends ChangeNotifier {
         .doc(groupNotifier.groupId)
         .collection('users')
         .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
         .update({"displayCompletedTodo": value});
 
     // User Providerの値も更新

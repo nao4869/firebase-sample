@@ -60,6 +60,7 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => UserReferenceProvider(
             referenceToUser: '',
+            userSettingsReference: '',
             isDisplayCompletedTodo: true,
           ),
         ),
