@@ -150,6 +150,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       userSettingsReference.docs.forEach((snapshot) {
         _userSettingsReference = snapshot.reference.id;
         _selectedImagePath = snapshot.data()['backgroundImagePath'];
+        _isDisplayCompletedTodo = snapshot.data()['displayCompletedTodo'];
       });
 
       // ProviderのUser参照を更新
