@@ -20,7 +20,8 @@ class SelectDesignScreen extends StatelessWidget {
       create: (_) => SelectDesignScreenNotifier(
         context: context,
         switchAppThemeNotifier: Provider.of(context, listen: false),
-        themeNotifier: Provider.of(context, listen: false),
+        userReferenceNotifier: Provider.of(context, listen: false),
+        groupNotifier: Provider.of(context, listen: false),
       ),
       child: _SelectDesignScreen(),
     );
@@ -249,8 +250,6 @@ class _SelectDesignScreen extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () {
-                switchAppThemeProvider
-                    .updateSelectedImagePath(imageList[index + startIndex]);
                 notifier.updateThemeColor(
                   index,
                   imageList[index + startIndex],

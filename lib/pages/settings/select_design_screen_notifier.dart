@@ -13,23 +13,14 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
   SelectDesignScreenNotifier({
     this.context,
     this.switchAppThemeNotifier,
-    this.themeNotifier,
     this.groupNotifier,
-    this.userReference,
+    this.userReferenceNotifier,
   });
-
-  String _uploadedFileURL;
-  File _image;
-  bool isUploadingImage = false;
 
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
-  final ThemeProvider themeNotifier;
   final CurrentGroupProvider groupNotifier;
-  final UserReferenceProvider userReference;
-  final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
-
-  int selectedIndex = 0;
+  final UserReferenceProvider userReferenceNotifier;
 
   // FireStoreの該当ユーザー画像を更新
   // Assets内の画像を適用
@@ -37,7 +28,6 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
     int backgroundDesignId,
     String imagePath,
   ) async {
-    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
 
@@ -47,13 +37,14 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')
-        .doc(notifier.referenceToUser)
+        .doc(userReferenceNotifier.referenceToUser)
         .collection('userSettings')
-        .doc(notifier.userSettingsReference)
+        .doc(userReferenceNotifier.userSettingsReference)
         .update({
       "backgroundDesignId": backgroundDesignId,
       "backgroundImagePath": imagePath,
     });
+    switchAppThemeNotifier.updateSelectedImagePath(imagePath);
     notifyListeners();
   }
 
