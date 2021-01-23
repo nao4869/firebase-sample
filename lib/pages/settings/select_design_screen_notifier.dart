@@ -33,7 +33,10 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
 
   // FireStoreの該当ユーザー画像を更新
   // Assets内の画像を適用
-  void updateUserAssetProfile(String path) async {
+  void updateThemeColor(
+    int backgroundDesignId,
+    String imagePath,
+  ) async {
     final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
@@ -45,7 +48,16 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
         .doc(groupNotifier.groupId)
         .collection('users')
         .doc(notifier.referenceToUser)
-        .update({'imagePath': path});
+        .collection('userSettings')
+        .doc(notifier.userSettingsReference)
+        .update({
+      "backgroundDesignId": backgroundDesignId,
+      "backgroundImagePath": imagePath,
+    });
     notifyListeners();
+  }
+
+  void popDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop('dialog');
   }
 }

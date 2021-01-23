@@ -61,18 +61,29 @@ class _SelectDesignScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          _buildRoundedButton(context, 'Free design'),
+                          _buildRoundedButton(
+                            context,
+                            'Free design',
+                          ),
                           const SizedBox(height: 20),
-                          _buildDesignLisView(startIndex: 0),
+                          _buildDesignLisView(
+                            context: context,
+                            startIndex: 0,
+                          ),
                           const SizedBox(height: 10),
-                          _buildDesignLisView(startIndex: 4),
+                          _buildDesignLisView(
+                            context: context,
+                            startIndex: 4,
+                          ),
                           const SizedBox(height: 10),
                           _buildImageLisView(
+                            context: context,
                             startIndex: 0,
                             length: 4,
                           ),
                           const SizedBox(height: 10),
                           _buildImageLisView(
+                            context: context,
                             startIndex: 4,
                             length: 1,
                           ),
@@ -178,6 +189,7 @@ class _SelectDesignScreen extends StatelessWidget {
     int startIndex = 0,
   }) {
     final size = MediaQuery.of(context).size;
+    final notifier = Provider.of<SelectDesignScreenNotifier>(context);
     final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
@@ -190,8 +202,11 @@ class _SelectDesignScreen extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () {
-                switchAppThemeProvider.switchTheme(
-                  colorList[index + startIndex],
+                switchAppThemeProvider
+                    .switchTheme(colorList[index + startIndex]);
+                notifier.updateThemeColor(
+                  index,
+                  '',
                 );
               },
               child: SizedBox(
@@ -221,6 +236,7 @@ class _SelectDesignScreen extends StatelessWidget {
     int length = 0,
   }) {
     final size = MediaQuery.of(context).size;
+    final notifier = Provider.of<SelectDesignScreenNotifier>(context);
     final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
@@ -233,7 +249,10 @@ class _SelectDesignScreen extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () {
-                switchAppThemeProvider.updateSelectedImagePath(
+                switchAppThemeProvider
+                    .updateSelectedImagePath(imageList[index + startIndex]);
+                notifier.updateThemeColor(
+                  index,
                   imageList[index + startIndex],
                 );
               },
@@ -256,9 +275,5 @@ class _SelectDesignScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void popDialog(BuildContext context) {
-    Navigator.of(context, rootNavigator: true).pop('dialog');
   }
 }
