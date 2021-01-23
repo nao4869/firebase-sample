@@ -1,6 +1,7 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/pages/settings/select_design_screen_notifier.dart';
 import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +9,25 @@ import 'package:provider/provider.dart';
 
 import '../../app_localizations.dart';
 
-class SelectDesignScreen extends StatefulWidget {
-  SelectDesignScreen();
+class SelectDesignScreen extends StatelessWidget {
+  static String routeName = 'select-design-screen';
+
+  const SelectDesignScreen();
 
   @override
-  _SelectDesignScreenState createState() => _SelectDesignScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SelectDesignScreenNotifier(
+        context: context,
+        switchAppThemeNotifier: Provider.of(context, listen: false),
+        themeNotifier: Provider.of(context, listen: false),
+      ),
+      child: _SelectDesignScreen(),
+    );
+  }
 }
 
-class _SelectDesignScreenState extends State<SelectDesignScreen> {
-  int selectedIndex = 0;
+class _SelectDesignScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     final size = MediaQuery.of(context).size;
@@ -50,7 +61,7 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          _buildRoundedButton('Free design'),
+                          _buildRoundedButton(context, 'Free design'),
                           const SizedBox(height: 20),
                           _buildDesignLisView(startIndex: 0),
                           const SizedBox(height: 10),
@@ -135,7 +146,10 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
     );
   }
 
-  Widget _buildRoundedButton(String title) {
+  Widget _buildRoundedButton(
+    BuildContext context,
+    String title,
+  ) {
     final size = MediaQuery.of(context).size;
     final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     return SizedBox(
@@ -160,6 +174,7 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
 
   // 背景色表示用ListView
   Widget _buildDesignLisView({
+    BuildContext context,
     int startIndex = 0,
   }) {
     final size = MediaQuery.of(context).size;
@@ -201,6 +216,7 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
 
   // 背景画像表示用ListView
   Widget _buildImageLisView({
+    BuildContext context,
     int startIndex = 0,
     int length = 0,
   }) {
@@ -242,7 +258,7 @@ class _SelectDesignScreenState extends State<SelectDesignScreen> {
     );
   }
 
-  void popDialog() {
+  void popDialog(BuildContext context) {
     Navigator.of(context, rootNavigator: true).pop('dialog');
   }
 }
