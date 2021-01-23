@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
+import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,7 @@ import '../../app_localizations.dart';
 class SplashScreenNotifier extends ChangeNotifier {
   SplashScreenNotifier({
     this.context,
+    this.switchAppThemeProvider,
     this.groupNotifier,
     this.userNotifier,
   }) {
@@ -23,11 +25,13 @@ class SplashScreenNotifier extends ChangeNotifier {
   }
 
   final BuildContext context;
+  final SwitchAppThemeProvider switchAppThemeProvider;
   final CurrentGroupProvider groupNotifier;
   final UserReferenceProvider userNotifier;
 
   bool _isLoading = false;
   String _referenceToUser;
+  String _selectedImagePath;
   bool _isDisplayCompletedTodo = false;
   String _groupId = '';
   String _deviceId;
@@ -145,12 +149,16 @@ class SplashScreenNotifier extends ChangeNotifier {
           .get();
       userSettingsReference.docs.forEach((snapshot) {
         _userSettingsReference = snapshot.reference.id;
+        _selectedImagePath = snapshot.data()['backgroundImagePath'];
       });
 
       // ProviderのUser参照を更新
       userNotifier.updateUserReference(_referenceToUser);
       userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
       userNotifier.updateUserSettingsReference(_userSettingsReference);
+
+      // 設定中の背景色がある際には、Providerで保持する
+      switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
     }
     if (groupNotifier.groupId != null && groupNotifier.groupId.isNotEmpty) {
       // ホーム画面遷移
