@@ -18,7 +18,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     this.context,
     this.switchAppThemeNotifier,
   }) {
-    /// Notifier生成時に、ログインユーザーを取得
+    /// Controllerを初期化
     slidableController = SlidableController(
       onSlideAnimationChanged: handleSlideAnimationChanged,
       onSlideIsOpenChanged: handleSlideIsOpenChanged,

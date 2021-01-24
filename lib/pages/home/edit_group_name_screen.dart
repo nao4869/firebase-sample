@@ -6,12 +6,10 @@ import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/home/edit_group_name_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
-import 'package:firebase_sample/widgets/buttons/rounded_bottom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_sample/extensions/set_image_path.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../app_localizations.dart';
 
@@ -35,9 +33,11 @@ class EditGroupNameScreen extends StatelessWidget {
 
 class _EditGroupNameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
+    final notifier = Provider.of<EditGroupNameScreenNotifier>(context);
     final theme = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
+      key: notifier.scaffoldKey,
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
       appBar: AppBar(
         centerTitle: true,
@@ -170,7 +170,6 @@ class _EditGroupNameScreen extends StatelessWidget {
   List<Widget> buildAppSettingsSection(BuildContext context) {
     final notifier = Provider.of<EditGroupNameScreenNotifier>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
-    final size = MediaQuery.of(context).size;
     return [
       SettingTitle(
         title: AppLocalizations.of(context).translate('currentGroupMember'),
@@ -247,45 +246,10 @@ class _EditGroupNameScreen extends StatelessWidget {
   }
 
   Widget _buildInvitePersonTile(BuildContext context) {
-    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
-    final groupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final notifier = Provider.of<EditGroupNameScreenNotifier>(context);
     final size = MediaQuery.of(context).size;
     return InkWell(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (_) {
-            return AlertDialog(
-              title: SizedBox(
-                width: size.width * .7,
-                height: size.width * .7,
-                child: QrImage(
-                  data: groupNotifier.groupId,
-                  backgroundColor: white,
-                  foregroundColor: switchAppThemeNotifier.currentTheme,
-                  version: QrVersions.auto,
-                  size: 320,
-                  gapless: false,
-                ),
-              ),
-              content: Text(
-                'Steps for joining\n\n(Invited person)\n1. Download the app\n2. Scan QR code by camera or QR code reader',
-              ),
-              contentPadding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
-              actions: <Widget>[
-                RoundedBottomButton(
-                  isEnable: true,
-                  title: 'Okay',
-                  color: switchAppThemeNotifier.currentTheme,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
+      onTap: notifier.showInvitationMethodDialog,
       child: ColoredBox(
         color: white,
         child: SizedBox(

@@ -194,5 +194,8 @@
   "selectDesign": "Select design",
   "select": "Select",
   "deleteCategory": "Delete category",
-  "confirmDeleteCategoryTodo": "To-dos in this category will also be deleted. Does it okay?"
+  "confirmDeleteCategoryTodo": "To-dos in this category will also be deleted. Does it okay?",
+  "invitationMethod": "Invitation method",
+  "inviteByQrCode": "Sharing QR code",
+  "inviteByGroupId": "Sharing group id"
 }
