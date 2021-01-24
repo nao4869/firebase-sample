@@ -83,6 +83,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('categories')
+            .orderBy("createdAt", descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合

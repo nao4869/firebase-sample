@@ -83,6 +83,7 @@ class _HomeScreen extends StatelessWidget {
                 .collection('groups')
                 .doc(groupNotifier.groupId)
                 .collection('categories')
+                .orderBy("createdAt", descending: true)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -184,6 +185,7 @@ class _HomeScreen extends StatelessWidget {
           .collection('categories')
           .doc(categoryId)
           .collection('to-dos')
+          .orderBy("createdAt", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // エラーの場合
