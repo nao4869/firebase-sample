@@ -197,5 +197,6 @@
   "confirmDeleteCategoryTodo": "To-dos in this category will also be deleted. Does it okay?",
   "invitationMethod": "Invitation method",
   "inviteByQrCode": "Sharing QR code",
-  "inviteByGroupId": "Sharing group id"
+  "inviteByGroupId": "Sharing group id",
+  "register": "Register"
 }

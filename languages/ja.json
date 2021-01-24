@@ -195,5 +195,6 @@
   "confirmDeleteCategoryTodo": "カテゴリー内の全てのTodoも削除されます。よろしいですか？",
   "invitationMethod": "招待方法",
   "inviteByQrCode": "QRコードを共有する",
-  "inviteByGroupId": "グループIDを共有する"
+  "inviteByGroupId": "グループIDを共有する",
+  "register": "登録する"
 }
