@@ -33,6 +33,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   final CurrentGroupProvider groupNotifier;
   final UserReferenceProvider userNotifier;
 
+  bool _isRegistrationProcess = false;
   bool _isLoading = false;
   String _referenceToUser;
   String _selectedImagePath;
@@ -47,145 +48,20 @@ class SplashScreenNotifier extends ChangeNotifier {
       return;
     }
     _isLoading = true;
-    final fireStoreInstance = FirebaseFirestore.instance;
-
     initDeviceId();
+
+    // ユーザー登録済み判定、非同期で取得する為、await必須
     await initUserReference();
 
     // TODO: 一度アプリを削除した際の処理をどうするか考慮する
     if (_isUserExist.size == 0 || _isUserExist == null) {
       if (invitationCode != null && invitationCode.isNotEmpty) {
-        // 初回起動時のみ、groupを追加
-        final referenceToUser = await fireStoreInstance
-            .collection('versions')
-            .doc('v1')
-            .collection('groups')
-            .doc(invitationCode)
-            .collection('users')
-            .add({
-          'name': userName ?? 'UserName',
-          'imagePath': null,
-          'createdAt': Timestamp.fromDate(DateTime.now()),
-          'deviceId': FieldValue.arrayUnion([_deviceId]),
-        });
-        // ProviderのグループIDを更新
-        groupNotifier.updateGroupId(invitationCode);
-
-        // ProviderのUser参照を更新
-        userNotifier.updateUserReference(referenceToUser.id);
-        userNotifier.updateCompletedTodo(true);
+        invitedUserRegistration();
       } else {
-        // 初回起動時のみ、groupを追加
-        fireStoreInstance
-            .collection('versions')
-            .doc('v1')
-            .collection('groups')
-            .add({
-          'name': 'Group Name',
-          'createdAt': Timestamp.fromDate(DateTime.now()),
-          'deviceId': FieldValue.arrayUnion([_deviceId]),
-        }).then((value) async {
-          _userReference = await fireStoreInstance
-              .collection('versions')
-              .doc('v1')
-              .collection('groups')
-              .doc(value.id)
-              .collection('users')
-              .add({
-            // Groupのサブコレクションに、Userを作成
-            'name': 'UserName',
-            'imagePath': null,
-            'createdAt': Timestamp.fromDate(DateTime.now()),
-            'deviceId': FieldValue.arrayUnion([_deviceId]),
-          });
-          addUserSettings(value.id);
-
-          // チュートリアルCategoryを追加
-          final _reference = await fireStoreInstance
-              .collection('versions')
-              .doc('v1')
-              .collection('groups')
-              .doc(value.id)
-              .collection('categories')
-              .add({
-            // Groupのサブコレクションに、Categoryを作成
-            'name': 'Tutorial',
-            'createdAt': Timestamp.fromDate(DateTime.now()),
-          });
-          // ProviderのグループIDを更新
-          groupNotifier.updateGroupId(value.id);
-
-          // ログイン中ユーザーへのReferenceを取得
-          var userResult = await fireStoreInstance
-              .collection('versions')
-              .doc('v1')
-              .collection('groups')
-              .doc(value.id)
-              .collection('users')
-              .where('deviceId', arrayContains: _deviceId)
-              .get();
-
-          userResult.docs.forEach((res) {
-            _referenceToUser = res.reference.id;
-          });
-          // ProviderのUser参照を更新
-          userNotifier.updateUserReference(_referenceToUser);
-          userNotifier.updateCompletedTodo(true);
-          addTutorialTodoList(_reference);
-        });
+        initialUserRegistration();
       }
     } else {
-      // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
-      var result = await fireStoreInstance
-          .collection('versions')
-          .doc('v1')
-          .collection('groups')
-          .where('deviceId', arrayContains: _deviceId)
-          .get();
-      result.docs.forEach((res) {
-        _groupId = res.reference.id;
-      });
-
-      // ProviderのグループIDを更新
-      groupNotifier.updateGroupId(_groupId);
-
-      // ログイン中ユーザーへのReferenceを取得
-      final userResult = await FirebaseFirestore.instance
-          .collection('versions')
-          .doc('v1')
-          .collection('groups')
-          .doc(_groupId)
-          .collection('users')
-          .where('deviceId', arrayContains: _deviceId)
-          .get();
-
-      userResult.docs.forEach((snapshot) {
-        _referenceToUser = snapshot.reference.id;
-      });
-
-      String _userSettingsReference;
-      final userSettingsReference = await FirebaseFirestore.instance
-          .collection('versions')
-          .doc('v1')
-          .collection('groups')
-          .doc(_groupId)
-          .collection('users')
-          .doc(_referenceToUser)
-          .collection('userSettings')
-          .get();
-      userSettingsReference.docs.forEach((snapshot) {
-        _userSettingsReference = snapshot.reference.id;
-        _selectedImagePath = snapshot.data()['backgroundImagePath'];
-        _isDisplayCompletedTodo = snapshot.data()['displayCompletedTodo'];
-      });
-
-      // ProviderのUser参照を更新
-      userNotifier.updateUserReference(_referenceToUser);
-      userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
-      userNotifier.updateUserSettingsReference(_userSettingsReference);
-
-      // 設定中の背景色がある際には、Providerで保持する
-      switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
+      singIn();
     }
     if (groupNotifier.groupId != null && groupNotifier.groupId.isNotEmpty) {
       // ホーム画面遷移
@@ -220,15 +96,175 @@ class SplashScreenNotifier extends ChangeNotifier {
     }
   }
 
-  void addUserSettings(String documentId) async {
+  // 招待コードを所持しているケース
+  void invitedUserRegistration() async {
+    final fireStoreInstance = FirebaseFirestore.instance;
+
+    if (!_isRegistrationProcess) {
+      _isRegistrationProcess = true;
+      // 初回起動時のみ、groupを追加
+      final referenceToUser = await fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(invitationCode)
+          .collection('users')
+          .add({
+        'name': userName ?? 'UserName',
+        'imagePath': null,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+        'deviceId': FieldValue.arrayUnion([_deviceId]),
+      });
+      // ProviderのグループIDを更新
+      groupNotifier.updateGroupId(invitationCode);
+
+      // ProviderのUser参照を更新
+      userNotifier.updateUserReference(referenceToUser.id);
+      userNotifier.updateCompletedTodo(true);
+
+      // UserSettingsを初期化
+      addUserSettings(
+        groupId: invitationCode,
+        userId: referenceToUser.id,
+      );
+    }
+  }
+
+  // 招待なし、初回登録処理関数
+  void initialUserRegistration() {
+    final fireStoreInstance = FirebaseFirestore.instance;
+    // 初回起動時のみ、groupを追加
+    fireStoreInstance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .add({
+      'name': 'Group Name',
+      'createdAt': Timestamp.fromDate(DateTime.now()),
+      'deviceId': FieldValue.arrayUnion([_deviceId]),
+    }).then((value) async {
+      _userReference = await fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(value.id)
+          .collection('users')
+          .add({
+        // Groupのサブコレクションに、Userを作成
+        'name': 'UserName',
+        'imagePath': null,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+        'deviceId': FieldValue.arrayUnion([_deviceId]),
+      });
+      addUserSettings(
+        groupId: value.id,
+        userId: _userReference.id,
+      );
+
+      // チュートリアルCategoryを追加
+      final _reference = await fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(value.id)
+          .collection('categories')
+          .add({
+        // Groupのサブコレクションに、Categoryを作成
+        'name': 'Tutorial',
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
+      // ProviderのグループIDを更新
+      groupNotifier.updateGroupId(value.id);
+
+      // ログイン中ユーザーへのReferenceを取得
+      var userResult = await fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(value.id)
+          .collection('users')
+          .where('deviceId', arrayContains: _deviceId)
+          .get();
+
+      userResult.docs.forEach((res) {
+        _referenceToUser = res.reference.id;
+      });
+      // ProviderのUser参照を更新
+      userNotifier.updateUserReference(_referenceToUser);
+      userNotifier.updateCompletedTodo(true);
+      addTutorialTodoList(_reference);
+    });
+  }
+
+  // 再起動時、2回目以降ログイン処理
+  void singIn() async {
+    final fireStoreInstance = FirebaseFirestore.instance;
+    // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
+    var result = await fireStoreInstance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .where('deviceId', arrayContains: _deviceId)
+        .get();
+    result.docs.forEach((res) {
+      _groupId = res.reference.id;
+    });
+
+    // ProviderのグループIDを更新
+    groupNotifier.updateGroupId(_groupId);
+
+    // ログイン中ユーザーへのReferenceを取得
+    final userResult = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .doc(_groupId)
+        .collection('users')
+        .where('deviceId', arrayContains: _deviceId)
+        .get();
+
+    userResult.docs.forEach((snapshot) {
+      _referenceToUser = snapshot.reference.id;
+    });
+
+    String _userSettingsReference;
+    final userSettingsReference = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .doc(_groupId)
+        .collection('users')
+        .doc(_referenceToUser)
+        .collection('userSettings')
+        .get();
+    userSettingsReference.docs.forEach((snapshot) {
+      _userSettingsReference = snapshot.reference.id;
+      _selectedImagePath = snapshot.data()['backgroundImagePath'];
+      _isDisplayCompletedTodo = snapshot.data()['displayCompletedTodo'];
+    });
+
+    // ProviderのUser参照を更新
+    userNotifier.updateUserReference(_referenceToUser);
+    userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
+    userNotifier.updateUserSettingsReference(_userSettingsReference);
+
+    // 設定中の背景色がある際には、Providerで保持する
+    switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
+  }
+
+  // ユーザー設定コレクションを初期化 - 初回ログイン、招待初回登録時実行
+  void addUserSettings({
+    String groupId,
+    String userId,
+  }) async {
     // UserSettingsコレクションを追加
     final reference = await FirebaseFirestore.instance
         .collection('versions')
         .doc('v1')
         .collection('groups')
-        .doc(documentId)
+        .doc(groupId)
         .collection('users')
-        .doc(_userReference.id)
+        .doc(userId)
         .collection('userSettings')
         .add({
       // UserSettingsドキュメントを追加
