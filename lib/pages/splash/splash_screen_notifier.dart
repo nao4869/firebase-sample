@@ -6,7 +6,6 @@ import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
-import 'package:firebase_sample/pages/splash/user_registration_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +18,16 @@ class SplashScreenNotifier extends ChangeNotifier {
     this.switchAppThemeProvider,
     this.groupNotifier,
     this.userNotifier,
+    this.userName,
+    this.invitationCode,
   }) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       initialize();
     });
   }
 
+  final String userName;
+  final String invitationCode;
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeProvider;
   final CurrentGroupProvider groupNotifier;
@@ -51,64 +54,86 @@ class SplashScreenNotifier extends ChangeNotifier {
 
     // TODO: 一度アプリを削除した際の処理をどうするか考慮する
     if (_isUserExist.size == 0 || _isUserExist == null) {
-      // 初回起動時のみ、groupを追加
-      fireStoreInstance
-          .collection('versions')
-          .doc('v1')
-          .collection('groups')
-          .add({
-        'name': 'Group Name',
-        'createdAt': Timestamp.fromDate(DateTime.now()),
-        'deviceId': FieldValue.arrayUnion([_deviceId]),
-      }).then((value) async {
-        _userReference = await fireStoreInstance
+      if (invitationCode != null && invitationCode.isNotEmpty) {
+        // 初回起動時のみ、groupを追加
+        final referenceToUser = await fireStoreInstance
             .collection('versions')
             .doc('v1')
             .collection('groups')
-            .doc(value.id)
+            .doc(invitationCode)
             .collection('users')
             .add({
-          // Groupのサブコレクションに、Userを作成
-          'name': 'UserName',
+          'name': userName ?? 'UserName',
           'imagePath': null,
           'createdAt': Timestamp.fromDate(DateTime.now()),
           'deviceId': FieldValue.arrayUnion([_deviceId]),
         });
-        addUserSettings(value.id);
-
-        // チュートリアルCategoryを追加
-        final _reference = await fireStoreInstance
-            .collection('versions')
-            .doc('v1')
-            .collection('groups')
-            .doc(value.id)
-            .collection('categories')
-            .add({
-          // Groupのサブコレクションに、Categoryを作成
-          'name': 'Tutorial',
-          'createdAt': Timestamp.fromDate(DateTime.now()),
-        });
         // ProviderのグループIDを更新
-        groupNotifier.updateGroupId(value.id);
+        groupNotifier.updateGroupId(invitationCode);
 
-        // ログイン中ユーザーへのReferenceを取得
-        var userResult = await fireStoreInstance
+        // ProviderのUser参照を更新
+        userNotifier.updateUserReference(referenceToUser.id);
+        userNotifier.updateCompletedTodo(true);
+      } else {
+        // 初回起動時のみ、groupを追加
+        fireStoreInstance
             .collection('versions')
             .doc('v1')
             .collection('groups')
-            .doc(value.id)
-            .collection('users')
-            .where('deviceId', arrayContains: _deviceId)
-            .get();
+            .add({
+          'name': 'Group Name',
+          'createdAt': Timestamp.fromDate(DateTime.now()),
+          'deviceId': FieldValue.arrayUnion([_deviceId]),
+        }).then((value) async {
+          _userReference = await fireStoreInstance
+              .collection('versions')
+              .doc('v1')
+              .collection('groups')
+              .doc(value.id)
+              .collection('users')
+              .add({
+            // Groupのサブコレクションに、Userを作成
+            'name': 'UserName',
+            'imagePath': null,
+            'createdAt': Timestamp.fromDate(DateTime.now()),
+            'deviceId': FieldValue.arrayUnion([_deviceId]),
+          });
+          addUserSettings(value.id);
 
-        userResult.docs.forEach((res) {
-          _referenceToUser = res.reference.id;
+          // チュートリアルCategoryを追加
+          final _reference = await fireStoreInstance
+              .collection('versions')
+              .doc('v1')
+              .collection('groups')
+              .doc(value.id)
+              .collection('categories')
+              .add({
+            // Groupのサブコレクションに、Categoryを作成
+            'name': 'Tutorial',
+            'createdAt': Timestamp.fromDate(DateTime.now()),
+          });
+          // ProviderのグループIDを更新
+          groupNotifier.updateGroupId(value.id);
+
+          // ログイン中ユーザーへのReferenceを取得
+          var userResult = await fireStoreInstance
+              .collection('versions')
+              .doc('v1')
+              .collection('groups')
+              .doc(value.id)
+              .collection('users')
+              .where('deviceId', arrayContains: _deviceId)
+              .get();
+
+          userResult.docs.forEach((res) {
+            _referenceToUser = res.reference.id;
+          });
+          // ProviderのUser参照を更新
+          userNotifier.updateUserReference(_referenceToUser);
+          userNotifier.updateCompletedTodo(true);
+          addTutorialTodoList(_reference);
         });
-        // ProviderのUser参照を更新
-        userNotifier.updateUserReference(_referenceToUser);
-        userNotifier.updateCompletedTodo(true);
-        addTutorialTodoList(_reference);
-      });
+      }
     } else {
       // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
       var result = await fireStoreInstance
@@ -236,7 +261,7 @@ class SplashScreenNotifier extends ChangeNotifier {
 
   void navigateHomeScreen() {
     Navigator.of(context, rootNavigator: true).pushReplacementNamed(
-      UserRegistrationScreen.routeName,
+      HomeScreen.routeName,
     );
   }
 }

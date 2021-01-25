@@ -9,7 +9,13 @@ import 'package:provider/provider.dart';
 class SplashScreen extends StatelessWidget {
   static String routeName = 'splash-screen';
 
-  const SplashScreen();
+  const SplashScreen({
+    this.userName,
+    this.invitationCode,
+  });
+
+  final String userName;
+  final String invitationCode;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +25,8 @@ class SplashScreen extends StatelessWidget {
         switchAppThemeProvider: Provider.of(context),
         groupNotifier: Provider.of(context),
         userNotifier: Provider.of(context, listen: false),
+        userName: userName,
+        invitationCode: invitationCode,
       ),
       child: _SplashScreen(),
     );

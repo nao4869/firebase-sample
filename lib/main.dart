@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
@@ -34,6 +35,14 @@ void main() async {
   } on PlatformException {
     deviceData = <String, dynamic>{'Error:': 'Failed to get platform version.'};
   }
+
+  if (Platform.isAndroid) {
+    _deviceId = deviceData['androidId'];
+  } else {
+    _deviceId = deviceData['identifierForVendor'];
+  }
+
+  await initUserReference();
 
   runApp(
     MultiProvider(
@@ -77,8 +86,10 @@ void main() async {
   );
 }
 
+String _deviceId = '';
+QuerySnapshot _isUserExist;
+
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -112,11 +123,29 @@ class MyApp extends StatelessWidget {
         // from the list (English, in this case).
         return supportedLocales.first;
       },
-      home: SplashScreen(),
+      home: _isUserExist != null
+          ? _isUserExist.size != 0
+              ? SplashScreen()
+              : UserRegistrationScreen()
+          : SplashScreen(),
       routes: <String, WidgetBuilder>{
         'home-screen': (_) => HomeScreen(),
         'user-registration-screen': (_) => UserRegistrationScreen(),
       },
     );
+  }
+}
+
+// 初回ログイン判定
+Future<void> initUserReference() async {
+  try {
+    _isUserExist = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .where('deviceId', arrayContains: _deviceId)
+        .get();
+  } catch (error) {
+    debugPrint('Group id does not exist');
   }
 }

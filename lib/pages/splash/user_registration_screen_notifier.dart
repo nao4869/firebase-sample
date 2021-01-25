@@ -3,10 +3,10 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/pages/splash/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../app_localizations.dart';
 
 class UserRegistrationScreenNotifier extends ChangeNotifier {
   UserRegistrationScreenNotifier({
@@ -65,20 +65,14 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
     formKey.currentState.reset();
   }
 
-  // FireStoreの該当ユーザー名を更新
-  // Todo: 該当ユーザーへのReferenceをProviderで保持する
-  void updateUserName() {
-    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
-    final groupNotifier =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
-    FirebaseFirestore.instance
-        .collection('versions')
-        .doc('v1')
-        .collection('groups')
-        .doc(groupNotifier.groupId)
-        .collection('users')
-        .doc(notifier.referenceToUser)
-        .update({"name": name});
-    Navigator.of(context).pop();
+  void navigateSplashScreen() {
+    Navigator.of(context, rootNavigator: true).push(
+      CupertinoPageRoute(
+        builder: (context) => SplashScreen(
+          userName: name,
+          invitationCode: invitationCode,
+        ),
+      ),
+    );
   }
 }

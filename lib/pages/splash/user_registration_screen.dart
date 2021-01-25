@@ -36,7 +36,6 @@ class _UserRegistrationScreen extends StatelessWidget {
     final notifier = Provider.of<UserRegistrationScreenNotifier>(context);
     final theme = Provider.of<ThemeProvider>(context, listen: false);
     final themeProvider = Provider.of<SwitchAppThemeProvider>(context);
-    final size = MediaQuery.of(context).size;
     final textFormHeight = 80.0;
     return ColoredBox(
       color: theme.isLightTheme ? white : darkBlack,
@@ -57,34 +56,6 @@ class _UserRegistrationScreen extends StatelessWidget {
                           ConstrainedBox(
                             constraints:
                                 const BoxConstraints.tightFor(height: 56.0),
-                          ),
-                          const SizedBox(height: 15),
-                          FractionallySizedBox(
-                            widthFactor: .8,
-                            child: UserRegistrationPageTitle(
-                              title: 'Your Nickname',
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          FractionallySizedBox(
-                            widthFactor: .8,
-                            child: _buildTextFormFieldDescription(
-                              'Your name in your family or in your friends circle.\nName is able to be edit later.',
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          FractionallySizedBox(
-                            widthFactor: .8,
-                            child: _buildTextFormField(
-                              context,
-                              formKey: notifier.formKey,
-                              height: textFormHeight,
-                              editingController: notifier.textController,
-                              onValidate: notifier.onValidate,
-                              onChanged: notifier.onNameChange,
-                              resetTextField: notifier.resetTextField,
-                              hintText: 'Your nickname',
-                            ),
                           ),
                           const SizedBox(height: 15),
                           FractionallySizedBox(
@@ -120,12 +91,10 @@ class _UserRegistrationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   RoundedBottomButton(
-                    isEnable: notifier.name.isNotEmpty,
+                    isEnable: true,
                     title: AppLocalizations.of(context).translate('register'),
-                    color: notifier.name.isNotEmpty
-                        ? themeProvider.currentTheme
-                        : grey,
-                    onPressed: notifier.updateUserName,
+                    color: themeProvider.currentTheme,
+                    onPressed: notifier.navigateSplashScreen,
                   ),
                 ],
               ),
