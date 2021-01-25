@@ -253,7 +253,7 @@ class _EditGroupNameScreen extends StatelessWidget {
       child: ColoredBox(
         color: white,
         child: SizedBox(
-          width: size.width * .8,
+          width: size.width * .9,
           height: 150,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -271,16 +271,20 @@ class _EditGroupNameScreen extends StatelessWidget {
                       Row(
                         children: [
                           const SizedBox(width: 10),
-                          Text(
-                            'Invite new person',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                          Expanded(
+                            child: Text(
+                              'Invite new person',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.0,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
