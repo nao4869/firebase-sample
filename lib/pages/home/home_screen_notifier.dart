@@ -44,7 +44,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   final textController = TextEditingController();
 
   String _taskName;
-  bool _isValid = false;
+  bool isValid = false;
 
   File _image;
   String _uploadedFileURL;
@@ -62,8 +62,8 @@ class HomeScreenNotifier extends ChangeNotifier {
   bool isInitialLoadCompleted = false;
   List<QueryDocumentSnapshot> todoList = [];
 
-  Animation<double> _rotationAnimation;
-  Color _fabColor = Colors.blue;
+  Animation<double> rotationAnimation;
+  Color fabColor = Colors.blue;
 
   @override
   void dispose() {
@@ -73,12 +73,12 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   void handleSlideAnimationChanged(Animation<double> slideAnimation) {
-    _rotationAnimation = slideAnimation;
+    rotationAnimation = slideAnimation;
     notifyListeners();
   }
 
   void handleSlideIsOpenChanged(bool isOpen) {
-    _fabColor = isOpen ? Colors.green : Colors.blue;
+    fabColor = isOpen ? Colors.green : Colors.blue;
     notifyListeners();
   }
 
@@ -245,7 +245,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   void onNameChange(String text) {
-    _isValid = text.isNotEmpty;
+    isValid = text.isNotEmpty;
     _taskName = text;
   }
 

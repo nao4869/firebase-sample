@@ -1,8 +1,6 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
-import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/settings/select_design_screen_notifier.dart';
-import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -238,7 +236,6 @@ class _SelectDesignScreen extends StatelessWidget {
   }) {
     final size = MediaQuery.of(context).size;
     final notifier = Provider.of<SelectDesignScreenNotifier>(context);
-    final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: SizedBox(

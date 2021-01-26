@@ -1,4 +1,3 @@
-import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,18 +28,12 @@ class _ZoomImageScreenState extends State<ZoomImageScreen> {
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context);
     final size = MediaQuery.of(context).size;
-    final screenSize = ScreenSize(
-      size: MediaQuery.of(context).size,
-      pixelRatio: MediaQuery.of(context).devicePixelRatio,
-    );
-    final sizeType = screenSize.specifyScreenSizeType();
     return Scaffold(
       //backgroundColor: Color.fromARGB(63, 63, 63, 1),
       body: SafeArea(
         bottom: false,
         child: ColoredBox(
           color: theme.isLightTheme ? black : darkBlack,
-          //color: theme.isLightTheme ? Color.fromARGB(63, 63, 63, 1) : darkBlack,
           child: InkWell(
             onTap: () {
               displayBottomSection = !displayBottomSection;

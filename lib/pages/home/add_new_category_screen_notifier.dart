@@ -38,16 +38,16 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   int selectedColorIndex = 0;
   bool isValid = false;
 
-  Animation<double> _rotationAnimation;
-  Color _fabColor = Colors.blue;
+  Animation<double> rotationAnimation;
+  Color fabColor = Colors.blue;
 
   void handleSlideAnimationChanged(Animation<double> slideAnimation) {
-    _rotationAnimation = slideAnimation;
+    rotationAnimation = slideAnimation;
     notifyListeners();
   }
 
   void handleSlideIsOpenChanged(bool isOpen) {
-    _fabColor = isOpen ? Colors.green : Colors.blue;
+    fabColor = isOpen ? Colors.green : Colors.blue;
     notifyListeners();
   }
 

@@ -41,7 +41,7 @@ class CustomTextFormField extends StatelessWidget {
           ),
           keyboardType: isNumber ? TextInputType.number : TextInputType.text,
           scrollPadding: const EdgeInsets.all(100.0),
-          autovalidate: true,
+          autovalidateMode: AutovalidateMode.always,
           onChanged: onChanged,
           initialValue: initialValue,
           controller: controller,

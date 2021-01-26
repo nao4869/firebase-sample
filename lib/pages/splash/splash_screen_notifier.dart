@@ -83,7 +83,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   }
 
   // 初回ログイン判定
-  void initUserReference() async {
+  Future<void> initUserReference() async {
     try {
       _isUserExist = await FirebaseFirestore.instance
           .collection('versions')

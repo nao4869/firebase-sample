@@ -1,6 +1,5 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
-import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -99,10 +98,6 @@ class _CustomTabsState extends State<CustomTabView>
   Widget build(BuildContext context) {
     final themeProvider =
         Provider.of<SwitchAppThemeProvider>(context, listen: false);
-    final darkModeNotifier = Provider.of<ThemeProvider>(context);
-    final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
-    final currentThemeId = switchAppThemeNotifier.getCurrentThemeNumber();
-
     if (widget.itemCount < 1) return widget.stub ?? Container();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
