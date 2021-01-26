@@ -185,11 +185,7 @@ class _EditGroupNameScreen extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
           if (snapshot.hasError || snapshot.data == null) {
-            return CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                notifier.switchAppThemeNotifier.currentTheme,
-              ),
-            );
+            return Container();
           } else {
             return ListView.separated(
               shrinkWrap: true,
