@@ -85,9 +85,69 @@ class _EditGroupNameScreen extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
           if (snapshot.hasError || snapshot.data == null) {
-            return CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                notifier.switchAppThemeNotifier.currentTheme,
+            return ColoredBox(
+              color: white,
+              child: InkWell(
+                onTap: () {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 12.0,
+                        bottom: 12.0,
+                        left: 20.0,
+                        right: 25.0,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Not Setting',
+                            style: TextStyle(
+                              color: theme.isLightTheme ? black : white,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return EditCategoryBottomSheet(
+                                    buttonTitle: 'Update Group Name',
+                                    initialValue: '',
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      notifier.updateGroupName();
+                                    },
+                                    onNameChange: (String text) {
+                                      notifier.onNameChange(text);
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('editGroupName'),
+                              style: TextStyle(
+                                color: notifier
+                                    .switchAppThemeNotifier.currentTheme,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      height: 1,
+                      indent: 20,
+                      thickness: .5,
+                    ),
+                  ],
+                ),
               ),
             );
           } else {
