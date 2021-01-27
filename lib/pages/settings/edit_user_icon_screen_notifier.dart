@@ -38,11 +38,14 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
     final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
-    _image = await ImagePicker.pickImage(
+
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(
       source: ImageSource.gallery,
       maxHeight: 600,
       maxWidth: 600,
     );
+    _image = File(pickedFile.path);
 
     if (_image != null) {
       firebase_storage.Reference storageReference = firebase_storage

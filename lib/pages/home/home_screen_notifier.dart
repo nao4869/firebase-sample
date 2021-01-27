@@ -267,11 +267,14 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   /// 画像ファイルをストレージにアップロードする関数です
   Future uploadFile() async {
-    _image = await ImagePicker.pickImage(
+    final picker = ImagePicker();
+
+    final pickedFile = await picker.getImage(
       source: ImageSource.gallery,
       maxHeight: 600,
       maxWidth: 800,
     );
+    _image = File(pickedFile.path);
 
     firebase_storage.Reference storageReference = firebase_storage
         .FirebaseStorage.instance
@@ -295,15 +298,17 @@ class HomeScreenNotifier extends ChangeNotifier {
   /// 動画ファイルをストレージにアップロードする関数です
   Future uploadVideoToStorage() async {
     try {
-      final file = await ImagePicker.pickVideo(source: ImageSource.gallery);
+      final picker = ImagePicker();
+      final pickedFile = await picker.getVideo(source: ImageSource.gallery);
+      final video = File(pickedFile.path);
 
       firebase_storage.Reference storageReference = firebase_storage
           .FirebaseStorage.instance
           .ref()
-          .child('videos/${Path.basename(file.path)}}');
+          .child('videos/${Path.basename(video.path)}}');
 
       await storageReference.putFile(
-          file, firebase_storage.SettableMetadata(contentType: 'video/mp4'));
+          video, firebase_storage.SettableMetadata(contentType: 'video/mp4'));
 
       storageReference.getDownloadURL().then((fileURL) {
         _uploadedFileURL = fileURL;
