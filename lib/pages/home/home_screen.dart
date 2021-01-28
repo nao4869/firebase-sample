@@ -6,6 +6,7 @@ import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
+import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -89,13 +90,7 @@ class _HomeScreen extends StatelessWidget {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               // エラーの場合
               if (snapshot.hasError || snapshot.data == null) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      switchAppThemeNotifier.currentTheme,
-                    ),
-                  ),
-                );
+                return CircularProgressDialog();
               } else {
                 return DecoratedBox(
                   decoration: BoxDecoration(

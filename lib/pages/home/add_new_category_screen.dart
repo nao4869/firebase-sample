@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
+import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -84,11 +85,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
           if (snapshot.hasError || snapshot.data == null) {
-            return CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                notifier.switchAppThemeNotifier.currentTheme,
-              ),
-            );
+            return CircularProgressDialog();
           } else {
             return SingleChildScrollView(
               child: Column(
