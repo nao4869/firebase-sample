@@ -395,6 +395,8 @@ class HomeScreenNotifier extends ChangeNotifier {
                   ),
                   StreamBuilder(
                     stream: FirebaseFirestore.instance
+                        .collection('versions')
+                        .doc('v1')
                         .collection('groups')
                         .doc(groupNotifier.groupId)
                         .collection('users')
