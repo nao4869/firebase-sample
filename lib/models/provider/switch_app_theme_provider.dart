@@ -52,6 +52,20 @@ class SwitchAppThemeProvider with ChangeNotifier {
       return 3;
     } else if (selectedImagePath == imageList[4]) {
       return 4;
+    } else if (selectedImagePath == imageList[5]) {
+      return 5;
+    } else if (selectedImagePath == imageList[6]) {
+      return 6;
+    } else if (selectedImagePath == imageList[7]) {
+      return 7;
+    } else if (selectedImagePath == imageList[8]) {
+      return 8;
+    } else if (selectedImagePath == imageList[9]) {
+      return 9;
+    } else if (selectedImagePath == imageList[10]) {
+      return 10;
+    } else if (selectedImagePath == imageList[11]) {
+      return 11;
     } else {
       return 0;
     }

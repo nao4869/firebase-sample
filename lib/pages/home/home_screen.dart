@@ -298,11 +298,6 @@ class _HomeScreen extends StatelessWidget {
                                                 document['imagePath'],
                                                 document.id,
                                               );
-//                                    notifier.editTodo(
-//                                      collection: 'to-dos',
-//                                      documentId: document.documentID,
-//                                      initialValue: document['name'],
-//                                    );
                                             },
                                             child: Hero(
                                               tag: document.id,

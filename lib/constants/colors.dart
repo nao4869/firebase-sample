@@ -62,6 +62,13 @@ List<String> imageList = [
   'assets/images/flower.jpg',
   'assets/images/variety_flowers.jpg',
   'assets/images/solar_system.jpg',
+  'assets/images/snow_forest.png',
+  'assets/images/beautiful_star.jpg',
+  'assets/images/confetti.jpg',
+  'assets/images/nautical.jpg',
+  'assets/images/twigs.jpg',
+  'assets/images/autumn.jpg',
+  'assets/images/mountains.jpg',
 ];
 
 const red = Color.fromRGBO(239, 43, 118, 1.0);

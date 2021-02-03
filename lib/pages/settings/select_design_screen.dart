@@ -84,7 +84,13 @@ class _SelectDesignScreen extends StatelessWidget {
                           _buildImageLisView(
                             context: context,
                             startIndex: 4,
-                            length: 1,
+                            length: 4,
+                          ),
+                          const SizedBox(height: 10),
+                          _buildImageLisView(
+                            context: context,
+                            startIndex: 8,
+                            length: 4,
                           ),
                         ],
                       ),
@@ -248,7 +254,7 @@ class _SelectDesignScreen extends StatelessWidget {
             return InkWell(
               onTap: () {
                 notifier.updateThemeColor(
-                  index,
+                  index + startIndex,
                   imageList[index + startIndex],
                 );
               },
