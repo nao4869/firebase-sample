@@ -1,6 +1,7 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/pages/settings/select_design_screen_notifier.dart';
+import 'package:firebase_sample/widgets/buttons/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -60,9 +61,9 @@ class _SelectDesignScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          _buildRoundedButton(
-                            context,
-                            'Free design',
+                          RoundedButton(
+                            title: 'Free design',
+                            onPressed: () {},
                           ),
                           const SizedBox(height: 20),
                           _buildDesignLisView(
@@ -157,32 +158,6 @@ class _SelectDesignScreen extends StatelessWidget {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRoundedButton(
-    BuildContext context,
-    String title,
-  ) {
-    final size = MediaQuery.of(context).size;
-    final switchAppThemeProvider = Provider.of<SwitchAppThemeProvider>(context);
-    return SizedBox(
-      width: size.width * .87,
-      height: 50,
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        onPressed: () {},
-        color: switchAppThemeProvider.currentTheme,
-        child: Text(
-          title,
-          style: TextStyle(
-            color: white,
-            fontSize: 18.0,
-          ),
         ),
       ),
     );
