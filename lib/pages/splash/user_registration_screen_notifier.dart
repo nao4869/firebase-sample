@@ -19,7 +19,6 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
     profileFocusNode = FocusNode();
   }
 
-  final formKey = GlobalKey<FormState>();
   final groupFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
   final groupTextController = TextEditingController();
@@ -60,7 +59,7 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
   /// 自己紹介編集 TextField 入力内容リセット
   void resetTextField() {
     onNameChange('');
-    formKey.currentState.reset();
+    groupFormKey.currentState.reset();
   }
 
   void navigateSplashScreen() {
