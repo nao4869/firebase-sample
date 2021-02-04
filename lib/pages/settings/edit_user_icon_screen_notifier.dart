@@ -45,7 +45,9 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
       maxHeight: 600,
       maxWidth: 600,
     );
-    _image = File(pickedFile.path);
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+    }
 
     if (_image != null) {
       firebase_storage.Reference storageReference = firebase_storage

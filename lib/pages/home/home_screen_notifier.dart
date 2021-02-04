@@ -185,6 +185,7 @@ class HomeScreenNotifier extends ChangeNotifier {
       'videoPath': null,
       'isChecked': false,
       'userImagePath': userReference['imagePath'],
+      'taggedUserReference': userReference.reference,
     });
   }
 
