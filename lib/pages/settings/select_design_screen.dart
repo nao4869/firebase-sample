@@ -1,5 +1,6 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/settings/select_design_screen_notifier.dart';
 import 'package:firebase_sample/widgets/buttons/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -175,7 +176,7 @@ class _SelectDesignScreen extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0),
       child: SizedBox(
         width: size.width * .85,
-        height: 80,
+        height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: 4,
@@ -190,8 +191,8 @@ class _SelectDesignScreen extends StatelessWidget {
                 );
               },
               child: SizedBox(
-                width: 80,
-                height: 80,
+                width: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
+                height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: colorList[index + startIndex],

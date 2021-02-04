@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,21 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
     this.switchAppThemeNotifier,
     this.groupNotifier,
     this.userReferenceNotifier,
-  });
+  }) {
+    screenSize = ScreenSize(
+      size: MediaQuery.of(context).size,
+      pixelRatio: MediaQuery.of(context).devicePixelRatio,
+    );
+    sizeType = screenSize.specifyScreenSizeType();
+  }
 
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
   final CurrentGroupProvider groupNotifier;
   final UserReferenceProvider userReferenceNotifier;
+
+  ScreenSize screenSize;
+  ScreenSizeType sizeType;
 
   // FireStoreの該当ユーザー画像を更新
   // Assets内の画像を適用
