@@ -99,12 +99,6 @@ class _SettingsScreen extends StatelessWidget {
       SettingTitle(
         title: AppLocalizations.of(context).translate('accountSettings'),
       ),
-      // ダークモードの切り替え - データベース更新
-//      SettingRow(
-//        title: AppLocalizations.of(context).translate('darkMode'),
-//        isEnable: notifier.themeNotifier.darkMode,
-//        onChange: notifier.updateDarkMode,
-//      ),
       SettingRow(
         title: AppLocalizations.of(context).translate('editAppTheme'),
         onTap: () {
@@ -158,7 +152,41 @@ class _SettingsScreen extends StatelessWidget {
             );
           }
         },
-      )
+      ),
+      StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('versions')
+            .doc('v1')
+            .collection('groups')
+            .doc(groupNotifier.groupId)
+            .collection('users')
+            .doc(userNotifier.referenceToUser)
+            .collection('userSettings')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          // エラーの場合
+          if (snapshot.hasError || snapshot.data == null) {
+            return SettingRow(
+              title:
+                  AppLocalizations.of(context).translate('isSortByCreatedAt'),
+              onChange: (bool value) {
+                notifier.updateIsSortByCreatedAt(value);
+              },
+              isEnable: false,
+            );
+          } else {
+            DocumentSnapshot currentUserSetting = snapshot?.data?.docs?.first;
+            return SettingRow(
+              title:
+                  AppLocalizations.of(context).translate('isSortByCreatedAt'),
+              onChange: (bool value) {
+                notifier.updateIsSortByCreatedAt(value);
+              },
+              isEnable: currentUserSetting['isSortByCreatedAt'] ?? false,
+            );
+          }
+        },
+      ),
     ];
   }
 }

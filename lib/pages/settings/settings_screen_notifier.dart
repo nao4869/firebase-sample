@@ -46,7 +46,9 @@ class SettingsScreenNotifier extends ChangeNotifier {
     );
   }
 
-  void updateIsDisplayCompletedTodo(bool value) {
+  void updateIsDisplayCompletedTodo(
+    bool displayCompletedTodo,
+  ) {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
@@ -58,9 +60,27 @@ class SettingsScreenNotifier extends ChangeNotifier {
         .doc(userNotifier.referenceToUser)
         .collection('userSettings')
         .doc(userNotifier.userSettingsReference)
-        .update({"displayCompletedTodo": value});
+        .update({"displayCompletedTodo": displayCompletedTodo});
 
     // User Providerの値も更新
-    userNotifier.updateCompletedTodo(value);
+    userNotifier.updateCompletedTodo(displayCompletedTodo);
+  }
+
+  void updateIsSortByCreatedAt(bool isSortByCreatedAt) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
+        .update({"isSortByCreatedAt": isSortByCreatedAt});
+
+    // User Providerの値も更新
+    userNotifier.updateIsSortByCreatedAt(isSortByCreatedAt);
   }
 }

@@ -4,6 +4,7 @@ import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
@@ -171,6 +172,7 @@ class _HomeScreen extends StatelessWidget {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
+    final userNotifier = Provider.of<UserReferenceProvider>(context);
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('versions')
@@ -180,7 +182,8 @@ class _HomeScreen extends StatelessWidget {
           .collection('categories')
           .doc(categoryId)
           .collection('to-dos')
-          .orderBy("createdAt", descending: true)
+          .orderBy("createdAt",
+              descending: userNotifier.isSortByCreatedAt ? true : false)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // エラーの場合
