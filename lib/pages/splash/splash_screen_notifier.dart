@@ -38,6 +38,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   String _referenceToUser;
   String _selectedImagePath;
   bool _isDisplayCompletedTodo = false;
+  bool _isRegistrationCompleted = false;
   String _groupId = '';
   String _deviceId;
   DocumentReference _userReference;
@@ -89,7 +90,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           .collection('versions')
           .doc('v1')
           .collection('groups')
-          .where('deviceId', arrayContains: _deviceId)
+          .where('deviceIds', arrayContains: _deviceId)
           .get();
     } catch (error) {
       debugPrint('Group id does not exist');
@@ -113,7 +114,7 @@ class SplashScreenNotifier extends ChangeNotifier {
         'name': userName ?? 'UserName',
         'imagePath': null,
         'createdAt': Timestamp.fromDate(DateTime.now()),
-        'deviceId': FieldValue.arrayUnion([_deviceId]),
+        'deviceId': _deviceId,
       });
       // ProviderのグループIDを更新
       groupNotifier.updateGroupId(invitationCode);
@@ -132,6 +133,11 @@ class SplashScreenNotifier extends ChangeNotifier {
 
   // 招待なし、初回登録処理関数
   void initialUserRegistration() {
+    // 複数回実行されてしまう問題を修正
+    if (_isRegistrationCompleted) {
+      return;
+    }
+
     final fireStoreInstance = FirebaseFirestore.instance;
     // 初回起動時のみ、groupを追加
     fireStoreInstance
@@ -141,8 +147,9 @@ class SplashScreenNotifier extends ChangeNotifier {
         .add({
       'name': 'Group Name',
       'createdAt': Timestamp.fromDate(DateTime.now()),
-      'deviceId': FieldValue.arrayUnion([_deviceId]),
+      'deviceIds': FieldValue.arrayUnion([_deviceId]),
     }).then((value) async {
+      // groupsのサブコレクションに、Userを作成
       _userReference = await fireStoreInstance
           .collection('versions')
           .doc('v1')
@@ -150,12 +157,24 @@ class SplashScreenNotifier extends ChangeNotifier {
           .doc(value.id)
           .collection('users')
           .add({
-        // Groupのサブコレクションに、Userを作成
         'name': 'UserName',
         'imagePath': null,
         'createdAt': Timestamp.fromDate(DateTime.now()),
-        'deviceId': FieldValue.arrayUnion([_deviceId]),
+        'deviceId': _deviceId,
       });
+
+      // groupsのサブコレクションに、deviceIdを追加
+      fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(value.id)
+          .collection('deviceIds')
+          .add({
+        'id': _deviceId,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
+
       addUserSettings(
         groupId: value.id,
         userId: _userReference.id,
@@ -183,7 +202,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           .collection('groups')
           .doc(value.id)
           .collection('users')
-          .where('deviceId', arrayContains: _deviceId)
+          .where('deviceId', isEqualTo: _deviceId)
           .get();
 
       userResult.docs.forEach((res) {
@@ -198,13 +217,18 @@ class SplashScreenNotifier extends ChangeNotifier {
 
   // 再起動時、2回目以降ログイン処理
   void singIn() async {
+    if (_isRegistrationCompleted) {
+      return;
+    }
+
     final fireStoreInstance = FirebaseFirestore.instance;
     // 初回起動時以外に、deviceIdから該当するgroupIdを取得する
+    // TODO: groupIdの存在を確認
     var result = await fireStoreInstance
         .collection('versions')
         .doc('v1')
         .collection('groups')
-        .where('deviceId', arrayContains: _deviceId)
+        .where('deviceIds', arrayContains: _deviceId)
         .get();
     result.docs.forEach((res) {
       _groupId = res.reference.id;
@@ -220,7 +244,7 @@ class SplashScreenNotifier extends ChangeNotifier {
         .collection('groups')
         .doc(_groupId)
         .collection('users')
-        .where('deviceId', arrayContains: _deviceId)
+        .where('deviceId', isEqualTo: _deviceId)
         .get();
 
     userResult.docs.forEach((snapshot) {
@@ -250,6 +274,7 @@ class SplashScreenNotifier extends ChangeNotifier {
 
     // 設定中の背景色がある際には、Providerで保持する
     switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
+    _isRegistrationCompleted = true;
   }
 
   // ユーザー設定コレクションを初期化 - 初回ログイン、招待初回登録時実行
@@ -293,6 +318,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     } catch (error) {
       debugPrint('Problem generating tutorial to-dos');
     }
+    _isRegistrationCompleted = true;
   }
 
   void navigateHomeScreen() {

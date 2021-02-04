@@ -143,7 +143,7 @@ Future<void> initUserReference() async {
         .collection('versions')
         .doc('v1')
         .collection('groups')
-        .where('deviceId', arrayContains: _deviceId)
+        .where('deviceIds', arrayContains: _deviceId)
         .get();
   } catch (error) {
     debugPrint('Group id does not exist');
