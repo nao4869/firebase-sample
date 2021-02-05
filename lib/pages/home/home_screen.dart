@@ -312,41 +312,7 @@ class _HomeScreen extends StatelessWidget {
                                           ),
                                         ),
                                       )
-                                    : document['videoPath'] != null &&
-                                            document['videoPath'] != ''
-                                        ? FutureBuilder(
-                                            future: notifier
-                                                .initializeVideoPlayerFuture,
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.done) {
-                                                return InkWell(
-                                                  onTap: notifier
-                                                      .playAndPauseVideo,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 8.0),
-                                                    child: AspectRatio(
-                                                      aspectRatio: notifier
-                                                          .videoController
-                                                          .value
-                                                          .aspectRatio,
-                                                      child: VideoPlayer(
-                                                        notifier
-                                                            .videoController,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              } else {
-                                                return Center(
-                                                    child:
-                                                        CircularProgressIndicator());
-                                              }
-                                            },
-                                          )
-                                        : null,
+                                    : null,
                                 trailing: InkWell(
                                   onTap: () {},
                                   child: SizedBox(
