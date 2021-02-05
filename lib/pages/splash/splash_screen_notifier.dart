@@ -38,6 +38,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   String _referenceToUser;
   String _selectedImagePath;
   bool _isDisplayCompletedTodo = false;
+  bool _isSortByCreatedAt = false;
   bool _isRegistrationCompleted = false;
   String _groupId = '';
   String _deviceId;
@@ -265,11 +266,13 @@ class SplashScreenNotifier extends ChangeNotifier {
       _userSettingsReference = snapshot.reference.id;
       _selectedImagePath = snapshot.data()['backgroundImagePath'];
       _isDisplayCompletedTodo = snapshot.data()['displayCompletedTodo'];
+      _isSortByCreatedAt = snapshot.data()['isSortByCreatedAt'];
     });
 
     // ProviderのUser参照を更新
     userNotifier.updateUserReference(_referenceToUser);
     userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
+    userNotifier.updateIsSortByCreatedAt(_isSortByCreatedAt);
     userNotifier.updateUserSettingsReference(_userSettingsReference);
 
     // 設定中の背景色がある際には、Providerで保持する
@@ -295,6 +298,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // UserSettingsドキュメントを追加
       'createdAt': Timestamp.fromDate(DateTime.now()),
       'displayCompletedTodo': true,
+      'isSortByCreatedAt': true,
       'backgroundDesignId': 0,
       'backgroundImagePath': '',
     });

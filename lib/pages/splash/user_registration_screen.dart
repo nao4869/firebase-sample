@@ -68,7 +68,7 @@ class _UserRegistrationScreen extends StatelessWidget {
                           FractionallySizedBox(
                             widthFactor: .8,
                             child: _buildTextFormFieldDescription(
-                              'If you are invited by other person, \nplease enter the invitation code in this form',
+                              'If you are invited by other person, \nplease enter the invitation code in this form\n\nYou can also register without invitation code just by clicking Register',
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -109,16 +109,19 @@ class _UserRegistrationScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Text(
-          text,
-          style: const TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
-            fontSize: 11.0,
-            letterSpacing: 1.2,
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: warmGrey,
+              fontWeight: FontWeight.bold,
+              fontSize: 12.0,
+              letterSpacing: 1.2,
+              height: 1.2,
+            ),
+            maxLines: 5,
+            textAlign: TextAlign.left,
           ),
-          maxLines: 2,
-          textAlign: TextAlign.left,
         ),
       ],
     );
