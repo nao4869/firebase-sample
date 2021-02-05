@@ -183,7 +183,7 @@ class _HomeScreen extends StatelessWidget {
           .doc(categoryId)
           .collection('to-dos')
           .orderBy("createdAt",
-              descending: userNotifier.isSortByCreatedAt ? true : false)
+              descending: userNotifier.isSortByCreatedAt ?? true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // エラーの場合
