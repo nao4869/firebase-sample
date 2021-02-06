@@ -198,6 +198,7 @@ class _HomeScreen extends StatelessWidget {
                   if (document == null) {
                     return Container();
                   } else {
+                    final userReference = document['taggedUserReference'];
                     return Column(
                       children: [
                         FractionallySizedBox(
@@ -263,7 +264,8 @@ class _HomeScreen extends StatelessWidget {
                                   content: document['name'] ?? '',
                                   isChecked: document['isChecked'],
                                 ),
-                                trailing: TaggedUserImage(),
+                                trailing: TaggedUserImage(
+                                    taggedUserReferenceId: userReference.id),
                               ),
                             ),
                           ),

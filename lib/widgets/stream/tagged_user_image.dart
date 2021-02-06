@@ -5,7 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:firebase_sample/extensions/set_image_path.dart';
 
 class TaggedUserImage extends StatelessWidget {
-  const TaggedUserImage();
+  const TaggedUserImage({
+    this.taggedUserReferenceId,
+  });
+
+  final String taggedUserReferenceId;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +27,9 @@ class TaggedUserImage extends StatelessWidget {
         if (userSnapShot.hasError) {
           return SizedBox(height: 35);
         } else if (userSnapShot.hasData && userSnapShot.data.size != 0) {
-          DocumentSnapshot currentTaggedUserSnapShot =
-              userSnapShot?.data?.docs?.first;
+          DocumentSnapshot currentTaggedUserSnapShot = userSnapShot?.data?.docs
+              ?.firstWhere((user) => user.id == taggedUserReferenceId,
+                  orElse: null);
           final imageWidget =
               setImagePath(currentTaggedUserSnapShot['imagePath']);
           return SizedBox(
