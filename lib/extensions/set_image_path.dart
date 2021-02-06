@@ -5,7 +5,9 @@ extension SetImagePath on void {
   Widget setImagePath(
     String imagePath,
   ) {
-    if (imagePath == null || imagePath == defaultPersonImage) {
+    if (imagePath == null ||
+        imagePath.isEmpty ||
+        imagePath == defaultPersonImage) {
       return Image.asset(
         'assets/images/default_profile_image.png',
         fit: BoxFit.cover,

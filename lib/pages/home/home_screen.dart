@@ -199,7 +199,8 @@ class _HomeScreen extends StatelessWidget {
                   if (document == null) {
                     return Container();
                   } else {
-                    final imageWidget = setImagePath(document['userImagePath']);
+                    final DocumentReference userReference =
+                        document['taggedUserReference'];
                     return Column(
                       children: [
                         FractionallySizedBox(
@@ -313,15 +314,40 @@ class _HomeScreen extends StatelessWidget {
                                         ),
                                       )
                                     : null,
-                                trailing: InkWell(
-                                  onTap: () {},
-                                  child: SizedBox(
-                                    height: 35,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(30),
-                                      child: imageWidget,
-                                    ),
-                                  ),
+                                trailing: StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('versions')
+                                      .doc('v1')
+                                      .collection('groups')
+                                      .doc(groupNotifier.groupId)
+                                      .collection('users')
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot>
+                                          userSnapShot) {
+                                    DocumentSnapshot userSnapShot =
+                                        snapshot?.data?.docs?.first;
+                                    final imageWidget =
+                                        setImagePath(userSnapShot['imagePath']);
+                                    if (snapshot.hasError) {
+                                      return Container();
+                                    } else if (snapshot.hasData &&
+                                        imageWidget != null) {
+                                      return InkWell(
+                                        onTap: () {},
+                                        child: SizedBox(
+                                          height: 35,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            child: imageWidget,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  },
                                 ),
                               ),
                             ),
