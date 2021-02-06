@@ -8,13 +8,13 @@ import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
+import 'package:firebase_sample/widgets/stream/tagged_user_image.dart';
+import 'package:firebase_sample/widgets/stream/todo_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-import 'package:firebase_sample/extensions/set_image_path.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen();
@@ -171,7 +171,6 @@ class _HomeScreen extends StatelessWidget {
     final notifier = Provider.of<HomeScreenNotifier>(context);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
-    final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final userNotifier = Provider.of<UserReferenceProvider>(context);
     return StreamBuilder(
       stream: FirebaseFirestore.instance
@@ -253,99 +252,18 @@ class _HomeScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
-                                title: InkWell(
-                                  onTap: () {
+                                title: TodoContent(
+                                  onPressed: () {
                                     notifier.editTodo(
                                       collection: 'to-dos',
                                       documentId: document.id,
                                       initialValue: document['name'],
                                     );
                                   },
-                                  child: Row(
-                                    children: [
-                                      Flexible(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: Text(
-                                            document['name'] ?? '',
-                                            maxLines: 10,
-                                            style: TextStyle(
-                                              fontSize: 15.0,
-                                              color:
-                                                  darkModeNotifier.isLightTheme
-                                                      ? black
-                                                      : white,
-                                              decoration: document['isChecked']
-                                                  ? TextDecoration.lineThrough
-                                                  : TextDecoration.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  content: document['name'] ?? '',
+                                  isChecked: document['isChecked'],
                                 ),
-                                // 画像部分の表示
-                                subtitle: document['imagePath'] != null &&
-                                        document['imagePath'] != ''
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 8.0),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          child: InkWell(
-                                            onTap: () {
-                                              notifier.navigateZoomImageScreen(
-                                                document['imagePath'],
-                                                document.id,
-                                              );
-                                            },
-                                            child: Hero(
-                                              tag: document.id,
-                                              child: Image.network(
-                                                document['imagePath'],
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : null,
-                                trailing: StreamBuilder(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('versions')
-                                      .doc('v1')
-                                      .collection('groups')
-                                      .doc(groupNotifier.groupId)
-                                      .collection('users')
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot>
-                                          userSnapShot) {
-                                    if (userSnapShot.hasError) {
-                                      return SizedBox(height: 35);
-                                    } else if (userSnapShot.hasData &&
-                                        userSnapShot.data.size != 0) {
-                                      DocumentSnapshot
-                                          currentTaggedUserSnapShot =
-                                          userSnapShot?.data?.docs?.first;
-                                      final imageWidget = setImagePath(
-                                          currentTaggedUserSnapShot[
-                                              'imagePath']);
-                                      return SizedBox(
-                                        height: 35,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          child: imageWidget,
-                                        ),
-                                      );
-                                    } else {
-                                      return SizedBox(height: 35);
-                                    }
-                                  },
-                                ),
+                                trailing: TaggedUserImage(),
                               ),
                             ),
                           ),
