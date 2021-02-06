@@ -120,53 +120,48 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
       context: context,
       builder: (_) {
         return AlertDialog(
-          title: SizedBox(
-            width: size.width * .3,
-            height: size.width * .2,
-            child: Column(
-              children: [
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'Group ID',
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.grey,
-                      ),
+          title: Column(
+            children: [
+              Row(
+                children: <Widget>[
+                  Text(
+                    'Group ID',
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.grey,
                     ),
-                  ],
-                ),
-                SizedBox(height: size.height * .005),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      groupNotifier.groupId,
-                      style: const TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.normal,
-                        color: black,
-                      ),
+                  ),
+                ],
+              ),
+              SizedBox(height: size.height * .005),
+              Row(
+                children: <Widget>[
+                  Text(
+                    groupNotifier.groupId,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                      color: black,
                     ),
-                    IconButton(
-                      onPressed: copyIdToClipBoard,
-                      icon: Icon(Icons.copy),
-                      iconSize: 20.0,
-                      color: switchAppThemeNotifier.currentTheme,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                SizedBox(
-                  width: double.infinity,
-                  height: 1,
-                  child: ColoredBox(
+                  ),
+                  IconButton(
+                    onPressed: copyIdToClipBoard,
+                    icon: Icon(Icons.copy),
+                    iconSize: 15.0,
                     color: switchAppThemeNotifier.currentTheme,
                   ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              SizedBox(
+                width: double.infinity,
+                height: 1,
+                child: ColoredBox(
+                  color: switchAppThemeNotifier.currentTheme,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           content: Text(
             'Steps for joining\n\n(Invited person)\n1. Download the app\n2. Enter above group id when registering',
