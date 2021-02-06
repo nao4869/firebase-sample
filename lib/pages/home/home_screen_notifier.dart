@@ -60,6 +60,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   int currentTabIndex = 0;
   int initPosition = 0;
   bool isInitialLoadCompleted = false;
+  String _referenceToUser = '';
   List<QueryDocumentSnapshot> todoList = [];
 
   Animation<double> rotationAnimation;
@@ -155,8 +156,6 @@ class HomeScreenNotifier extends ChangeNotifier {
   Future<void> createPostWithoutImage() async {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
-    final userNotifier =
-        Provider.of<UserReferenceProvider>(context, listen: false);
     Navigator.of(context).pop();
 
     // タスク担当ユーザーの参照を取得
@@ -166,7 +165,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')
-        .doc(userNotifier.referenceToUser)
+        .doc(_referenceToUser)
         .get();
 
     // GroupのサブコレクションのサブコレクションCategory下にTo-dosを作成
@@ -441,6 +440,8 @@ class HomeScreenNotifier extends ChangeNotifier {
                                   return InkWell(
                                     onTap: () {
                                       _selectedPersonIndex = index;
+                                      _referenceToUser =
+                                          snapshot.data.docs[index].id;
                                       setState(() {});
                                     },
                                     child: SizedBox(
@@ -485,7 +486,9 @@ class HomeScreenNotifier extends ChangeNotifier {
                     width: size.width,
                     child: FullWidthButton(
                       title: AppLocalizations.of(context).translate('post'),
-                      onPressed: createPostWithoutImage,
+                      onPressed: () {
+                        createPostWithoutImage();
+                      },
                     ),
                   ),
                 ],
