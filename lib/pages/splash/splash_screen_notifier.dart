@@ -104,6 +104,17 @@ class SplashScreenNotifier extends ChangeNotifier {
 
     if (!_isRegistrationProcess) {
       _isRegistrationProcess = true;
+
+      // 端末のデバイスIDをサブコレクションへ追加
+      fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(invitationCode)
+          .update({
+        'deviceIds': FieldValue.arrayUnion([_deviceId])
+      });
+
       // 初回起動時のみ、groupを追加
       final referenceToUser = await fireStoreInstance
           .collection('versions')
