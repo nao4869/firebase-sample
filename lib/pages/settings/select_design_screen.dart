@@ -53,7 +53,7 @@ class _SelectDesignScreen extends StatelessWidget {
                 Center(
                   child: SizedBox(
                     width: size.width * .9,
-                    height: size.height * .7,
+                    height: size.height * .72,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         color: white,
@@ -94,6 +94,7 @@ class _SelectDesignScreen extends StatelessWidget {
                             startIndex: 8,
                             length: 4,
                           ),
+                          const SizedBox(height: 10),
                         ],
                       ),
                     ),
@@ -222,7 +223,7 @@ class _SelectDesignScreen extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0),
       child: SizedBox(
         width: size.width * .85,
-        height: 80,
+        height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: length,
@@ -235,8 +236,8 @@ class _SelectDesignScreen extends StatelessWidget {
                 );
               },
               child: SizedBox(
-                width: 80,
-                height: 80,
+                width: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
+                height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
                   child: Image.asset(
