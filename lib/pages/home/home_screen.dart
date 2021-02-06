@@ -199,8 +199,6 @@ class _HomeScreen extends StatelessWidget {
                   if (document == null) {
                     return Container();
                   } else {
-                    final DocumentReference userReference =
-                        document['taggedUserReference'];
                     return Column(
                       children: [
                         FractionallySizedBox(
@@ -325,27 +323,26 @@ class _HomeScreen extends StatelessWidget {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot>
                                           userSnapShot) {
-                                    DocumentSnapshot userSnapShot =
-                                        snapshot?.data?.docs?.first;
-                                    final imageWidget =
-                                        setImagePath(userSnapShot['imagePath']);
-                                    if (snapshot.hasError) {
-                                      return Container();
-                                    } else if (snapshot.hasData &&
-                                        imageWidget != null) {
-                                      return InkWell(
-                                        onTap: () {},
-                                        child: SizedBox(
-                                          height: 35,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            child: imageWidget,
-                                          ),
+                                    if (userSnapShot.hasError) {
+                                      return SizedBox(height: 35);
+                                    } else if (userSnapShot.hasData &&
+                                        userSnapShot.data.size != 0) {
+                                      DocumentSnapshot
+                                          currentTaggedUserSnapShot =
+                                          userSnapShot?.data?.docs?.first;
+                                      final imageWidget = setImagePath(
+                                          currentTaggedUserSnapShot[
+                                              'imagePath']);
+                                      return SizedBox(
+                                        height: 35,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          child: imageWidget,
                                         ),
                                       );
                                     } else {
-                                      return Container();
+                                      return SizedBox(height: 35);
                                     }
                                   },
                                 ),
