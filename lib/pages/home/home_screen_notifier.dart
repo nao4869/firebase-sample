@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -39,10 +40,16 @@ class HomeScreenNotifier extends ChangeNotifier {
       onSlideAnimationChanged: handleSlideAnimationChanged,
       onSlideIsOpenChanged: handleSlideIsOpenChanged,
     );
+    initializeFirebaseMessaging();
   }
   final BuildContext context;
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
+
+  String messageTitle = "Empty";
+  String notificationAlert = "alert";
+
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   String _taskName;
   bool isValid = false;
@@ -66,6 +73,25 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   Animation<double> rotationAnimation;
   Color fabColor = Colors.blue;
+
+  void initializeFirebaseMessaging() {
+    _firebaseMessaging.configure(
+      /// The onMessage function triggers when the notification is received while we are running the app
+      onMessage: (message) async {
+        messageTitle = message["notification"]["title"];
+        notificationAlert = "New Notification Alert";
+        notifyListeners();
+      },
+      /// The onResume function triggers when we receive the notification alert in the device notification bar and
+      /// opens the app through the push notification itself.
+      /// In this case, the app can be running in the background or not running at all.
+      onResume: (message) async {
+        messageTitle = message["data"]["title"];
+        notificationAlert = "Application opened from Notification";
+        notifyListeners();
+      },
+    );
+  }
 
   @override
   void dispose() {

@@ -22,7 +22,12 @@ import 'models/provider/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Firebase initialized
   await Firebase.initializeApp();
+
+//  // Set the background messaging handler early on, as a named top-level function
+//  myBackgroundMessageHandler();
 
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> deviceData;
@@ -151,6 +156,7 @@ Future<void> initUserReference() async {
   }
 }
 
+// Define a TOP-LEVEL or STATIC function to handle background messages
 // Note: the protocol of data and notification are in line with the fields defined by a RemoteMessage.
 Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
   if (message.containsKey('data')) {
