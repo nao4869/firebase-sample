@@ -150,3 +150,18 @@ Future<void> initUserReference() async {
     debugPrint('Group id does not exist');
   }
 }
+
+// Note: the protocol of data and notification are in line with the fields defined by a RemoteMessage.
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+  }
+
+  // Or do other work.
+}
