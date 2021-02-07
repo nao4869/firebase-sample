@@ -8,6 +8,7 @@ import 'package:firebase_sample/pages/settings/select_design_screen.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/pages/settings/settings_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/switch_application_theme.dart';
+import 'package:firebase_sample/widgets/stream/switch_toggle_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -91,10 +92,6 @@ class _SettingsScreen extends StatelessWidget {
 
   List<Widget> buildAppSettingsSection(BuildContext context) {
     final notifier = Provider.of<SettingsScreenNotifier>(context);
-    final groupNotifier =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
-    final userNotifier =
-        Provider.of<UserReferenceProvider>(context, listen: false);
     return [
       SettingTitle(
         title: AppLocalizations.of(context).translate('accountSettings'),
@@ -119,72 +116,16 @@ class _SettingsScreen extends StatelessWidget {
           );
         },
       ),
-      StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('versions')
-            .doc('v1')
-            .collection('groups')
-            .doc(groupNotifier.groupId)
-            .collection('users')
-            .doc(userNotifier.referenceToUser)
-            .collection('userSettings')
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          // エラーの場合
-          if (snapshot.hasError || snapshot.data == null) {
-            return SettingRow(
-              title: AppLocalizations.of(context)
-                  .translate('displayCompletedTodo'),
-              onChange: (bool value) {
-                notifier.updateIsDisplayCompletedTodo(value);
-              },
-              isEnable: false,
-            );
-          } else {
-            DocumentSnapshot currentUserSetting = snapshot?.data?.docs?.first;
-            return SettingRow(
-              title: AppLocalizations.of(context)
-                  .translate('displayCompletedTodo'),
-              onChange: (bool value) {
-                notifier.updateIsDisplayCompletedTodo(value);
-              },
-              isEnable: currentUserSetting['displayCompletedTodo'] ?? false,
-            );
-          }
+      SwitchToggleListTile(
+        switchFieldName: 'displayCompletedTodo',
+        onChanged: (bool value) {
+          notifier.updateIsDisplayCompletedTodo(value);
         },
       ),
-      StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('versions')
-            .doc('v1')
-            .collection('groups')
-            .doc(groupNotifier.groupId)
-            .collection('users')
-            .doc(userNotifier.referenceToUser)
-            .collection('userSettings')
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          // エラーの場合
-          if (snapshot.hasError || snapshot.data == null) {
-            return SettingRow(
-              title:
-                  AppLocalizations.of(context).translate('isSortByCreatedAt'),
-              onChange: (bool value) {
-                notifier.updateIsSortByCreatedAt(value);
-              },
-              isEnable: false,
-            );
-          } else {
-            DocumentSnapshot currentUserSetting = snapshot?.data?.docs?.first;
-            return SettingRow(
-              title:
-                  AppLocalizations.of(context).translate('isSortByCreatedAt'),
-              onChange: (bool value) {
-                notifier.updateIsSortByCreatedAt(value);
-              },
-              isEnable: currentUserSetting['isSortByCreatedAt'] ?? false,
-            );
-          }
+      SwitchToggleListTile(
+        switchFieldName: 'isSortByCreatedAt',
+        onChanged: (bool value) {
+          notifier.updateIsSortByCreatedAt(value);
         },
       ),
     ];
