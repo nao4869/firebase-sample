@@ -128,6 +128,12 @@ class _SettingsScreen extends StatelessWidget {
           notifier.updateIsSortByCreatedAt(value);
         },
       ),
+      SwitchToggleListTile(
+        switchFieldName: 'isSortCategoryByCreatedAt',
+        onChanged: (bool value) {
+          notifier.updateIsSortCategoryByCreatedAt(value);
+        },
+      ),
     ];
   }
 }

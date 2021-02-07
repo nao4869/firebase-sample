@@ -83,4 +83,22 @@ class SettingsScreenNotifier extends ChangeNotifier {
     // User Providerの値も更新
     userNotifier.updateIsSortByCreatedAt(isSortByCreatedAt);
   }
+
+  void updateIsSortCategoryByCreatedAt(bool isSortCategoryByCreatedAt) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
+        .update({"isSortCategoryByCreatedAt": isSortCategoryByCreatedAt});
+
+    // User Providerの値も更新
+    userNotifier.updateIsSortCategoryByCreatedAt(isSortCategoryByCreatedAt);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
 import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,6 +35,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
         Provider.of<AddCategoryScreenNotifier>(context, listen: false);
     final theme = Provider.of<ThemeProvider>(context, listen: false);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
+    final userNotifier = Provider.of<UserReferenceProvider>(context);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     final size = MediaQuery.of(context).size;
@@ -80,7 +82,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('categories')
-            .orderBy("createdAt", descending: true)
+            .orderBy("createdAt",
+            descending: userNotifier.isSortCategoryByCreatedAt ?? true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合

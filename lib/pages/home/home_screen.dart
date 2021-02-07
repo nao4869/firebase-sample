@@ -39,6 +39,7 @@ class _HomeScreen extends StatelessWidget {
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final userNotifier = Provider.of<UserReferenceProvider>(context);
     final currentThemeId = switchAppThemeNotifier.getCurrentThemeNumber();
     return Scaffold(
       backgroundColor: switchAppThemeNotifier.currentTheme,
@@ -85,7 +86,8 @@ class _HomeScreen extends StatelessWidget {
                 .collection('groups')
                 .doc(groupNotifier.groupId)
                 .collection('categories')
-                .orderBy("createdAt", descending: true)
+                .orderBy("createdAt",
+                    descending: userNotifier.isSortCategoryByCreatedAt ?? true)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

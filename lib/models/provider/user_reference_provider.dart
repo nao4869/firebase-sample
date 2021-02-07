@@ -6,12 +6,14 @@ class UserReferenceProvider with ChangeNotifier {
     this.userSettingsReference,
     this.isDisplayCompletedTodo,
     this.isSortByCreatedAt,
+    this.isSortCategoryByCreatedAt,
   });
 
   String referenceToUser;
   String userSettingsReference;
   bool isDisplayCompletedTodo;
   bool isSortByCreatedAt;
+  bool isSortCategoryByCreatedAt;
 
   void updateUserReference(String newUserReference) {
     referenceToUser = newUserReference;
@@ -27,5 +29,9 @@ class UserReferenceProvider with ChangeNotifier {
 
   void updateIsSortByCreatedAt(bool updated) {
     isSortByCreatedAt = updated;
+  }
+
+  void updateIsSortCategoryByCreatedAt(bool updated) {
+    isSortCategoryByCreatedAt = updated;
   }
 }

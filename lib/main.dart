@@ -73,6 +73,7 @@ void main() async {
             userSettingsReference: '',
             isDisplayCompletedTodo: true,
             isSortByCreatedAt: true,
+            isSortCategoryByCreatedAt: true,
           ),
         ),
         ChangeNotifierProvider(
