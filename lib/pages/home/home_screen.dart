@@ -264,8 +264,10 @@ class _HomeScreen extends StatelessWidget {
                                   content: document['name'] ?? '',
                                   isChecked: document['isChecked'],
                                 ),
-                                trailing: TaggedUserImage(
-                                    taggedUserReferenceId: userReference.id),
+                                trailing: userReference != null
+                                    ? TaggedUserImage(
+                                        taggedUserReferenceId: userReference.id)
+                                    : null,
                               ),
                             ),
                           ),

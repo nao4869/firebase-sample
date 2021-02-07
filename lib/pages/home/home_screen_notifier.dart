@@ -159,15 +159,19 @@ class HomeScreenNotifier extends ChangeNotifier {
     Navigator.of(context).pop();
 
     // タスク担当ユーザーの参照を取得
-    final userReference = await FirebaseFirestore.instance
-        .collection('versions')
-        .doc('v1')
-        .collection('groups')
-        .doc(groupNotifier.groupId)
-        .collection('users')
-        .doc(_referenceToUser)
-        .get();
+    DocumentSnapshot userReference;
+    if (_referenceToUser != null && _referenceToUser.isNotEmpty) {
+      userReference = await FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(groupNotifier.groupId)
+          .collection('users')
+          .doc(_referenceToUser)
+          .get();
+    }
 
+    // TODO: remindDateを入力できるようにする
     // GroupのサブコレクションのサブコレクションCategory下にTo-dosを作成
     FirebaseFirestore.instance
         .collection('versions')
@@ -183,8 +187,8 @@ class HomeScreenNotifier extends ChangeNotifier {
       'imagePath': null,
       'videoPath': null,
       'isChecked': false,
-      'userImagePath': userReference['imagePath'],
-      'taggedUserReference': userReference.reference,
+      'taggedUserReference':
+          userReference != null ? userReference.reference : null,
     });
   }
 
