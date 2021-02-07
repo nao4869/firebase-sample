@@ -92,6 +92,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     SlideActionType actionType,
     String collection,
     String documentId,
+    String initialValue,
   }) {
     return showCupertinoModalPopup(
       context: context,
@@ -110,7 +111,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
                 editCategory(
                   collection: collection,
                   documentId: documentId,
-                  initialValue: taskName,
+                  initialValue: initialValue,
                 );
               },
             ),
@@ -267,6 +268,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     String documentId,
     String initialValue,
   }) {
+    taskName = initialValue;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

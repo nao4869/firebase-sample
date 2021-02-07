@@ -132,6 +132,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
                               actionType: SlideActionType.primary,
                               collection: 'categories',
                               documentId: snapshot.data.docs[index].id,
+                              initialValue:
+                                  snapshot.data.docs[index].data()['name'],
                             );
                           },
                           child: Padding(

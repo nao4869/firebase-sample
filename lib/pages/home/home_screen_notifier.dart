@@ -499,6 +499,8 @@ class HomeScreenNotifier extends ChangeNotifier {
     String documentId,
     String initialValue,
   }) {
+    // 編集時に初期値を追加
+    _taskName = initialValue;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
