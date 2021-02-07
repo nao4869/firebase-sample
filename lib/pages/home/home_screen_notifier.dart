@@ -19,6 +19,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_sample/extensions/set_image_path.dart';
@@ -73,6 +74,25 @@ class HomeScreenNotifier extends ChangeNotifier {
     videoController.dispose();
     super.dispose();
   }
+
+  RefreshController refreshController =
+  RefreshController(initialRefresh: false);
+
+  void onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    notifyListeners();
+    refreshController.refreshCompleted();
+  }
+
+  void onLoading() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    notifyListeners();
+    refreshController.loadComplete();
+  }
+
 
   void handleSlideAnimationChanged(Animation<double> slideAnimation) {
     rotationAnimation = slideAnimation;
