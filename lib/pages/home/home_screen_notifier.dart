@@ -15,6 +15,7 @@ import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -50,8 +51,8 @@ class HomeScreenNotifier extends ChangeNotifier {
   String _uploadedFileURL;
   int _selectedPersonIndex;
 
-  String createdDate;
-  bool get isDateValid => createdDate != null;
+  DateTime _selectedRemindDate;
+  bool get isDateValid => _selectedRemindDate != null;
 
   SlidableController slidableController;
   VideoPlayerController videoController;
@@ -184,12 +185,14 @@ class HomeScreenNotifier extends ChangeNotifier {
         .add({
       'name': _taskName,
       'createdAt': Timestamp.fromDate(DateTime.now()),
+      'remindDate': Timestamp.fromDate(_selectedRemindDate),
       'imagePath': null,
       'videoPath': null,
       'isChecked': false,
       'taggedUserReference':
           userReference != null ? userReference.reference : null,
     });
+    _selectedRemindDate = null;
   }
 
   void updateTodoIsChecked(
@@ -331,37 +334,22 @@ class HomeScreenNotifier extends ChangeNotifier {
     }
   }
 
-  void showModalPicker() {
-    final size = MediaQuery.of(context).size;
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: size.height * .65,
-          child: DatePickerBottomSheet(
-            initialDateString: '',
-            isValid: isDateValid,
-            onPressedNext: null,
-            onPressedDone: () {
-              Navigator.of(context).pop();
-            },
-            onDateTimeChanged: _onSelectedItemChanged,
-          ),
-        );
+  void showDateTimePicker() {
+    DatePicker.showDateTimePicker(
+      context,
+      showTitleActions: true,
+      currentTime: DateTime.now(),
+      minTime: DateTime(2020, 5, 5, 20, 50),
+      maxTime: DateTime(2020, 6, 7, 05, 09),
+      onChanged: (date) {
+        debugPrint('change $date in time zone ' +
+            date.timeZoneOffset.inHours.toString());
+      },
+      onConfirm: (date) {
+        _selectedRemindDate = date;
+        notifyListeners();
       },
     );
-  }
-
-  void _onSelectedItemChanged(String value) {
-    createdDate = value;
-    notifyListeners();
   }
 
   void openModalBottomSheet() {
@@ -394,8 +382,8 @@ class HomeScreenNotifier extends ChangeNotifier {
                     },
                   ),
                   DateRow(
-                    createdDate: createdDate,
-                    onPressed: showModalPicker,
+                    remindDate: _selectedRemindDate,
+                    onPressed: showDateTimePicker,
                   ),
                   StreamBuilder(
                     stream: FirebaseFirestore.instance

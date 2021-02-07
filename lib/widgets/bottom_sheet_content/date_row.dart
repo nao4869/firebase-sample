@@ -1,15 +1,16 @@
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DateRow extends StatelessWidget {
   DateRow({
-    this.createdDate,
+    this.remindDate,
     this.onPressed,
   });
 
-  final String createdDate;
+  final DateTime remindDate;
   final VoidCallback onPressed;
 
   @override
@@ -33,8 +34,8 @@ class DateRow extends StatelessWidget {
             ),
             const SizedBox(width: 20),
             Text(
-              createdDate != null
-                  ? createdDate.substring(0, 10)
+              remindDate != null
+                  ? DateFormat.yMd().add_jm().format(remindDate)
                   : 'No remind date',
               style: TextStyle(
                 fontSize: 15.0,
