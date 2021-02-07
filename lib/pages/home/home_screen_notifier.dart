@@ -185,7 +185,9 @@ class HomeScreenNotifier extends ChangeNotifier {
         .add({
       'name': _taskName,
       'createdAt': Timestamp.fromDate(DateTime.now()),
-      'remindDate': Timestamp.fromDate(_selectedRemindDate),
+      'remindDate': _selectedRemindDate != null
+          ? Timestamp.fromDate(_selectedRemindDate)
+          : null,
       'imagePath': null,
       'videoPath': null,
       'isChecked': false,
