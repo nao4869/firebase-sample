@@ -7,7 +7,6 @@ import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/edit_group_name_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
-import 'package:firebase_sample/widgets/bottom_sheet/date_picker_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/bottom_sheet_content/date_row.dart';
 import 'package:firebase_sample/widgets/bottom_sheet_content/input_field.dart';
@@ -76,7 +75,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   }
 
   RefreshController refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   void onRefresh() async {
     // monitor network fetch
@@ -92,7 +91,6 @@ class HomeScreenNotifier extends ChangeNotifier {
     notifyListeners();
     refreshController.loadComplete();
   }
-
 
   void handleSlideAnimationChanged(Animation<double> slideAnimation) {
     rotationAnimation = slideAnimation;
@@ -374,6 +372,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     );
   }
 
+  // 新規Todo作成時 ボトムシート表示関数
   void openModalBottomSheet() {
     final size = MediaQuery.of(context).size;
     final groupNotifier =
@@ -518,19 +517,32 @@ class HomeScreenNotifier extends ChangeNotifier {
     String collection,
     String documentId,
     String initialValue,
+    String selectedPersonId,
+    DateTime remindDate,
   }) {
     // 編集時に初期値を追加
     _taskName = initialValue;
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
       builder: (BuildContext context) {
         return EditCategoryBottomSheet(
           buttonTitle: 'Update Todo',
           initialValue: initialValue,
+          selectedRemindDate: remindDate,
+          selectedPersonId: selectedPersonId,
+          showDateTimePicker: showDateTimePicker,
           onPressed: () {
             Navigator.of(context).pop();
             updateTodoName(collection, documentId);
           },
+          onSelectedPersonChanged: () {},
           onNameChange: (String text) {
             onNameChange(text);
           },

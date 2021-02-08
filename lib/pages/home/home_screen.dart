@@ -272,6 +272,15 @@ class _HomeScreen extends StatelessWidget {
                                         collection: 'to-dos',
                                         documentId: document.id,
                                         initialValue: document['name'],
+                                        selectedPersonId: document[
+                                                    'taggedUserReference'] !=
+                                                null
+                                            ? document['taggedUserReference'].id
+                                            : null,
+                                        remindDate: document['remindDate'] !=
+                                                null
+                                            ? document['remindDate'].toDate()
+                                            : null,
                                       );
                                     },
                                     content: document['name'] ?? '',
