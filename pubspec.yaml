@@ -51,7 +51,7 @@ dependencies:
   intl: ^0.16.1
 
   # pull to refresh
-  pull_to_refresh: ^1.6.4
+  pull_to_refresh: 1.6.3
 
   # Icon
   font_awesome_flutter: ^8.11.0
