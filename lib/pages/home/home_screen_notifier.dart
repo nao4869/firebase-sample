@@ -520,6 +520,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     String selectedPersonId,
     DateTime remindDate,
   }) {
+    String _selectedPersonId = selectedPersonId;
     // 編集時に初期値を追加
     _taskName = initialValue;
     showModalBottomSheet(
@@ -536,13 +537,15 @@ class HomeScreenNotifier extends ChangeNotifier {
           buttonTitle: 'Update Todo',
           initialValue: initialValue,
           selectedRemindDate: remindDate,
-          selectedPersonId: selectedPersonId,
+          selectedPersonId: _selectedPersonId,
           showDateTimePicker: showDateTimePicker,
           onUpdatePressed: () {
             Navigator.of(context).pop();
             updateTodoName(collection, documentId);
           },
-          onSelectedPersonChanged: () {},
+          onSelectedPersonChanged: (String id) {
+            _selectedPersonId = id;
+          },
           onNameChange: (String text) {
             onNameChange(text);
           },
