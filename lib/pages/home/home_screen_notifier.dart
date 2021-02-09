@@ -538,7 +538,7 @@ class HomeScreenNotifier extends ChangeNotifier {
           selectedRemindDate: remindDate,
           selectedPersonId: selectedPersonId,
           showDateTimePicker: showDateTimePicker,
-          onPressed: () {
+          onUpdatePressed: () {
             Navigator.of(context).pop();
             updateTodoName(collection, documentId);
           },

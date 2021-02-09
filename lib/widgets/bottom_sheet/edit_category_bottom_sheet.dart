@@ -14,7 +14,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
     this.initialValue,
     this.selectedRemindDate,
     this.selectedPersonId,
-    this.onPressed,
+    this.onUpdatePressed,
     this.showDateTimePicker,
     this.onSelectedPersonChanged,
     this.onNameChange,
@@ -24,7 +24,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
   final String initialValue;
   final String selectedPersonId;
   final DateTime selectedRemindDate;
-  final VoidCallback onPressed;
+  final VoidCallback onUpdatePressed;
   final VoidCallback showDateTimePicker;
   final VoidCallback onSelectedPersonChanged;
   final Function(String) onNameChange;
@@ -156,7 +156,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
             width: size.width,
             child: FullWidthButton(
               title: buttonTitle,
-              onPressed: onPressed,
+              onPressed: onUpdatePressed,
             ),
           ),
         ],

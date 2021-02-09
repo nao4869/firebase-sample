@@ -24,7 +24,7 @@ class TaggedUserImage extends StatelessWidget {
           .snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<QuerySnapshot> userSnapShot) {
-        if (userSnapShot.hasError) {
+        if (userSnapShot.hasError || !userSnapShot.hasData) {
           return SizedBox(height: 35);
         } else if (userSnapShot.hasData && userSnapShot.data.size != 0) {
           DocumentSnapshot currentTaggedUserSnapShot = userSnapShot?.data?.docs

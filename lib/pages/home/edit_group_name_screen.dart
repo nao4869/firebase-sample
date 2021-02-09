@@ -117,7 +117,7 @@ class _EditGroupNameScreen extends StatelessWidget {
                                   return EditCategoryBottomSheet(
                                     buttonTitle: 'Update Group Name',
                                     initialValue: '',
-                                    onPressed: () {
+                                    onUpdatePressed: () {
                                       Navigator.of(context).pop();
                                       notifier.updateGroupName();
                                     },
@@ -188,7 +188,7 @@ class _EditGroupNameScreen extends StatelessWidget {
                                   return EditCategoryBottomSheet(
                                     buttonTitle: 'Update Group Name',
                                     initialValue: currentGroup['name'],
-                                    onPressed: () {
+                                    onUpdatePressed: () {
                                       Navigator.of(context).pop();
                                       notifier.updateGroupName();
                                     },
