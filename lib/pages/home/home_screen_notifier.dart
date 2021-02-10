@@ -62,6 +62,7 @@ class HomeScreenNotifier extends ChangeNotifier {
   int initPosition = 0;
   bool isInitialLoadCompleted = false;
   String _referenceToUser = '';
+  String _selectedPersonId = '';
   List<QueryDocumentSnapshot> todoList = [];
 
   Animation<double> rotationAnimation;
@@ -234,12 +235,24 @@ class HomeScreenNotifier extends ChangeNotifier {
         .update({"isChecked": isChecked});
   }
 
-  void updateTodoName(
+  void updateTodo(
     String collection,
     String documentId,
-  ) {
+  ) async {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    // 選択中ユーザーIDから、タスク担当ユーザーの参照を取得
+    DocumentSnapshot userReference;
+    if (_selectedPersonId != null && _selectedPersonId.isNotEmpty) {
+      userReference = await FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(groupNotifier.groupId)
+          .collection('users')
+          .doc(_selectedPersonId)
+          .get();
+    }
     FirebaseFirestore.instance
         .collection('versions')
         .doc('v1')
@@ -249,7 +262,14 @@ class HomeScreenNotifier extends ChangeNotifier {
         .doc(currentTabDocumentId)
         .collection(collection)
         .doc(documentId)
-        .update({"name": _taskName});
+        .update({
+      "name": _taskName,
+      "taggedUserReference":
+          userReference != null ? userReference.reference : null,
+      'remindDate': _selectedRemindDate != null
+          ? Timestamp.fromDate(_selectedRemindDate)
+          : null,
+    });
   }
 
   // 単一のTodoを指定されたFireStore Collectionから削除します。
@@ -520,7 +540,8 @@ class HomeScreenNotifier extends ChangeNotifier {
     String selectedPersonId,
     DateTime remindDate,
   }) {
-    String _selectedPersonId = selectedPersonId;
+    _selectedPersonId = selectedPersonId;
+    _selectedRemindDate = remindDate;
     // 編集時に初期値を追加
     _taskName = initialValue;
     showModalBottomSheet(
@@ -536,12 +557,12 @@ class HomeScreenNotifier extends ChangeNotifier {
         return EditCategoryBottomSheet(
           buttonTitle: 'Update Todo',
           initialValue: initialValue,
-          selectedRemindDate: remindDate,
+          selectedRemindDate: _selectedRemindDate,
           selectedPersonId: _selectedPersonId,
           showDateTimePicker: showDateTimePicker,
           onUpdatePressed: () {
             Navigator.of(context).pop();
-            updateTodoName(collection, documentId);
+            updateTodo(collection, documentId);
           },
           onSelectedPersonChanged: (String id) {
             _selectedPersonId = id;
