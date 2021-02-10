@@ -44,7 +44,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
-              height: size.width * .2,
+              height: size.width * .3,
               width: size.width * .9,
               child: DecoratedBox(
                 decoration: BoxDecoration(
