@@ -122,7 +122,9 @@ class _HomeScreen extends StatelessWidget {
                         ),
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: colorList[index],
+                            color: index >= colorList.length
+                                ? colorList[0]
+                                : colorList[index],
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10),
                               topLeft: Radius.circular(10),
@@ -255,8 +257,12 @@ class _HomeScreen extends StatelessWidget {
                                   leading: CircularCheckBox(
                                     value: document['isChecked'],
                                     checkColor: Colors.white,
-                                    activeColor: colorList[index],
-                                    inactiveColor: colorList[index],
+                                    activeColor: index >= colorList.length
+                                        ? colorList[0]
+                                        : colorList[index],
+                                    inactiveColor: index >= colorList.length
+                                        ? colorList[0]
+                                        : colorList[index],
                                     disabledColor: Colors.grey,
                                     onChanged: (val) {
                                       notifier.updateTodoIsChecked(
