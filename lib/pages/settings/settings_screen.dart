@@ -123,6 +123,12 @@ class _SettingsScreen extends StatelessWidget {
         },
       ),
       SwitchToggleListTile(
+        switchFieldName: 'isDisplayOnlyCompletedTodo',
+        onChanged: (bool value) {
+          notifier.updateIsDisplayOnlyCompletedTodo(value);
+        },
+      ),
+      SwitchToggleListTile(
         switchFieldName: 'isSortByCreatedAt',
         onChanged: (bool value) {
           notifier.updateIsSortByCreatedAt(value);

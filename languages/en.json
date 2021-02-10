@@ -20,6 +20,7 @@
   "editAppTheme": "Change theme color",
   "editDesignTheme": "Change background theme",
   "displayCompletedTodo": "Display completed to-dos",
+  "isDisplayOnlyCompletedTodo": "Display only completed to-dos",
   "isSortByCreatedAt": "Sort to-dos by created date",
   "isSortCategoryByCreatedAt": "Sort categories by created date",
   "directMessageScreen": "Direct message screen",

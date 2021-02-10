@@ -111,6 +111,9 @@ class HomeScreenNotifier extends ChangeNotifier {
         Provider.of<UserReferenceProvider>(context, listen: false);
     if (userNotifier.isDisplayCompletedTodo) {
       todoList = snapshot;
+    } else if (userNotifier.isDisplayOnlyCompletedTodo) {
+      todoList =
+          snapshot.where((element) => element['isChecked'] == true).toList();
     } else {
       todoList =
           snapshot.where((element) => element['isChecked'] == false).toList();

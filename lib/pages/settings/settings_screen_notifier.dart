@@ -66,6 +66,26 @@ class SettingsScreenNotifier extends ChangeNotifier {
     userNotifier.updateCompletedTodo(displayCompletedTodo);
   }
 
+  void updateIsDisplayOnlyCompletedTodo(
+    bool isDisplayOnlyCompletedTodo,
+  ) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v1')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
+        .update({"isDisplayOnlyCompletedTodo": isDisplayOnlyCompletedTodo});
+
+    // User Providerの値も更新
+    userNotifier.updateIsDisplayOnlyCompletedTodo(isDisplayOnlyCompletedTodo);
+  }
+
   void updateIsSortByCreatedAt(bool isSortByCreatedAt) {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);

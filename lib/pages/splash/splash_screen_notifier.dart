@@ -38,6 +38,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   String _referenceToUser;
   String _selectedImagePath;
   bool _isDisplayCompletedTodo = false;
+  bool _isDisplayOnlyCompletedTodo = false;
   bool _isSortByCreatedAt = false;
   bool _isSortCategoryByCreatedAt = false;
   bool _isRegistrationCompleted = false;
@@ -278,20 +279,27 @@ class SplashScreenNotifier extends ChangeNotifier {
       _userSettingsReference = snapshot.reference.id;
       _selectedImagePath = snapshot.data()['backgroundImagePath'];
       _isDisplayCompletedTodo = snapshot.data()['displayCompletedTodo'];
+      _isDisplayOnlyCompletedTodo =
+          snapshot.data()['isDisplayOnlyCompletedTodo'];
       _isSortByCreatedAt = snapshot.data()['isSortByCreatedAt'];
       _isSortCategoryByCreatedAt = snapshot.data()['isSortCategoryByCreatedAt'];
     });
-
     // ProviderのUser参照を更新
-    userNotifier.updateUserReference(_referenceToUser);
-    userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
-    userNotifier.updateIsSortByCreatedAt(_isSortByCreatedAt);
-    userNotifier.updateIsSortCategoryByCreatedAt(_isSortCategoryByCreatedAt);
-    userNotifier.updateUserSettingsReference(_userSettingsReference);
+    updateUserSettingsNotifier(_userSettingsReference);
 
     // 設定中の背景色がある際には、Providerで保持する
     switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
     _isRegistrationCompleted = true;
+  }
+
+  void updateUserSettingsNotifier(String userSettingsReference) {
+    // ProviderのUser参照を更新
+    userNotifier.updateUserReference(_referenceToUser);
+    userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
+    userNotifier.updateIsDisplayOnlyCompletedTodo(_isDisplayOnlyCompletedTodo);
+    userNotifier.updateIsSortByCreatedAt(_isSortByCreatedAt);
+    userNotifier.updateIsSortCategoryByCreatedAt(_isSortCategoryByCreatedAt);
+    userNotifier.updateUserSettingsReference(userSettingsReference);
   }
 
   // ユーザー設定コレクションを初期化 - 初回ログイン、招待初回登録時実行
@@ -312,6 +320,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // UserSettingsドキュメントを追加
       'createdAt': Timestamp.fromDate(DateTime.now()),
       'displayCompletedTodo': true,
+      'isDisplayOnlyCompletedTodo': false,
       'isSortByCreatedAt': true,
       'isSortCategoryByCreatedAt': true,
       'backgroundDesignId': 0,
