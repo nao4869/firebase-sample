@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
@@ -37,6 +38,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   bool _isLoading = false;
   String _referenceToUser;
   String _selectedImagePath;
+  String _fcmToken;
   bool _isDisplayCompletedTodo = false;
   bool _isDisplayOnlyCompletedTodo = false;
   bool _isSortByCreatedAt = false;
@@ -53,6 +55,8 @@ class SplashScreenNotifier extends ChangeNotifier {
     }
     _isLoading = true;
     initDeviceId();
+
+    await getFcmToken();
 
     // ユーザー登録済み判定、非同期で取得する為、await必須
     await initUserReference();
@@ -73,6 +77,21 @@ class SplashScreenNotifier extends ChangeNotifier {
     } else {
       _isLoading = false;
     }
+  }
+
+  Future<void> getFcmToken() async {
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      _fcmToken = token;
+    });
   }
 
   // デバイスIDを設定
@@ -127,6 +146,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           .add({
         'name': userName ?? 'UserName',
         'imagePath': null,
+        'fcmToken': _fcmToken,
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'deviceId': _deviceId,
       });
@@ -173,6 +193,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           .add({
         'name': 'UserName',
         'imagePath': null,
+        'fcmToken': _fcmToken,
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'deviceId': _deviceId,
       });
