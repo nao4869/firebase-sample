@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -217,6 +218,7 @@ class HomeScreenNotifier extends ChangeNotifier {
           userReference != null ? userReference.reference : null,
     });
     _selectedRemindDate = null;
+    _taskName = '';
   }
 
   void updateTodoIsChecked(
@@ -517,17 +519,65 @@ class HomeScreenNotifier extends ChangeNotifier {
                       }
                     },
                   ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 50,
-                    width: size.width,
-                    child: FullWidthButton(
-                      title: AppLocalizations.of(context).translate('post'),
-                      onPressed: () {
-                        createPostWithoutImage();
-                      },
-                    ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      SizedBox(
+                        height: 25,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: 4,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const SizedBox(width: 20);
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(5.0),
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: colorList[index],
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: SizedBox(
+                                  width: 25,
+                                  height: 25,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        height: 40,
+                        width: size.width * .2,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5.0),
+                          child: FullWidthButton(
+                            title: _taskName == null || _taskName == ''
+                                ? AppLocalizations.of(context)
+                                    .translate('close')
+                                : AppLocalizations.of(context)
+                                    .translate('post'),
+                            onPressed: () {
+                              if (_taskName == null || _taskName == '') {
+                                Navigator.of(context).pop();
+                              } else {
+                                createPostWithoutImage();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 30),
+                    ],
                   ),
+                  const SizedBox(height: 10),
                 ],
               ),
             );

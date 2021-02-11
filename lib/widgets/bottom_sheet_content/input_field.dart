@@ -16,7 +16,7 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 5),
       child: SizedBox(
         height: size.width * height,
         width: size.width * width,
