@@ -404,6 +404,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         Provider.of<SwitchAppThemeProvider>(context, listen: false);
     showModalBottomSheet(
       context: context,
+      barrierColor: Colors.transparent,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -549,6 +550,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     _taskName = initialValue;
     showModalBottomSheet(
       context: context,
+      barrierColor: Colors.transparent,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
