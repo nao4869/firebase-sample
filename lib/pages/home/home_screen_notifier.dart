@@ -217,6 +217,7 @@ class HomeScreenNotifier extends ChangeNotifier {
           userReference != null ? userReference.reference : null,
     });
     _selectedRemindDate = null;
+    _taskName = '';
   }
 
   void updateTodoIsChecked(
@@ -522,9 +523,15 @@ class HomeScreenNotifier extends ChangeNotifier {
                     height: 50,
                     width: size.width,
                     child: FullWidthButton(
-                      title: AppLocalizations.of(context).translate('post'),
+                      title: _taskName == null || _taskName == ''
+                          ? AppLocalizations.of(context).translate('close')
+                          : AppLocalizations.of(context).translate('post'),
                       onPressed: () {
-                        createPostWithoutImage();
+                        if (_taskName == null || _taskName == '') {
+                          Navigator.of(context).pop();
+                        } else {
+                          createPostWithoutImage();
+                        }
                       },
                     ),
                   ),

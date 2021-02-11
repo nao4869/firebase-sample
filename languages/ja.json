@@ -177,6 +177,7 @@
   "stories": "追加",
   "createNewStory": "新規ストーリー作成",
   "post": "投稿する",
+  "close": "閉じる",
   "goBackToPreviousScreen": "前画面に戻りますか？",
   "creatingPostWillBeDeleted": "作成中の投稿は削除されます",
   "editReply": "リプライを編集する",

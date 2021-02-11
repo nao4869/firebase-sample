@@ -178,6 +178,7 @@
   "stories": "Add",
   "createNewStory": "Create new Story",
   "post": "Post",
+  "close": "Close",
   "goBackToPreviousScreen": "Do you want to navigate to previous screen?",
   "creatingPostWillBeDeleted": "Currently creating post will not be saved",
   "editReply": "Edit Reply",
