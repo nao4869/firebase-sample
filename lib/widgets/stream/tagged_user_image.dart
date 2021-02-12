@@ -33,7 +33,7 @@ class TaggedUserImage extends StatelessWidget {
           final imageWidget =
               setImagePath(currentTaggedUserSnapShot['imagePath']);
           return SizedBox(
-            height: 35,
+            height: 45,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: imageWidget,

@@ -290,6 +290,9 @@ class _HomeScreen extends StatelessWidget {
                                       );
                                     },
                                     content: document['name'] ?? '',
+                                    remindDate: document['remindDate'] != null
+                                        ? document['remindDate'].toDate() ?? ''
+                                        : null,
                                     isChecked: document['isChecked'],
                                   ),
                                   trailing: userReference != null
