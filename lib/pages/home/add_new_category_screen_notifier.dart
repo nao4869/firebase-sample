@@ -152,21 +152,23 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   /// カテゴリーを追加する関数
   /// colorのみ指定し、タスク名を追加は行わない
   void addCategory() {
-    final groupNotifier =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
-    Navigator.of(context).pop();
-    FirebaseFirestore.instance
-        .collection('versions')
-        .doc('v1')
-        .collection('groups')
-        .doc(groupNotifier.groupId)
-        .collection('categories')
-        .add({
-      // Groupのサブコレクションに、Categoryを作成
-      'name': taskName,
-      'createdAt': Timestamp.fromDate(DateTime.now()),
-    });
-    notifyListeners();
+    if (taskName != null && taskName != '') {
+      final groupNotifier =
+          Provider.of<CurrentGroupProvider>(context, listen: false);
+      Navigator.of(context).pop();
+      FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(groupNotifier.groupId)
+          .collection('categories')
+          .add({
+        // Groupのサブコレクションに、Categoryを作成
+        'name': taskName,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
+      notifyListeners();
+    }
   }
 
   Widget deleteConfirmDialog(
@@ -282,6 +284,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         return EditCategoryBottomSheet(
           buttonTitle: 'Update Category',
           initialValue: initialValue,
+          isDisplayLowerField: false,
           onUpdatePressed: () {
             Navigator.of(context).pop();
             updateCategory(collection, documentId);

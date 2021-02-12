@@ -113,6 +113,14 @@ class _EditGroupNameScreen extends StatelessWidget {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
+                                barrierColor: Colors.transparent,
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
+                                  ),
+                                ),
                                 builder: (BuildContext context) {
                                   return EditCategoryBottomSheet(
                                     buttonTitle: 'Update Group Name',
@@ -172,7 +180,7 @@ class _EditGroupNameScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            currentGroup != null
+                            currentGroup != null && currentGroup['name'] != null
                                 ? currentGroup['name']
                                 : 'Not Setting',
                             style: TextStyle(
@@ -184,10 +192,19 @@ class _EditGroupNameScreen extends StatelessWidget {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
+                                barrierColor: Colors.transparent,
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
+                                  ),
+                                ),
                                 builder: (BuildContext context) {
                                   return EditCategoryBottomSheet(
                                     buttonTitle: 'Update Group Name',
-                                    initialValue: currentGroup['name'],
+                                    initialValue: '',
+                                    isDisplayLowerField: false,
                                     onUpdatePressed: () {
                                       Navigator.of(context).pop();
                                       notifier.updateGroupName();

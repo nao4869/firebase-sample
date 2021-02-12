@@ -131,7 +131,7 @@ class _HomeScreen extends StatelessWidget {
                             ),
                           ),
                           child: Tab(
-                            text: snapshot.data.docs[index].data()['name'],
+                            text: snapshot.data.docs[index].data()['name'] ?? '',
                           ),
                         ),
                       );

@@ -14,6 +14,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
     this.initialValue,
     this.selectedRemindDate,
     this.selectedPersonId,
+    this.isDisplayLowerField = true,
     this.onUpdatePressed,
     this.showDateTimePicker,
     this.onSelectedPersonChanged,
@@ -23,6 +24,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
   final String buttonTitle;
   final String initialValue;
   final String selectedPersonId;
+  final bool isDisplayLowerField;
   final DateTime selectedRemindDate;
   final VoidCallback onUpdatePressed;
   final VoidCallback showDateTimePicker;
@@ -68,106 +70,108 @@ class EditCategoryBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          DateRow(
-            remindDate: selectedRemindDate,
-            onPressed: showDateTimePicker,
-          ),
-          StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('versions')
-                    .doc('v1')
-                    .collection('groups')
-                    .doc(groupNotifier.groupId)
-                    .collection('users')
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  // エラーの場合
-                  if (snapshot.hasError || snapshot.data == null) {
-                    return CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        switchAppThemeNotifier.currentTheme,
-                      ),
-                    );
-                  } else {
-                    return SizedBox(
-                      height: 40,
-                      width: size.width * .9,
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 20),
-                          Text(
-                            'Who\'s task?',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
+          if (isDisplayLowerField)
+            DateRow(
+              remindDate: selectedRemindDate,
+              onPressed: showDateTimePicker,
+            ),
+          if (isDisplayLowerField)
+            StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('versions')
+                      .doc('v1')
+                      .collection('groups')
+                      .doc(groupNotifier.groupId)
+                      .collection('users')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    // エラーの場合
+                    if (snapshot.hasError || snapshot.data == null) {
+                      return CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          switchAppThemeNotifier.currentTheme,
+                        ),
+                      );
+                    } else {
+                      return SizedBox(
+                        height: 40,
+                        width: size.width * .9,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 20),
+                            Text(
+                              'Who\'s task?',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return const SizedBox(width: 10);
-                            },
-                            itemCount: snapshot.data.size,
-                            itemBuilder: (BuildContext context, int index) {
-                              final imageWidget = setImagePath(snapshot
-                                  .data.docs[index]
-                                  .data()['imagePath']);
-                              if (_selectedPersonId == null) {
-                                _selectedPersonId = selectedPersonId;
-                              }
-                              return InkWell(
-                                onTap: () {
-                                  onSelectedPersonChanged(
-                                      snapshot.data.docs[index].id);
-                                  _selectedPersonId =
-                                      snapshot.data.docs[index].id;
-                                  print(_selectedPersonId);
-                                  print(snapshot.data.docs[index].id);
-                                  setState(() {});
-                                },
-                                child: SizedBox(
-                                  height: 30,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: Stack(
-                                      children: [
-                                        imageWidget,
-                                        if (_selectedPersonId ==
-                                            snapshot.data.docs[index].id)
-                                          SizedBox(
-                                            height: 40,
-                                            width: 40,
-                                            child: DecoratedBox(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(30),
-                                                color: switchAppThemeNotifier
-                                                    .currentTheme
-                                                    .withOpacity(0.5),
+                            const SizedBox(width: 10),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(width: 10);
+                              },
+                              itemCount: snapshot.data.size,
+                              itemBuilder: (BuildContext context, int index) {
+                                final imageWidget = setImagePath(snapshot
+                                    .data.docs[index]
+                                    .data()['imagePath']);
+                                if (_selectedPersonId == null) {
+                                  _selectedPersonId = selectedPersonId;
+                                }
+                                return InkWell(
+                                  onTap: () {
+                                    onSelectedPersonChanged(
+                                        snapshot.data.docs[index].id);
+                                    _selectedPersonId =
+                                        snapshot.data.docs[index].id;
+                                    print(_selectedPersonId);
+                                    print(snapshot.data.docs[index].id);
+                                    setState(() {});
+                                  },
+                                  child: SizedBox(
+                                    height: 30,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: Stack(
+                                        children: [
+                                          imageWidget,
+                                          if (_selectedPersonId ==
+                                              snapshot.data.docs[index].id)
+                                            SizedBox(
+                                              height: 40,
+                                              width: 40,
+                                              child: DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  color: switchAppThemeNotifier
+                                                      .currentTheme
+                                                      .withOpacity(0.5),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                },
-              );
-            },
-          ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+            ),
           const SizedBox(height: 20),
           SizedBox(
             height: 50,

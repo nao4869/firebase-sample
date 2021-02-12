@@ -83,7 +83,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
             .doc(groupNotifier.groupId)
             .collection('categories')
             .orderBy("createdAt",
-            descending: userNotifier.isSortCategoryByCreatedAt ?? true)
+                descending: userNotifier.isSortCategoryByCreatedAt ?? true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           // エラーの場合
@@ -174,7 +174,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                         padding: const EdgeInsets.all(12.0),
                                         child: Text(
                                           snapshot.data.docs[index]
-                                              .data()['name'],
+                                                  .data()['name'] ??
+                                              '',
                                           style: TextStyle(
                                             color: darkModeNotifier.isLightTheme
                                                 ? black
