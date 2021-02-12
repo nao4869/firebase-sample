@@ -62,6 +62,14 @@ class _HomeCalendarScreen extends StatelessWidget {
         ),
         actions: [
           InkWell(
+            onTap: notifier.navigateHomeScreen,
+            child: Icon(
+              Icons.list,
+              color: white,
+            ),
+          ),
+          const SizedBox(width: 20),
+          InkWell(
             onTap: notifier.navigateAddCategoryScreen,
             child: Icon(
               Icons.folder_open,

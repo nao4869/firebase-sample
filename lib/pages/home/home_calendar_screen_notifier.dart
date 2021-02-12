@@ -5,6 +5,7 @@ import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/edit_group_name_screen.dart';
+import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
@@ -123,6 +124,14 @@ class HomeCalendarScreenNotifier extends ChangeNotifier {
   void setCurrentIndex(int index) {
     currentTabIndex = index;
     notifyListeners();
+  }
+
+  void navigateHomeScreen() {
+    Navigator.of(context, rootNavigator: true).pushReplacement(
+      CupertinoPageRoute(
+        builder: (context) => HomeScreen(),
+      ),
+    );
   }
 
   void navigateSettingScreen() {
