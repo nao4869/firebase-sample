@@ -5,7 +5,6 @@ import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/edit_group_name_screen.dart';
-import 'package:firebase_sample/pages/home/home_calendar_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
 import 'package:firebase_sample/pages/settings/settings_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
@@ -26,8 +25,8 @@ import 'package:firebase_sample/extensions/set_image_path.dart';
 
 import '../../app_localizations.dart';
 
-class HomeScreenNotifier extends ChangeNotifier {
-  HomeScreenNotifier({
+class HomeCalendarScreenNotifier extends ChangeNotifier {
+  HomeCalendarScreenNotifier({
     this.context,
   }) {
     textController.text = '';
@@ -130,14 +129,6 @@ class HomeScreenNotifier extends ChangeNotifier {
     Navigator.of(context, rootNavigator: true).push(
       CupertinoPageRoute(
         builder: (context) => SettingsScreen(),
-      ),
-    );
-  }
-
-  void navigateCalendarScreen() {
-    Navigator.of(context, rootNavigator: true).pushReplacement(
-      CupertinoPageRoute(
-        builder: (context) => HomeCalendarScreen(),
       ),
     );
   }

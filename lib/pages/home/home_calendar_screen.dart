@@ -5,7 +5,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
-import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
+import 'package:firebase_sample/pages/home/home_calendar_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
 import 'package:firebase_sample/widgets/stream/tagged_user_image.dart';
@@ -17,26 +17,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen();
+class HomeCalendarScreen extends StatelessWidget {
+  const HomeCalendarScreen();
 
-  static String routeName = 'home-screen';
+  static String routeName = 'home-calendar-screen';
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomeScreenNotifier(
+      create: (_) => HomeCalendarScreenNotifier(
         context: context,
       ),
-      child: _HomeScreen(),
+      child: _HomeCalendarScreen(),
     );
   }
 }
 
-class _HomeScreen extends StatelessWidget {
+class _HomeCalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final notifier = Provider.of<HomeScreenNotifier>(context);
+    final notifier = Provider.of<HomeCalendarScreenNotifier>(context);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
@@ -61,14 +61,6 @@ class _HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          InkWell(
-            onTap: notifier.navigateCalendarScreen,
-            child: Icon(
-              Icons.calendar_view_day,
-              color: white,
-            ),
-          ),
-          const SizedBox(width: 20),
           InkWell(
             onTap: notifier.navigateAddCategoryScreen,
             child: Icon(
@@ -96,7 +88,7 @@ class _HomeScreen extends StatelessWidget {
                 .doc(groupNotifier.groupId)
                 .collection('categories')
                 .orderBy("createdAt",
-                    descending: userNotifier.isSortCategoryByCreatedAt ?? true)
+                descending: userNotifier.isSortCategoryByCreatedAt ?? true)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -108,11 +100,11 @@ class _HomeScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: switchAppThemeNotifier.selectedImagePath.isNotEmpty
                         ? DecorationImage(
-                            image: AssetImage(
-                              imageList[currentThemeId],
-                            ),
-                            fit: BoxFit.cover,
-                          )
+                      image: AssetImage(
+                        imageList[currentThemeId],
+                      ),
+                      fit: BoxFit.cover,
+                    )
                         : null,
                     color: darkModeNotifier.isLightTheme
                         ? switchAppThemeNotifier.currentTheme
@@ -139,8 +131,7 @@ class _HomeScreen extends StatelessWidget {
                             ),
                           ),
                           child: Tab(
-                            text:
-                                snapshot.data.docs[index].data()['name'] ?? '',
+                            text: snapshot.data.docs[index].data()['name'] ?? '',
                           ),
                         ),
                       );
@@ -182,10 +173,10 @@ class _HomeScreen extends StatelessWidget {
     String categoryId,
     int index,
   }) {
-    final notifier = Provider.of<HomeScreenNotifier>(context);
+    final notifier = Provider.of<HomeCalendarScreenNotifier>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier =
-        Provider.of<CurrentGroupProvider>(context, listen: false);
+    Provider.of<CurrentGroupProvider>(context, listen: false);
     final userNotifier = Provider.of<UserReferenceProvider>(context);
     return StreamBuilder(
       stream: FirebaseFirestore.instance
@@ -197,7 +188,7 @@ class _HomeScreen extends StatelessWidget {
           .doc(categoryId)
           .collection('to-dos')
           .orderBy("createdAt",
-              descending: userNotifier.isSortByCreatedAt ?? true)
+          descending: userNotifier.isSortByCreatedAt ?? true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // エラーの場合
@@ -218,7 +209,7 @@ class _HomeScreen extends StatelessWidget {
               onLoading: notifier.onLoading,
               child: ListView(
                 children: notifier.todoList.map(
-                  (DocumentSnapshot document) {
+                      (DocumentSnapshot document) {
                     if (document == null) {
                       return Container();
                     } else {
@@ -288,12 +279,12 @@ class _HomeScreen extends StatelessWidget {
                                         documentId: document.id,
                                         initialValue: document['name'],
                                         selectedPersonId: document[
-                                                    'taggedUserReference'] !=
-                                                null
+                                        'taggedUserReference'] !=
+                                            null
                                             ? document['taggedUserReference'].id
                                             : null,
                                         remindDate: document['remindDate'] !=
-                                                null
+                                            null
                                             ? document['remindDate'].toDate()
                                             : null,
                                       );
@@ -306,8 +297,8 @@ class _HomeScreen extends StatelessWidget {
                                   ),
                                   trailing: userReference != null
                                       ? TaggedUserImage(
-                                          taggedUserReferenceId:
-                                              userReference.id)
+                                      taggedUserReferenceId:
+                                      userReference.id)
                                       : null,
                                 ),
                               ),
