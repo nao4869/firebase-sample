@@ -61,14 +61,16 @@ class _UserRegistrationScreen extends StatelessWidget {
                           FractionallySizedBox(
                             widthFactor: .8,
                             child: UserRegistrationPageTitle(
-                              title: 'Invitation Code',
+                              title: AppLocalizations.of(context)
+                                  .translate('invitationCode'),
                             ),
                           ),
                           const SizedBox(height: 5),
                           FractionallySizedBox(
                             widthFactor: .8,
                             child: _buildTextFormFieldDescription(
-                              'If you are invited by other person, \nplease enter the invitation code in this form\n\nYou can also register without invitation code just by clicking Register',
+                              AppLocalizations.of(context)
+                                  .translate('ifYouAreInvited'),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -82,7 +84,8 @@ class _UserRegistrationScreen extends StatelessWidget {
                               onValidate: notifier.onValidate,
                               onChanged: notifier.onInvitationCodeChange,
                               resetTextField: notifier.resetTextField,
-                              hintText: 'Invitation code',
+                              hintText: AppLocalizations.of(context)
+                                  .translate('invitationCode'),
                             ),
                           ),
                         ],

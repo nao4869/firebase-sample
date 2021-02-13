@@ -43,7 +43,7 @@ class _EditGroupNameScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: switchAppThemeNotifier.currentTheme,
         title: Text(
-          'Group Name',
+          AppLocalizations.of(context).translate('groupName'),
           style: TextStyle(
             color: white,
             fontSize: 15.0,
@@ -103,7 +103,8 @@ class _EditGroupNameScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            'Not Setting',
+                            AppLocalizations.of(context)
+                                .translate('notSetting'),
                             style: TextStyle(
                               color: theme.isLightTheme ? black : white,
                               fontSize: 16.0,
@@ -123,7 +124,8 @@ class _EditGroupNameScreen extends StatelessWidget {
                                 ),
                                 builder: (BuildContext context) {
                                   return EditCategoryBottomSheet(
-                                    buttonTitle: 'Update Group Name',
+                                    buttonTitle: AppLocalizations.of(context)
+                                        .translate('updateGroupName'),
                                     initialValue: '',
                                     onUpdatePressed: () {
                                       Navigator.of(context).pop();
@@ -182,7 +184,8 @@ class _EditGroupNameScreen extends StatelessWidget {
                           Text(
                             currentGroup != null && currentGroup['name'] != null
                                 ? currentGroup['name']
-                                : 'Not Setting',
+                                : AppLocalizations.of(context)
+                                    .translate('notSetting'),
                             style: TextStyle(
                               color: theme.isLightTheme ? black : white,
                               fontSize: 16.0,
@@ -202,7 +205,8 @@ class _EditGroupNameScreen extends StatelessWidget {
                                 ),
                                 builder: (BuildContext context) {
                                   return EditCategoryBottomSheet(
-                                    buttonTitle: 'Update Group Name',
+                                    buttonTitle: AppLocalizations.of(context)
+                                        .translate('updateGroupName'),
                                     initialValue: '',
                                     isDisplayLowerField: false,
                                     onUpdatePressed: () {
@@ -346,7 +350,8 @@ class _EditGroupNameScreen extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              'Invite new person',
+                              AppLocalizations.of(context)
+                                  .translate('inviteNewPerson'),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextStyle(
@@ -361,7 +366,8 @@ class _EditGroupNameScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
-                          'Share your todo list, shopping list with family members and friends',
+                          AppLocalizations.of(context)
+                              .translate('shareYourTodoList'),
                           maxLines: 5,
                           style: TextStyle(
                             fontSize: 15.0,

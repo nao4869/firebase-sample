@@ -11,6 +11,8 @@ import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_localizations.dart';
+
 class AddCategoryScreen extends StatelessWidget {
   const AddCategoryScreen();
 
@@ -54,7 +56,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
           onPressed: notifier.pop,
         ),
         title: Text(
-          'Manage Category',
+          AppLocalizations.of(context).translate('manageCategory'),
           style: TextStyle(
             color: white,
             fontWeight: FontWeight.bold,

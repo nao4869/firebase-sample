@@ -63,7 +63,8 @@ class _SelectDesignScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 10),
                           RoundedButton(
-                            title: 'Free design',
+                            title: AppLocalizations.of(context)
+                                .translate('freeDesign'),
                             onPressed: () {},
                           ),
                           const SizedBox(height: 20),

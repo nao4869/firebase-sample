@@ -44,7 +44,7 @@ class _SettingsScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: switchAppThemeNotifier.currentTheme,
         title: Text(
-          'User Settings',
+          AppLocalizations.of(context).translate('userSettings'),
           style: TextStyle(
             color: white,
             fontSize: 15.0,

@@ -154,7 +154,8 @@ class _EditUserIconScreen extends StatelessWidget {
                             children: [
                               const SizedBox(width: 20),
                               Text(
-                                'Select from icons',
+                                AppLocalizations.of(context)
+                                    .translate('selectFromIcons'),
                                 style: TextStyle(
                                   color: Colors.blueGrey,
                                 ),

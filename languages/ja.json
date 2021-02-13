@@ -200,5 +200,20 @@
   "invitationMethod": "招待方法",
   "inviteByQrCode": "QRコードを共有する",
   "inviteByGroupId": "グループIDを共有する",
-  "register": "登録する"
+  "register": "登録する",
+  "manageCategory": "カテゴリーを管理する",
+  "updateCategory": "カテゴリーを更新する",
+  "todoDeleted": "Todoを削除しました",
+  "notSetting": "未設定",
+  "updateGroupName": "グループ名を更新する",
+  "inviteNewPerson": "新しく招待する",
+  "shareYourTodoList": "招待コードを共有し、Todoリストを家族、友人と共有しよう！",
+  "groupId": "グループID",
+  "stepsForJoiningWithGroupId": "参加手順\\n\\n(招待された人)\\n1. アプリをダウンロード\\n2. 初回登録時に上記の招待コードを入力",
+  "stepsForJoiningWithQrCode": "参加手順\\n\\n(招待された人)\\n1. アプリをダウンロード\\n2. QRコードを読み込む",
+  "selectFromIcons": "アイコンから選択する",
+  "freeDesign": "無料テーマ",
+  "userSettings": "ユーザー設定",
+  "invitationCode": "招待コード",
+  "ifYouAreInvited": "他の人から招待されている場合は、 \\n下記のフォームに招待コードを入力してください。\\n\\n招待コードがない場合は、入力せずに登録を押してください。"
 }

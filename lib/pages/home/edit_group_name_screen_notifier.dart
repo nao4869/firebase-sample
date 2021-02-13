@@ -125,7 +125,7 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
               Row(
                 children: <Widget>[
                   Text(
-                    'Group ID',
+                    AppLocalizations.of(context).translate('groupId'),
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.normal,
@@ -164,7 +164,8 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
             ],
           ),
           content: Text(
-            'Steps for joining\n\n(Invited person)\n1. Download the app\n2. Enter above group id when registering',
+            AppLocalizations.of(context)
+                .translate('stepsForJoiningWithGroupId'),
           ),
           contentPadding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
           actions: <Widget>[
@@ -206,7 +207,7 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
             ),
           ),
           content: Text(
-            'Steps for joining\n\n(Invited person)\n1. Download the app\n2. Scan QR code by camera or QR code reader',
+            AppLocalizations.of(context).translate('stepsForJoiningWithQrCode'),
           ),
           contentPadding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
           actions: <Widget>[

@@ -159,7 +159,7 @@ class _EditUserNameScreen extends StatelessWidget {
           validator: onValidate,
           onChanged: onChanged,
           decoration: InputDecoration(
-            hintText: 'User Name',
+            hintText: AppLocalizations.of(context).translate('userName'),
             hintStyle: const TextStyle(
               color: Color.fromRGBO(208, 208, 208, 1),
               fontSize: 15,

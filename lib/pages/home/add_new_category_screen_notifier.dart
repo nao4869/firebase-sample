@@ -187,7 +187,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
           context,
           actionType == SlideActionType.primary
               ? 'Dismiss Archive'
-              : 'Todo deleted',
+              : AppLocalizations.of(context).translate('todoDeleted'),
         );
       },
       onNegativeCallback: () {},
@@ -282,7 +282,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       ),
       builder: (BuildContext context) {
         return EditCategoryBottomSheet(
-          buttonTitle: 'Update Category',
+          buttonTitle: AppLocalizations.of(context).translate('updateCategory'),
           initialValue: initialValue,
           isDisplayLowerField: false,
           onUpdatePressed: () {
