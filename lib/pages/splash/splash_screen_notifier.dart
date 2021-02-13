@@ -358,10 +358,11 @@ class SplashScreenNotifier extends ChangeNotifier {
           'name':
               AppLocalizations.of(context).translate('tutorialTodo${i + 1}'),
           'createdAt': Timestamp.fromDate(DateTime.now()),
+          'remindDate': null,
           'imagePath': null,
           'videoPath': null,
           'isChecked': false,
-          'userImagePath': null,
+          'taggedUserReference': null,
         });
       }
     } catch (error) {

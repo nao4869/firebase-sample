@@ -254,6 +254,14 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   void openModalBottomSheet() {
     showModalBottomSheet(
       context: context,
+      barrierColor: Colors.transparent,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
       builder: (BuildContext context) {
         return AddCategoryBottomSheet(
           onNameChange: (String text) {
