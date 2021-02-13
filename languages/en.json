@@ -211,11 +211,11 @@
   "inviteNewPerson": "Invite new person",
   "shareYourTodoList": "Share your todo list, shopping list with family members and friends",
   "groupId": "Group ID",
-  "stepsForJoiningWithGroupId": "Steps for joining\\n\\n(Invited person)\\n1. Download the app\\n2. Enter above group id when registering",
-  "stepsForJoiningWithQrCode": "Steps for joining\\n\\n(Invited person)\\n1. Download the app\\n2. Scan QR code by camera or QR code reader",
+  "stepsForJoiningWithGroupId": "Steps for joining\n\n(Invited person)\n1. Download the app\n2. Enter above group id when registering",
+  "stepsForJoiningWithQrCode": "Steps for joining\n\n(Invited person)\n1. Download the app\n2. Scan QR code by camera or QR code reader",
   "selectFromIcons": "Select from icons",
   "freeDesign": "Free design",
   "userSettings": "User Settings",
   "invitationCode": "Invitation Code",
-  "ifYouAreInvited": "If you are invited by other person, \\nplease enter the invitation code in this form\\n\\nYou can also register without invitation code just by clicking Register"
+  "ifYouAreInvited": "If you are invited by other person, \nplease enter the invitation code in this form\n\nYou can also register without invitation code just by clicking Register"
 }
