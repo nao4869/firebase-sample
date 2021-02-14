@@ -53,7 +53,6 @@ class _SelectDesignScreen extends StatelessWidget {
                 Center(
                   child: SizedBox(
                     width: size.width * .9,
-                    height: size.height * .72,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         color: white,
