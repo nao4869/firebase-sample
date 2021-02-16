@@ -95,6 +95,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
             return SingleChildScrollView(
               child: Column(
                 children: [
+                  const SizedBox(height: 10),
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,

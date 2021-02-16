@@ -416,126 +416,130 @@ class HomeScreenNotifier extends ChangeNotifier {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InputField(
-                    onChanged: (String text) {
-                      onNameChange(text);
-                    },
-                  ),
-                  DateRow(
-                    remindDate: _selectedRemindDate,
-                    onPressed: showDateTimePicker,
-                  ),
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('versions')
-                        .doc('v1')
-                        .collection('groups')
-                        .doc(groupNotifier.groupId)
-                        .collection('users')
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      // エラーの場合
-                      if (snapshot.hasError || snapshot.data == null) {
-                        return CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            switchAppThemeNotifier.currentTheme,
-                          ),
-                        );
-                      } else {
-                        return SizedBox(
-                          height: 40,
-                          width: size.width * .9,
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 20),
-                              Text(
-                                'Who\'s task?',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
+            return SafeArea(
+              child: Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InputField(
+                      onChanged: (String text) {
+                        onNameChange(text);
+                      },
+                    ),
+                    DateRow(
+                      remindDate: _selectedRemindDate,
+                      onPressed: showDateTimePicker,
+                    ),
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('versions')
+                          .doc('v1')
+                          .collection('groups')
+                          .doc(groupNotifier.groupId)
+                          .collection('users')
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        // エラーの場合
+                        if (snapshot.hasError || snapshot.data == null) {
+                          return CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              switchAppThemeNotifier.currentTheme,
+                            ),
+                          );
+                        } else {
+                          return SizedBox(
+                            height: 40,
+                            width: size.width * .9,
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 20),
+                                Text(
+                                  'Who\'s task?',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 10),
-                              ListView.separated(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return const SizedBox(width: 10);
-                                },
-                                itemCount: snapshot.data.size,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final imageWidget = setImagePath(snapshot
-                                      .data.docs[index]
-                                      .data()['imagePath']);
-                                  return InkWell(
-                                    onTap: () {
-                                      _selectedPersonIndex = index;
-                                      _referenceToUser =
-                                          snapshot.data.docs[index].id;
-                                      setState(() {});
-                                    },
-                                    child: SizedBox(
-                                      height: 30,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(30),
-                                        child: Stack(
-                                          children: [
-                                            imageWidget,
-                                            if (_selectedPersonIndex == index)
-                                              SizedBox(
-                                                height: 40,
-                                                width: 40,
-                                                child: DecoratedBox(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    color:
-                                                        switchAppThemeNotifier
-                                                            .currentTheme
-                                                            .withOpacity(0.5),
+                                const SizedBox(width: 10),
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return const SizedBox(width: 10);
+                                  },
+                                  itemCount: snapshot.data.size,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final imageWidget = setImagePath(snapshot
+                                        .data.docs[index]
+                                        .data()['imagePath']);
+                                    return InkWell(
+                                      onTap: () {
+                                        _selectedPersonIndex = index;
+                                        _referenceToUser =
+                                            snapshot.data.docs[index].id;
+                                        setState(() {});
+                                      },
+                                      child: SizedBox(
+                                        height: 30,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          child: Stack(
+                                            children: [
+                                              imageWidget,
+                                              if (_selectedPersonIndex == index)
+                                                SizedBox(
+                                                  height: 40,
+                                                  width: 40,
+                                                  child: DecoratedBox(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      color:
+                                                          switchAppThemeNotifier
+                                                              .currentTheme
+                                                              .withOpacity(0.5),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 50,
-                    width: size.width,
-                    child: FullWidthButton(
-                      title: _taskName == null || _taskName == ''
-                          ? AppLocalizations.of(context).translate('close')
-                          : AppLocalizations.of(context).translate('post'),
-                      onPressed: () {
-                        if (_taskName == null || _taskName == '') {
-                          Navigator.of(context).pop();
-                        } else {
-                          createPostWithoutImage();
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         }
                       },
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 50,
+                      width: size.width,
+                      child: FullWidthButton(
+                        title: _taskName == null || _taskName == ''
+                            ? AppLocalizations.of(context).translate('close')
+                            : AppLocalizations.of(context).translate('post'),
+                        onPressed: () {
+                          if (_taskName == null || _taskName == '') {
+                            Navigator.of(context).pop();
+                          } else {
+                            createPostWithoutImage();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
