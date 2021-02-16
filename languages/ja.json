@@ -215,5 +215,8 @@
   "freeDesign": "無料テーマ",
   "userSettings": "ユーザー設定",
   "invitationCode": "招待コード",
-  "ifYouAreInvited": "他の人から招待されている場合は、 \n下記のフォームに招待コードを入力してください。\n\n招待コードがない場合は、入力せずに登録を押してください。"
+  "ifYouAreInvited": "他の人から招待されている場合は、 \n下記のフォームに招待コードを入力してください。\n\n招待コードがない場合は、入力せずに登録を押してください。",
+  "invalidInvitationCode": "Invitation code you have entered is not valid. Please check and try again with different invitation code",
+  "registerWithoutInvitationCode": "Register without invitation",
+  "invalidCode": "Invalid code"
 }

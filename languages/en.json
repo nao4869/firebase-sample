@@ -217,5 +217,8 @@
   "freeDesign": "Free design",
   "userSettings": "User Settings",
   "invitationCode": "Invitation Code",
-  "ifYouAreInvited": "If you are invited by other person, \nplease enter the invitation code in this form\n\nYou can also register without invitation code just by clicking Register"
+  "ifYouAreInvited": "If you are invited by other person, \nplease enter the invitation code in this form\n\nYou can also register without invitation code just by clicking Register",
+  "invalidInvitationCode": "Invitation code you have entered is not valid. Please check and try again with different invitation code",
+  "registerWithoutInvitationCode": "Register without invitation",
+  "invalidCode": "Invalid code"
 }

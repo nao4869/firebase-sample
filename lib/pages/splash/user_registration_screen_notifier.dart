@@ -1,10 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/splash/splash_screen.dart';
+import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../app_localizations.dart';
 
 class UserRegistrationScreenNotifier extends ChangeNotifier {
   UserRegistrationScreenNotifier({
@@ -62,12 +67,48 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
     groupFormKey.currentState.reset();
   }
 
-  void navigateSplashScreen() {
+  void checkInvitationCodeValidity() async {
+    final fireStoreInstance = FirebaseFirestore.instance;
+    if (invitationCode.isNotEmpty) {
+      final documentReference = await fireStoreInstance
+          .collection('versions')
+          .doc('v1')
+          .collection('groups')
+          .doc(invitationCode)
+          .get();
+      if (documentReference.exists) {
+        navigateSplashScreen(true);
+      } else {
+        showDialog<bool>(
+          context: context,
+          builder: (_) {
+            return CmnDialog(context).showDialogWidget(
+              onPositiveCallback: () {},
+              onNegativeCallback: () {
+                navigateSplashScreen(false);
+              },
+              titleStr: AppLocalizations.of(context).translate('invalidCode'),
+              titleColor: switchAppThemeNotifier.currentTheme,
+              msgStr: AppLocalizations.of(context)
+                  .translate('invalidInvitationCode'),
+              positiveBtnStr: cmnOkay,
+              negativeBtnStr: AppLocalizations.of(context)
+                  .translate('registerWithoutInvitationCode'),
+            );
+          },
+        );
+      }
+    } else {
+      navigateSplashScreen(false);
+    }
+  }
+
+  void navigateSplashScreen(bool isInvitedUser) {
     Navigator.of(context, rootNavigator: true).push(
       CupertinoPageRoute(
         builder: (context) => SplashScreen(
           userName: name,
-          invitationCode: invitationCode,
+          invitationCode: isInvitedUser ? invitationCode : null,
         ),
       ),
     );
