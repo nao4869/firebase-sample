@@ -3,6 +3,7 @@ import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/settings/edit_user_icon_screen.dart';
 import 'package:firebase_sample/pages/settings/edit_user_name_screen.dart';
 import 'package:firebase_sample/widgets/buttons/rounded_bottom_button.dart';
@@ -21,7 +22,10 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
     this.switchAppThemeNotifier,
     this.themeNotifier,
   }) {
-    //
+    screenSize = ScreenSize(
+        size: MediaQuery.of(context).size,
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+    sizeType = screenSize.specifyScreenSizeType();
   }
 
   final BuildContext context;
@@ -34,6 +38,9 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
 
   String groupName;
   bool isValid = false;
+
+  ScreenSize screenSize;
+  ScreenSizeType sizeType;
 
   // ダークモード切り替え関数
   void updateDarkMode(bool val) {

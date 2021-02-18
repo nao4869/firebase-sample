@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/add_category_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
@@ -23,6 +24,11 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       onSlideAnimationChanged: handleSlideAnimationChanged,
       onSlideIsOpenChanged: handleSlideIsOpenChanged,
     );
+
+    screenSize = ScreenSize(
+        size: MediaQuery.of(context).size,
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+    sizeType = screenSize.specifyScreenSizeType();
   }
 
   final BuildContext context;
@@ -30,6 +36,9 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
 
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
+
+  ScreenSize screenSize;
+  ScreenSizeType sizeType;
 
   SlidableController slidableController;
   String taskName;

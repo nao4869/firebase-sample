@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
 import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -146,7 +147,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
                               width: size.width * .8,
-                              height: 50,
+                              height: notifier.sizeType == ScreenSizeType.large
+                                  ? 40
+                                  : 50,
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   color: theme.isLightTheme ? white : black,
@@ -174,18 +177,27 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                       width: size.width * .6,
                                       height: size.width * .6,
                                       child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Text(
-                                          snapshot.data.docs[index]
-                                                  .data()['name'] ??
-                                              '',
-                                          style: TextStyle(
-                                            color: darkModeNotifier.isLightTheme
-                                                ? black
-                                                : white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16.0,
-                                          ),
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              snapshot.data.docs[index]
+                                                      .data()['name'] ??
+                                                  '',
+                                              style: TextStyle(
+                                                color: darkModeNotifier
+                                                        .isLightTheme
+                                                    ? black
+                                                    : white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: notifier.sizeType ==
+                                                        ScreenSizeType.large
+                                                    ? 12.0
+                                                    : 16.0,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),

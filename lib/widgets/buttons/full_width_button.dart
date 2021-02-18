@@ -22,7 +22,7 @@ class FullWidthButton extends StatelessWidget {
         title,
         style: TextStyle(
           color: Colors.white,
-          fontSize: 20.0,
+          fontSize: 18.0,
           fontWeight: FontWeight.bold,
         ),
       ),

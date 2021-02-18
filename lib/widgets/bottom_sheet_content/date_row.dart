@@ -1,4 +1,5 @@
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,10 +9,12 @@ class DateRow extends StatelessWidget {
   DateRow({
     this.remindDate,
     this.onPressed,
+    this.sizeType,
   });
 
   final DateTime remindDate;
   final VoidCallback onPressed;
+  final ScreenSizeType sizeType;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class DateRow extends StatelessWidget {
             Text(
               'When?',
               style: TextStyle(
-                fontSize: 15.0,
+                fontSize: sizeType == ScreenSizeType.large ? 12.0 : 15.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -38,7 +41,7 @@ class DateRow extends StatelessWidget {
                   ? DateFormat.yMd().add_jm().format(remindDate)
                   : 'No remind date',
               style: TextStyle(
-                fontSize: 15.0,
+                fontSize: sizeType == ScreenSizeType.large ? 12.0 : 15.0,
                 fontWeight: FontWeight.bold,
                 color: switchAppThemeNotifier.currentTheme,
               ),

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/pages/home/edit_group_name_screen.dart';
 import 'package:firebase_sample/pages/home/zoom_tweet_image_screen.dart';
@@ -39,10 +40,18 @@ class HomeScreenNotifier extends ChangeNotifier {
       onSlideAnimationChanged: handleSlideAnimationChanged,
       onSlideIsOpenChanged: handleSlideIsOpenChanged,
     );
+
+    screenSize = ScreenSize(
+        size: MediaQuery.of(context).size,
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+    sizeType = screenSize.specifyScreenSizeType();
   }
   final BuildContext context;
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
+
+  ScreenSize screenSize;
+  ScreenSizeType sizeType;
 
   String _taskName;
   bool isValid = false;
@@ -431,6 +440,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                     DateRow(
                       remindDate: _selectedRemindDate,
                       onPressed: showDateTimePicker,
+                      sizeType: sizeType,
                     ),
                     StreamBuilder(
                       stream: FirebaseFirestore.instance
@@ -452,14 +462,15 @@ class HomeScreenNotifier extends ChangeNotifier {
                         } else {
                           return SizedBox(
                             height: 40,
-                            width: size.width * .9,
                             child: Row(
                               children: [
                                 const SizedBox(width: 20),
                                 Text(
                                   'Who\'s task?',
                                   style: TextStyle(
-                                    fontSize: 15.0,
+                                    fontSize: sizeType == ScreenSizeType.large
+                                        ? 12.0
+                                        : 15.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -586,6 +597,7 @@ class HomeScreenNotifier extends ChangeNotifier {
           onNameChange: (String text) {
             onNameChange(text);
           },
+          sizeType: sizeType,
         );
       },
     );

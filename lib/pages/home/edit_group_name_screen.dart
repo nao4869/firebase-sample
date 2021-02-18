@@ -3,6 +3,7 @@ import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/edit_group_name_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/edit_category_bottom_sheet.dart';
@@ -46,7 +47,7 @@ class _EditGroupNameScreen extends StatelessWidget {
           AppLocalizations.of(context).translate('groupName'),
           style: TextStyle(
             color: white,
-            fontSize: 15.0,
+            fontSize: 14.0,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -107,7 +108,10 @@ class _EditGroupNameScreen extends StatelessWidget {
                                 .translate('notSetting'),
                             style: TextStyle(
                               color: theme.isLightTheme ? black : white,
-                              fontSize: 16.0,
+                              fontSize:
+                                  notifier.sizeType == ScreenSizeType.large
+                                      ? 12.0
+                                      : 16.0,
                             ),
                           ),
                           InkWell(
@@ -144,7 +148,10 @@ class _EditGroupNameScreen extends StatelessWidget {
                               style: TextStyle(
                                 color: notifier
                                     .switchAppThemeNotifier.currentTheme,
-                                fontSize: 16.0,
+                                fontSize:
+                                    notifier.sizeType == ScreenSizeType.large
+                                        ? 12.0
+                                        : 16.0,
                               ),
                             ),
                           ),
@@ -188,7 +195,10 @@ class _EditGroupNameScreen extends StatelessWidget {
                                     .translate('notSetting'),
                             style: TextStyle(
                               color: theme.isLightTheme ? black : white,
-                              fontSize: 16.0,
+                              fontSize:
+                                  notifier.sizeType == ScreenSizeType.large
+                                      ? 12.0
+                                      : 16.0,
                             ),
                           ),
                           InkWell(
@@ -226,7 +236,10 @@ class _EditGroupNameScreen extends StatelessWidget {
                               style: TextStyle(
                                 color: notifier
                                     .switchAppThemeNotifier.currentTheme,
-                                fontSize: 16.0,
+                                fontSize:
+                                    notifier.sizeType == ScreenSizeType.large
+                                        ? 12.0
+                                        : 16.0,
                               ),
                             ),
                           ),
@@ -270,6 +283,7 @@ class _EditGroupNameScreen extends StatelessWidget {
           } else {
             return ListView.separated(
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               separatorBuilder: (BuildContext context, int index) {
                 return const SizedBox(width: 10);
@@ -286,8 +300,12 @@ class _EditGroupNameScreen extends StatelessWidget {
                       children: [
                         const SizedBox(width: 10),
                         SizedBox(
-                          width: 45,
-                          height: 45,
+                          width: notifier.sizeType == ScreenSizeType.large
+                              ? 35
+                              : 45,
+                          height: notifier.sizeType == ScreenSizeType.large
+                              ? 35
+                              : 45,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               border: Border.all(
@@ -309,6 +327,9 @@ class _EditGroupNameScreen extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           snapshot.data.docs[index].data()['name'] ?? '',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          ),
                         ),
                       ],
                     ),
@@ -340,14 +361,14 @@ class _EditGroupNameScreen extends StatelessWidget {
                 Image.asset(
                   'assets/images/persons.png',
                 ),
-                const SizedBox(width: 15),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 5),
                           Expanded(
                             child: Text(
                               AppLocalizations.of(context)
@@ -356,7 +377,10 @@ class _EditGroupNameScreen extends StatelessWidget {
                               maxLines: 2,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 17.0,
+                                fontSize:
+                                    notifier.sizeType == ScreenSizeType.large
+                                        ? 13.0
+                                        : 17.0,
                               ),
                             ),
                           ),
@@ -364,13 +388,14 @@ class _EditGroupNameScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: Text(
                           AppLocalizations.of(context)
                               .translate('shareYourTodoList'),
-                          maxLines: 5,
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 15.0,
+                            fontSize: 12.0,
                           ),
                         ),
                       ),

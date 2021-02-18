@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/widgets/bottom_sheet_content/date_row.dart';
 import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
     this.showDateTimePicker,
     this.onSelectedPersonChanged,
     this.onNameChange,
+    this.sizeType,
   });
 
   final String buttonTitle;
@@ -30,6 +32,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
   final VoidCallback showDateTimePicker;
   final Function(String) onSelectedPersonChanged;
   final Function(String) onNameChange;
+  final ScreenSizeType sizeType;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +77,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
             DateRow(
               remindDate: selectedRemindDate,
               onPressed: showDateTimePicker,
+              sizeType: sizeType,
             ),
           if (isDisplayLowerField)
             StatefulBuilder(
@@ -98,14 +102,15 @@ class EditCategoryBottomSheet extends StatelessWidget {
                     } else {
                       return SizedBox(
                         height: 40,
-                        width: size.width * .9,
                         child: Row(
                           children: [
                             const SizedBox(width: 20),
                             Text(
                               'Who\'s task?',
                               style: TextStyle(
-                                fontSize: 15.0,
+                                fontSize: sizeType == ScreenSizeType.large
+                                    ? 12.0
+                                    : 15.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

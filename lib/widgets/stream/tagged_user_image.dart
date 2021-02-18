@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_sample/extensions/set_image_path.dart';
 
 class TaggedUserImage extends StatelessWidget {
   const TaggedUserImage({
-    this.taggedUserReferenceId,
+    @required this.taggedUserReferenceId,
+    @required this.sizeType,
   });
 
   final String taggedUserReferenceId;
+  final ScreenSizeType sizeType;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class TaggedUserImage extends StatelessWidget {
           final imageWidget =
               setImagePath(currentTaggedUserSnapShot['imagePath']);
           return SizedBox(
-            height: 45,
+            height: sizeType == ScreenSizeType.large ? 30 : 45,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: imageWidget,

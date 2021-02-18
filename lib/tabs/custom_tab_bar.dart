@@ -113,7 +113,7 @@ class _CustomTabsState extends State<CustomTabView>
             labelStyle: TextStyle(
               color: white,
               fontWeight: FontWeight.bold,
-              fontSize: 14.0,
+              fontSize: 12.0,
             ),
             unselectedLabelColor: white,
             indicatorColor: themeProvider.currentTheme,

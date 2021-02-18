@@ -5,6 +5,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
@@ -219,7 +220,10 @@ class _HomeScreen extends StatelessWidget {
                       return Column(
                         children: [
                           FractionallySizedBox(
-                            widthFactor: .95,
+                            widthFactor:
+                                notifier.sizeType == ScreenSizeType.large
+                                    ? .99
+                                    : .95,
                             child: Slidable(
                               key: Key(document.id),
                               actionPane: SlidableDrawerActionPane(),
@@ -256,23 +260,27 @@ class _HomeScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: ListTile(
-                                  leading: CircularCheckBox(
-                                    value: document['isChecked'],
-                                    checkColor: Colors.white,
-                                    activeColor: index >= colorList.length
-                                        ? colorList[0]
-                                        : colorList[index],
-                                    inactiveColor: index >= colorList.length
-                                        ? colorList[0]
-                                        : colorList[index],
-                                    disabledColor: Colors.grey,
-                                    onChanged: (val) {
-                                      notifier.updateTodoIsChecked(
-                                        'to-dos',
-                                        document.id,
-                                        !document['isChecked'],
-                                      );
-                                    },
+                                  dense: true,
+                                  leading: SizedBox(
+                                    width: 40,
+                                    child: CircularCheckBox(
+                                      value: document['isChecked'],
+                                      checkColor: Colors.white,
+                                      activeColor: index >= colorList.length
+                                          ? colorList[0]
+                                          : colorList[index],
+                                      inactiveColor: index >= colorList.length
+                                          ? colorList[0]
+                                          : colorList[index],
+                                      disabledColor: Colors.grey,
+                                      onChanged: (val) {
+                                        notifier.updateTodoIsChecked(
+                                          'to-dos',
+                                          document.id,
+                                          !document['isChecked'],
+                                        );
+                                      },
+                                    ),
                                   ),
                                   title: TodoContent(
                                     onPressed: () {
@@ -296,11 +304,14 @@ class _HomeScreen extends StatelessWidget {
                                         ? document['remindDate'].toDate() ?? ''
                                         : null,
                                     isChecked: document['isChecked'],
+                                    sizeType: notifier.sizeType,
                                   ),
                                   trailing: userReference != null
                                       ? TaggedUserImage(
                                           taggedUserReferenceId:
-                                              userReference.id)
+                                              userReference.id,
+                                          sizeType: notifier.sizeType,
+                                        )
                                       : null,
                                 ),
                               ),

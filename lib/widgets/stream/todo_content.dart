@@ -1,5 +1,6 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -10,12 +11,14 @@ class TodoContent extends StatelessWidget {
     this.content,
     this.remindDate,
     this.isChecked = false,
+    this.sizeType,
   });
 
   final VoidCallback onPressed;
   final String content;
   final DateTime remindDate;
   final bool isChecked;
+  final ScreenSizeType sizeType;
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +32,15 @@ class TodoContent extends StatelessWidget {
             Row(
               children: [
                 Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Text(
-                      content,
-                      maxLines: 10,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: darkModeNotifier.isLightTheme ? black : white,
-                        decoration: isChecked
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                      ),
+                  child: Text(
+                    content,
+                    maxLines: 10,
+                    style: TextStyle(
+                      fontSize: sizeType == ScreenSizeType.large ? 12.0 : 15.0,
+                      color: darkModeNotifier.isLightTheme ? black : white,
+                      decoration: isChecked
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
                     ),
                   ),
                 ),
@@ -50,19 +50,17 @@ class TodoContent extends StatelessWidget {
                 ? Row(
                     children: [
                       Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Text(
-                            DateFormat.yMMMd().add_jm().format(remindDate),
-                            maxLines: 10,
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color:
-                                  darkModeNotifier.isLightTheme ? black : white,
-                              decoration: isChecked
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                            ),
+                        child: Text(
+                          DateFormat.yMMMd().add_jm().format(remindDate),
+                          maxLines: 10,
+                          style: TextStyle(
+                            fontSize:
+                                sizeType == ScreenSizeType.large ? 12.0 : 15.0,
+                            color:
+                                darkModeNotifier.isLightTheme ? black : white,
+                            decoration: isChecked
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
                           ),
                         ),
                       ),
