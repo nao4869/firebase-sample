@@ -1,6 +1,8 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
+import 'package:firebase_sample/pages/settings/settings_screen_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +54,10 @@ class SettingRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final verticalPadding = onChange != null ? 4.0 : 12.0;
     final theme = Provider.of<ThemeProvider>(context);
+    final screenSize = ScreenSize(
+        size: MediaQuery.of(context).size,
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+    final sizeType = screenSize.specifyScreenSizeType();
     return ColoredBox(
       color: white,
       child: InkWell(
@@ -71,7 +77,7 @@ class SettingRow extends StatelessWidget {
                     title,
                     style: TextStyle(
                       color: theme.isLightTheme ? black : white,
-                      fontSize: 17.0,
+                      fontSize: sizeType == ScreenSizeType.large ? 14.0 : 17.0,
                     ),
                   ),
                   isCheckBox

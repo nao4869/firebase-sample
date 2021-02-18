@@ -1,6 +1,7 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/splash/user_registration_screen_notifier.dart';
 import 'package:firebase_sample/widgets/buttons/rounded_bottom_button.dart';
 import 'package:firebase_sample/widgets/user/user_registration_page_title.dart';
@@ -69,8 +70,10 @@ class _UserRegistrationScreen extends StatelessWidget {
                           FractionallySizedBox(
                             widthFactor: .8,
                             child: _buildTextFormFieldDescription(
-                              AppLocalizations.of(context)
-                                  .translate('ifYouAreInvited'),
+                              context,
+                              AppLocalizations.of(context).translate(
+                                'ifYouAreInvited',
+                              ),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -108,21 +111,25 @@ class _UserRegistrationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextFormFieldDescription(String text) {
+  Widget _buildTextFormFieldDescription(
+    BuildContext context,
+    String text,
+  ) {
+    final notifier = Provider.of<UserRegistrationScreenNotifier>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               color: warmGrey,
               fontWeight: FontWeight.bold,
-              fontSize: 12.0,
+              fontSize: notifier.sizeType == ScreenSizeType.large ? 10.0 : 12.0,
               letterSpacing: 1.2,
               height: 1.2,
             ),
-            maxLines: 5,
+            maxLines: 10,
             textAlign: TextAlign.left,
           ),
         ),

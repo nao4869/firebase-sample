@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/settings/edit_user_icon_screen_notifier.dart';
 import 'package:firebase_sample/widgets/buttons/rounded_bottom_button.dart';
 import 'package:firebase_sample/widgets/user/circular_user_icon.dart';
@@ -106,7 +107,7 @@ class _EditUserIconScreen extends StatelessWidget {
                       color: theme.isLightTheme ? themeColor : darkBlack,
                       child: Column(
                         children: [
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
                           StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection('versions')
@@ -138,7 +139,7 @@ class _EditUserIconScreen extends StatelessWidget {
                               }
                             },
                           ),
-                          const SizedBox(height: 15),
+                          const SizedBox(height: 10),
                           FractionallySizedBox(
                             widthFactor: .8,
                             child: RoundedBottomButton(
@@ -149,7 +150,7 @@ class _EditUserIconScreen extends StatelessWidget {
                               onPressed: notifier.updateUserProfileImage,
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
                           Row(
                             children: [
                               const SizedBox(width: 20),
@@ -162,69 +163,10 @@ class _EditUserIconScreen extends StatelessWidget {
                               ),
                             ],
                           ),
+                          const SizedBox(height: 5),
+                          _buildFirstIconsRow(context),
                           const SizedBox(height: 10),
-                          SizedBox(
-                            height: 100,
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 4,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    notifier.updateUserAssetProfile(
-                                        'assets/images/person_icon_${index + 1}.png');
-                                  },
-                                  child: SizedBox(
-                                    width: 90,
-                                    height: 90,
-                                    child: Image.asset(
-                                      'assets/images/person_icon_${index + 1}.png',
-                                    ),
-                                  ),
-                                );
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                return const SizedBox(width: 10);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: SizedBox(
-                                height: 100,
-                                child: ListView.separated(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 2,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        notifier.updateUserAssetProfile(
-                                            'assets/images/person_icon_${index + 5}.png');
-                                      },
-                                      child: SizedBox(
-                                        width: 90,
-                                        height: 90,
-                                        child: Image.asset(
-                                          'assets/images/person_icon_${index + 5}.png',
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return const SizedBox(width: 15);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
+                          _buildSecondIconsRow(context),
                         ],
                       ),
                     ),
@@ -232,6 +174,77 @@ class _EditUserIconScreen extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFirstIconsRow(BuildContext context) {
+    final notifier = Provider.of<EditUserIconScreenNotifier>(context);
+    return SizedBox(
+      height: notifier.sizeType == ScreenSizeType.large ? 80 : 100,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: 4,
+        itemBuilder: (BuildContext context, int index) {
+          return Row(
+            children: [
+              index == 0 ? const SizedBox(width: 20) : const SizedBox(),
+              InkWell(
+                onTap: () {
+                  notifier.updateUserAssetProfile(
+                      'assets/images/person_icon_${index + 1}.png');
+                },
+                child: SizedBox(
+                  width: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                  height: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                  child: Image.asset(
+                    'assets/images/person_icon_${index + 1}.png',
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(width: 10);
+        },
+      ),
+    );
+  }
+
+  Widget _buildSecondIconsRow(BuildContext context) {
+    final notifier = Provider.of<EditUserIconScreenNotifier>(context);
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 15.0),
+        child: SizedBox(
+          height: notifier.sizeType == ScreenSizeType.large ? 80 : 100,
+          child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: 2,
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                onTap: () {
+                  notifier.updateUserAssetProfile(
+                      'assets/images/person_icon_${index + 5}.png');
+                },
+                child: SizedBox(
+                  width: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                  height: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                  child: Image.asset(
+                    'assets/images/person_icon_${index + 5}.png',
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(width: 15);
+            },
           ),
         ),
       ),

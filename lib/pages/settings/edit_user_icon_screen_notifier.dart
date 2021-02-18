@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
@@ -19,7 +20,12 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
     this.themeNotifier,
     this.groupNotifier,
     this.userReference,
-  });
+  }) {
+    screenSize = ScreenSize(
+        size: MediaQuery.of(context).size,
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+    sizeType = screenSize.specifyScreenSizeType();
+  }
 
   String _uploadedFileURL;
   File _image;
@@ -31,6 +37,9 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
   final CurrentGroupProvider groupNotifier;
   final UserReferenceProvider userReference;
   final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
+  ScreenSize screenSize;
+  ScreenSizeType sizeType;
 
   // FireStoreの該当ユーザー画像を更新
   // Todo: 該当ユーザーへのReferenceをProviderで保持する

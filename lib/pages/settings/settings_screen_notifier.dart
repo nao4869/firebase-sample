@@ -3,6 +3,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/settings/edit_user_icon_screen.dart';
 import 'package:firebase_sample/pages/settings/edit_user_name_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +17,10 @@ class SettingsScreenNotifier extends ChangeNotifier {
     this.themeNotifier,
     this.userNotifier,
   }) {
-    //
+    screenSize = ScreenSize(
+        size: MediaQuery.of(context).size,
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+    sizeType = screenSize.specifyScreenSizeType();
   }
 
   final BuildContext context;
@@ -24,6 +28,9 @@ class SettingsScreenNotifier extends ChangeNotifier {
   final UserReferenceProvider userNotifier;
   final ThemeProvider themeNotifier;
   final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
+  ScreenSize screenSize;
+  ScreenSizeType sizeType;
 
   // ダークモード切り替え関数
   void updateDarkMode(bool val) {

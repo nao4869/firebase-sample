@@ -45,121 +45,124 @@ class _SelectDesignScreen extends StatelessWidget {
                 )
               : null,
         ),
-        child: Column(
-          children: [
-            Column(
-              children: [
-                const SizedBox(height: 50),
-                Center(
-                  child: SizedBox(
-                    width: size.width * .9,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          RoundedButton(
-                            title: AppLocalizations.of(context)
-                                .translate('freeDesign'),
-                            onPressed: () {},
-                          ),
-                          const SizedBox(height: 20),
-                          _buildDesignLisView(
-                            context: context,
-                            startIndex: 0,
-                          ),
-                          const SizedBox(height: 10),
-                          _buildDesignLisView(
-                            context: context,
-                            startIndex: 4,
-                          ),
-                          const SizedBox(height: 10),
-                          _buildImageLisView(
-                            context: context,
-                            startIndex: 0,
-                            length: 4,
-                          ),
-                          const SizedBox(height: 10),
-                          _buildImageLisView(
-                            context: context,
-                            startIndex: 4,
-                            length: 4,
-                          ),
-                          const SizedBox(height: 10),
-                          _buildImageLisView(
-                            context: context,
-                            startIndex: 8,
-                            length: 4,
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: size.width * .42,
-                  height: 50,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      side: BorderSide(
-                        color: switchAppThemeProvider.currentTheme,
-                        width: 3,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    elevation: 0.0,
-                    color: white,
-                    child: Text(
-                      AppLocalizations.of(context).translate('cancel'),
-                      style: TextStyle(
-                        color: switchAppThemeProvider.currentTheme,
-                        fontSize: 18.0,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  const SizedBox(height: 30),
+                  Center(
+                    child: SizedBox(
+                      width: size.width * .9,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            RoundedButton(
+                              title: AppLocalizations.of(context)
+                                  .translate('freeDesign'),
+                              onPressed: () {},
+                            ),
+                            const SizedBox(height: 20),
+                            _buildDesignLisView(
+                              context: context,
+                              startIndex: 0,
+                            ),
+                            const SizedBox(height: 10),
+                            _buildDesignLisView(
+                              context: context,
+                              startIndex: 4,
+                            ),
+                            const SizedBox(height: 10),
+                            _buildImageLisView(
+                              context: context,
+                              startIndex: 0,
+                              length: 4,
+                            ),
+                            const SizedBox(height: 10),
+                            _buildImageLisView(
+                              context: context,
+                              startIndex: 4,
+                              length: 4,
+                            ),
+                            const SizedBox(height: 10),
+                            _buildImageLisView(
+                              context: context,
+                              startIndex: 8,
+                              length: 4,
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 20),
-                SizedBox(
-                  width: size.width * .42,
-                  height: 50,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      side: BorderSide(
-                        color: white,
-                        width: 3,
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: size.width * .42,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        side: BorderSide(
+                          color: switchAppThemeProvider.currentTheme,
+                          width: 3,
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    elevation: 0.0,
-                    color: switchAppThemeProvider.currentTheme,
-                    child: Text(
-                      AppLocalizations.of(context).translate('save'),
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 18.0,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      elevation: 0.0,
+                      color: white,
+                      child: Text(
+                        AppLocalizations.of(context).translate('cancel'),
+                        style: TextStyle(
+                          color: switchAppThemeProvider.currentTheme,
+                          fontSize: 18.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    width: size.width * .42,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        side: BorderSide(
+                          color: white,
+                          width: 3,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      elevation: 0.0,
+                      color: switchAppThemeProvider.currentTheme,
+                      child: Text(
+                        AppLocalizations.of(context).translate('save'),
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

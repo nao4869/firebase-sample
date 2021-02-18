@@ -132,7 +132,8 @@ class _HomeScreen extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Tab(
-                            text: snapshot.data.docs[index].data()['name'] ?? '',
+                            text:
+                                snapshot.data.docs[index].data()['name'] ?? '',
                           ),
                         ),
                       ),

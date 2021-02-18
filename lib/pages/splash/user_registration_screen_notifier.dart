@@ -4,6 +4,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/splash/splash_screen.dart';
 import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,11 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
     textController.text = '';
     groupTextController.text = '';
     profileFocusNode = FocusNode();
+
+    screenSize = ScreenSize(
+        size: MediaQuery.of(context).size,
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+    sizeType = screenSize.specifyScreenSizeType();
   }
 
   final groupFormKey = GlobalKey<FormState>();
@@ -36,6 +42,9 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
   bool isCodeValid = false;
   String name = '';
   String invitationCode = '';
+
+  ScreenSize screenSize;
+  ScreenSizeType sizeType;
 
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
