@@ -19,6 +19,7 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
       pixelRatio: MediaQuery.of(context).devicePixelRatio,
     );
     sizeType = screenSize.specifyScreenSizeType();
+    tileSizeByDevice = setTileSizeByDevice();
   }
 
   final BuildContext context;
@@ -28,6 +29,7 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
 
   ScreenSize screenSize;
   ScreenSizeType sizeType;
+  double tileSizeByDevice;
 
   // FireStoreの該当ユーザー画像を更新
   // Assets内の画像を適用
@@ -53,6 +55,16 @@ class SelectDesignScreenNotifier extends ChangeNotifier {
     });
     switchAppThemeNotifier.updateSelectedImagePath(imagePath);
     notifyListeners();
+  }
+
+  double setTileSizeByDevice() {
+    if (sizeType == ScreenSizeType.large) {
+      return 70;
+    } else if (sizeType == ScreenSizeType.xlarge) {
+      return 75;
+    } else {
+      return 80;
+    }
   }
 
   void popDialog(BuildContext context) {

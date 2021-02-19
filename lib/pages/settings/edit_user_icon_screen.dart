@@ -182,35 +182,42 @@ class _EditUserIconScreen extends StatelessWidget {
 
   Widget _buildFirstIconsRow(BuildContext context) {
     final notifier = Provider.of<EditUserIconScreenNotifier>(context);
-    return SizedBox(
-      height: notifier.sizeType == ScreenSizeType.large ? 80 : 100,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 4,
-        itemBuilder: (BuildContext context, int index) {
-          return Row(
-            children: [
-              index == 0 ? const SizedBox(width: 20) : const SizedBox(),
-              InkWell(
-                onTap: () {
-                  notifier.updateUserAssetProfile(
-                      'assets/images/person_icon_${index + 1}.png');
-                },
-                child: SizedBox(
-                  width: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
-                  height: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
-                  child: Image.asset(
-                    'assets/images/person_icon_${index + 1}.png',
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: SizedBox(
+          height: notifier.sizeType == ScreenSizeType.large ? 80 : 100,
+          child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: 4,
+            itemBuilder: (BuildContext context, int index) {
+              return Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      notifier.updateUserAssetProfile(
+                          'assets/images/person_icon_${index + 1}.png');
+                    },
+                    child: SizedBox(
+                      width:
+                          notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                      height:
+                          notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                      child: Image.asset(
+                        'assets/images/person_icon_${index + 1}.png',
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(width: 10);
-        },
+                ],
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(width: 10);
+            },
+          ),
+        ),
       ),
     );
   }
@@ -220,7 +227,7 @@ class _EditUserIconScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Padding(
-        padding: const EdgeInsets.only(left: 15.0),
+        padding: const EdgeInsets.only(left: 20.0),
         child: SizedBox(
           height: notifier.sizeType == ScreenSizeType.large ? 80 : 100,
           child: ListView.separated(
@@ -243,7 +250,7 @@ class _EditUserIconScreen extends StatelessWidget {
               );
             },
             separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(width: 15);
+              return const SizedBox(width: 10);
             },
           ),
         ),

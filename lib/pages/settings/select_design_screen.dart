@@ -50,7 +50,7 @@ class _SelectDesignScreen extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 40),
                   Center(
                     child: SizedBox(
                       width: size.width * .9,
@@ -160,7 +160,7 @@ class _SelectDesignScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 200),
             ],
           ),
         ),
@@ -180,7 +180,7 @@ class _SelectDesignScreen extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0),
       child: SizedBox(
         width: size.width * .85,
-        height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
+        height: notifier.tileSizeByDevice,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: 4,
@@ -195,8 +195,8 @@ class _SelectDesignScreen extends StatelessWidget {
                 );
               },
               child: SizedBox(
-                width: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
-                height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
+                width: notifier.tileSizeByDevice,
+                height: notifier.tileSizeByDevice,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: colorList[index + startIndex],
@@ -226,7 +226,7 @@ class _SelectDesignScreen extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0),
       child: SizedBox(
         width: size.width * .85,
-        height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
+        height: notifier.tileSizeByDevice,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: length,
@@ -239,8 +239,8 @@ class _SelectDesignScreen extends StatelessWidget {
                 );
               },
               child: SizedBox(
-                width: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
-                height: notifier.sizeType == ScreenSizeType.xlarge ? 75 : 80,
+                width: notifier.tileSizeByDevice,
+                height: notifier.tileSizeByDevice,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
                   child: Image.asset(

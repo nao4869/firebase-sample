@@ -134,20 +134,20 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
                   Text(
                     AppLocalizations.of(context).translate('groupId'),
                     style: const TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.normal,
                       color: Colors.grey,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: size.height * .005),
+              SizedBox(height: size.height * .003),
               Row(
                 children: <Widget>[
                   Text(
                     groupNotifier.groupId,
                     style: const TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.normal,
                       color: black,
                     ),
@@ -173,6 +173,11 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
           content: Text(
             AppLocalizations.of(context)
                 .translate('stepsForJoiningWithGroupId'),
+            style: const TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.normal,
+              color: black,
+            ),
           ),
           contentPadding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
           actions: <Widget>[
@@ -215,6 +220,11 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
           ),
           content: Text(
             AppLocalizations.of(context).translate('stepsForJoiningWithQrCode'),
+            style: const TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.normal,
+              color: black,
+            ),
           ),
           contentPadding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
           actions: <Widget>[
