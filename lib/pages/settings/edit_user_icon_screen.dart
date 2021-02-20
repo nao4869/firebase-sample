@@ -111,7 +111,7 @@ class _EditUserIconScreen extends StatelessWidget {
                           StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection('versions')
-                                .doc('v1')
+                                .doc('v2')
                                 .collection('groups')
                                 .doc(notifier.groupNotifier.groupId)
                                 .collection('users')

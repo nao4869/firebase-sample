@@ -81,7 +81,7 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
     if (invitationCode.isNotEmpty) {
       final documentReference = await fireStoreInstance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(invitationCode)
           .get();

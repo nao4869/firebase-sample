@@ -110,7 +110,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     try {
       _isUserExist = await FirebaseFirestore.instance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .where('deviceIds', arrayContains: _deviceId)
           .get();
@@ -129,7 +129,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // 端末のデバイスIDをサブコレクションへ追加
       fireStoreInstance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(invitationCode)
           .update({
@@ -139,7 +139,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // 初回起動時のみ、groupを追加
       final referenceToUser = await fireStoreInstance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(invitationCode)
           .collection('users')
@@ -176,7 +176,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     // 初回起動時のみ、groupを追加
     fireStoreInstance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .add({
       'name': 'Group Name',
@@ -186,7 +186,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // groupsのサブコレクションに、Userを作成
       _userReference = await fireStoreInstance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(value.id)
           .collection('users')
@@ -201,7 +201,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // groupsのサブコレクションに、deviceIdを追加
       fireStoreInstance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(value.id)
           .collection('deviceIds')
@@ -218,7 +218,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // チュートリアルCategoryを追加
       final _reference = await fireStoreInstance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(value.id)
           .collection('categories')
@@ -233,7 +233,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       // ログイン中ユーザーへのReferenceを取得
       var userResult = await fireStoreInstance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(value.id)
           .collection('users')
@@ -261,7 +261,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     // TODO: groupIdの存在を確認
     var result = await fireStoreInstance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .where('deviceIds', arrayContains: _deviceId)
         .get();
@@ -275,7 +275,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     // ログイン中ユーザーへのReferenceを取得
     final userResult = await FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(_groupId)
         .collection('users')
@@ -289,7 +289,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     String _userSettingsReference;
     final userSettingsReference = await FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(_groupId)
         .collection('users')
@@ -331,7 +331,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     // UserSettingsコレクションを追加
     final reference = await FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupId)
         .collection('users')

@@ -60,7 +60,7 @@ class SettingsScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')
@@ -80,7 +80,7 @@ class SettingsScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')
@@ -98,7 +98,7 @@ class SettingsScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')
@@ -116,7 +116,7 @@ class SettingsScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')

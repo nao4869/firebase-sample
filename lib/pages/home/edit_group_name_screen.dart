@@ -81,7 +81,7 @@ class _EditGroupNameScreen extends StatelessWidget {
       StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('versions')
-            .doc('v1')
+            .doc('v2')
             .collection('groups')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -280,7 +280,7 @@ class _EditGroupNameScreen extends StatelessWidget {
       StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('versions')
-            .doc('v1')
+            .doc('v2')
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('users')

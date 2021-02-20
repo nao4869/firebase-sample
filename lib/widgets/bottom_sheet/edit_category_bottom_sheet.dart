@@ -97,7 +97,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
                 return StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('versions')
-                      .doc('v1')
+                      .doc('v2')
                       .collection('groups')
                       .doc(groupNotifier.groupId)
                       .collection('users')

@@ -195,7 +195,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     if (_referenceToUser != null && _referenceToUser.isNotEmpty) {
       userReference = await FirebaseFirestore.instance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('users')
@@ -207,7 +207,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     // GroupのサブコレクションのサブコレクションCategory下にTo-dosを作成
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
@@ -238,7 +238,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
@@ -259,7 +259,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     if (_selectedPersonId != null && _selectedPersonId.isNotEmpty) {
       userReference = await FirebaseFirestore.instance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('users')
@@ -268,7 +268,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     }
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
@@ -294,7 +294,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
@@ -458,7 +458,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                     StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('versions')
-                          .doc('v1')
+                          .doc('v2')
                           .collection('groups')
                           .doc(groupNotifier.groupId)
                           .collection('users')

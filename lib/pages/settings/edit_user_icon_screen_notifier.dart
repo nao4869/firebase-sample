@@ -72,7 +72,7 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
 
         FirebaseFirestore.instance
             .collection('versions')
-            .doc('v1')
+            .doc('v2')
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('users')
@@ -93,7 +93,7 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
 
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('users')

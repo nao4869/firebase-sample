@@ -167,7 +167,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       Navigator.of(context).pop();
       FirebaseFirestore.instance
           .collection('versions')
-          .doc('v1')
+          .doc('v2')
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('categories')
@@ -218,7 +218,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection(collection)
@@ -234,7 +234,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection(collection)

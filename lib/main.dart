@@ -143,7 +143,7 @@ Future<void> initUserReference() async {
   try {
     _isUserExist = await FirebaseFirestore.instance
         .collection('versions')
-        .doc('v1')
+        .doc('v2')
         .collection('groups')
         .where('deviceIds', arrayContains: _deviceId)
         .get();
