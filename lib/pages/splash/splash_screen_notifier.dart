@@ -222,6 +222,8 @@ class SplashScreenNotifier extends ChangeNotifier {
           .collection('groups')
           .doc(value.id)
           .collection('categories')
+          .doc('parent')
+          .collection('children')
           .add({
         // Groupのサブコレクションに、Categoryを作成
         'name': 'Tutorial',

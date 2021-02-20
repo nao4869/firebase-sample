@@ -87,6 +87,8 @@ class _HomeScreen extends StatelessWidget {
               .collection('groups')
               .doc(groupNotifier.groupId)
               .collection('categories')
+              .doc('parent')
+              .collection('children')
               .orderBy("createdAt",
                   descending: userNotifier.isSortCategoryByCreatedAt ?? true)
               .snapshots(),
@@ -189,6 +191,8 @@ class _HomeScreen extends StatelessWidget {
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('categories')
+          .doc('parent')
+          .collection('children')
           .doc(categoryId)
           .collection('to-dos')
           .orderBy("createdAt",

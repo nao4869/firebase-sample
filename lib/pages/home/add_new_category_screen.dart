@@ -85,6 +85,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
             .collection('groups')
             .doc(groupNotifier.groupId)
             .collection('categories')
+            .doc('parent')
+            .collection('children')
             .orderBy("createdAt",
                 descending: userNotifier.isSortCategoryByCreatedAt ?? true)
             .snapshots(),

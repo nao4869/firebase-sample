@@ -171,6 +171,8 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('categories')
+          .doc('parent')
+          .collection('children')
           .add({
         // Groupのサブコレクションに、Categoryを作成
         'name': taskName,
