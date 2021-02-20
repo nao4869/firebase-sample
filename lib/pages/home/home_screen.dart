@@ -83,86 +83,92 @@ class _HomeScreen extends StatelessWidget {
           const SizedBox(width: 20),
         ],
       ),
-      body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('versions')
-              .doc('v2')
-              .collection('groups')
-              .doc(groupNotifier.groupId)
-              .collection('categories')
-              .doc(parentIdNotifier.currentParentCategoryId)
-              .collection('children')
-              .orderBy("createdAt",
-                  descending: userNotifier.isSortCategoryByCreatedAt ?? true)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            // エラーの場合
-            if (snapshot.hasError || snapshot.data == null) {
-              return CircularProgressDialog();
-            } else {
-              return DecoratedBox(
-                decoration: BoxDecoration(
-                  image: switchAppThemeNotifier.selectedImagePath.isNotEmpty
-                      ? DecorationImage(
-                          image: AssetImage(
-                            imageList[currentThemeId],
+      body: parentIdNotifier.currentParentCategoryId != null &&
+              parentIdNotifier.currentParentCategoryId.isNotEmpty
+          ? StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('versions')
+                  .doc('v2')
+                  .collection('groups')
+                  .doc(groupNotifier.groupId)
+                  .collection('categories')
+                  .doc(parentIdNotifier.currentParentCategoryId)
+                  .collection('children')
+                  .orderBy("createdAt",
+                      descending:
+                          userNotifier.isSortCategoryByCreatedAt ?? true)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                // エラーの場合
+                if (snapshot.hasError || snapshot.data == null) {
+                  return CircularProgressDialog();
+                } else {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      image: switchAppThemeNotifier.selectedImagePath.isNotEmpty
+                          ? DecorationImage(
+                              image: AssetImage(
+                                imageList[currentThemeId],
+                              ),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                      color: darkModeNotifier.isLightTheme
+                          ? switchAppThemeNotifier.currentTheme
+                          : darkBlack,
+                    ),
+                    child: CustomTabView(
+                      initPosition: notifier.initPosition,
+                      itemCount: snapshot.data.docs.length,
+                      tabBuilder: (context, index) {
+                        notifier.setInitialTabId(snapshot.data.docs[index].id);
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: 100,
+                            maxHeight: 35,
+                            maxWidth: 250,
                           ),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                  color: darkModeNotifier.isLightTheme
-                      ? switchAppThemeNotifier.currentTheme
-                      : darkBlack,
-                ),
-                child: CustomTabView(
-                  initPosition: notifier.initPosition,
-                  itemCount: snapshot.data.docs.length,
-                  tabBuilder: (context, index) {
-                    notifier.setInitialTabId(snapshot.data.docs[index].id);
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 100,
-                        maxHeight: 35,
-                        maxWidth: 250,
-                      ),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index >= colorList.length
-                              ? colorList[0]
-                              : colorList[index],
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10),
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: index >= colorList.length
+                                  ? colorList[0]
+                                  : colorList[index],
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Tab(
+                                text:
+                                    snapshot.data.docs[index].data()['name'] ??
+                                        '',
+                              ),
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Tab(
-                            text:
-                                snapshot.data.docs[index].data()['name'] ?? '',
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  pageBuilder: (context, index) {
-                    return createListView(
-                      context: context,
-                      categoryId: snapshot.data.docs[index].id,
-                      index: index,
-                    );
-                  },
-                  onPositionChange: (index) {
-                    notifier.setCurrentIndex(index);
-                    notifier.initPosition = index;
-                    notifier.updateCurrentTabId(snapshot.data.docs[index].id);
-                  },
-                  onScroll: (position) {},
-                ),
-              );
-            }
-          }),
+                        );
+                      },
+                      pageBuilder: (context, index) {
+                        return createListView(
+                          context: context,
+                          categoryId: snapshot.data.docs[index].id,
+                          index: index,
+                        );
+                      },
+                      onPositionChange: (index) {
+                        notifier.setCurrentIndex(index);
+                        notifier.initPosition = index;
+                        notifier
+                            .updateCurrentTabId(snapshot.data.docs[index].id);
+                      },
+                      onScroll: (position) {},
+                    ),
+                  );
+                }
+              })
+          : Container(),
       floatingActionButton: FloatingActionButton(
         elevation: 1.0,
         backgroundColor: white,

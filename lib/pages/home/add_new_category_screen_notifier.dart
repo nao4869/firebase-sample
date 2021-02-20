@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
@@ -180,6 +181,8 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     if (taskName != null && taskName != '') {
       final groupNotifier =
           Provider.of<CurrentGroupProvider>(context, listen: false);
+      final parentIdNotifier =
+          Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
       Navigator.of(context).pop();
       FirebaseFirestore.instance
           .collection('versions')
@@ -187,7 +190,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('categories')
-          .doc('parent')
+          .doc(parentIdNotifier.currentParentCategoryId)
           .collection('children')
           .add({
         // Groupのサブコレクションに、Categoryを作成
@@ -234,12 +237,16 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   ) {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    final parentIdNotifier =
+        Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
         .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
-        .collection(collection)
+        .collection('categories')
+        .doc(parentIdNotifier.currentParentCategoryId)
+        .collection('children')
         .doc(documentId)
         .delete();
   }
@@ -250,12 +257,16 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   ) {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    final parentIdNotifier =
+        Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
         .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
-        .collection(collection)
+        .collection('categories')
+        .doc(parentIdNotifier.currentParentCategoryId)
+        .collection('children')
         .doc(documentId)
         .update({"name": taskName});
   }

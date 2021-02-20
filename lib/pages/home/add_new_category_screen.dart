@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
@@ -42,6 +43,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
     final userNotifier = Provider.of<UserReferenceProvider>(context);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    final parentIdNotifier =
+        Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
     final currentThemeId =
         notifier.switchAppThemeNotifier.getCurrentThemeNumber();
     final size = MediaQuery.of(context).size;
@@ -88,8 +91,6 @@ class _CategoryPhotoScreen extends StatelessWidget {
               .collection('groups')
               .doc(groupNotifier.groupId)
               .collection('categories')
-              .doc('parent')
-              .collection('children')
               .orderBy("createdAt",
                   descending: userNotifier.isSortCategoryByCreatedAt ?? true)
               .snapshots(),
@@ -153,7 +154,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                           .collection('groups')
                           .doc(groupNotifier.groupId)
                           .collection('categories')
-                          .doc('parent')
+                          .doc(parentIdNotifier.currentParentCategoryId)
                           .collection('children')
                           .orderBy("createdAt",
                               descending:
@@ -169,7 +170,6 @@ class _CategoryPhotoScreen extends StatelessWidget {
                           return SingleChildScrollView(
                             child: Column(
                               children: [
-                                const SizedBox(height: 10),
                                 ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
@@ -223,7 +223,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: SizedBox(
-                                            width: size.width * .8,
+                                            width: size.width * .7,
                                             height: notifier.sizeType ==
                                                     ScreenSizeType.large
                                                 ? 40

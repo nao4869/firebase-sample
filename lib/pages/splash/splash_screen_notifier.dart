@@ -327,6 +327,8 @@ class SplashScreenNotifier extends ChangeNotifier {
       _isSortByCreatedAt = snapshot.data()['isSortByCreatedAt'];
       _isSortCategoryByCreatedAt = snapshot.data()['isSortCategoryByCreatedAt'];
     });
+
+    parentCategoryIdNotifier.updateCurrentParentCategoryId(_parentCategoryId);
     // ProviderのUser参照を更新
     updateUserSettingsNotifier(
       _userSettingsReference,
