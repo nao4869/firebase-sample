@@ -34,7 +34,7 @@ class TodoContent extends StatelessWidget {
                 Flexible(
                   child: Text(
                     content,
-                    maxLines: 10,
+                    maxLines: 100,
                     style: TextStyle(
                       fontSize: sizeType == ScreenSizeType.large ? 12.0 : 15.0,
                       color: darkModeNotifier.isLightTheme ? black : white,

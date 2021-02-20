@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_localizations.dart';
+
 class DateRow extends StatelessWidget {
   DateRow({
     this.remindDate,
@@ -29,7 +31,7 @@ class DateRow extends StatelessWidget {
           children: [
             const SizedBox(width: 20),
             Text(
-              'When?',
+              AppLocalizations.of(context).translate('when'),
               style: TextStyle(
                 fontSize: sizeType == ScreenSizeType.large ? 12.0 : 15.0,
                 fontWeight: FontWeight.bold,
@@ -39,7 +41,7 @@ class DateRow extends StatelessWidget {
             Text(
               remindDate != null
                   ? DateFormat.yMd().add_jm().format(remindDate)
-                  : 'No remind date',
+                  : AppLocalizations.of(context).translate('noRemindDate'),
               style: TextStyle(
                 fontSize: sizeType == ScreenSizeType.large ? 12.0 : 15.0,
                 fontWeight: FontWeight.bold,

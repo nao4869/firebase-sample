@@ -73,6 +73,7 @@ class _EditGroupNameScreen extends StatelessWidget {
     final notifier = Provider.of<EditGroupNameScreenNotifier>(context);
     final theme = Provider.of<ThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final size = MediaQuery.of(context).size;
     return [
       SettingTitle(
         title: AppLocalizations.of(context).translate('groupName'),
@@ -188,17 +189,21 @@ class _EditGroupNameScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            currentGroup != null && currentGroup['name'] != null
-                                ? currentGroup['name']
-                                : AppLocalizations.of(context)
-                                    .translate('notSetting'),
-                            style: TextStyle(
-                              color: theme.isLightTheme ? black : white,
-                              fontSize:
-                                  notifier.sizeType == ScreenSizeType.large
-                                      ? 12.0
-                                      : 16.0,
+                          SizedBox(
+                            width: size.width * .57,
+                            child: Text(
+                              currentGroup != null &&
+                                      currentGroup['name'] != null
+                                  ? currentGroup['name']
+                                  : AppLocalizations.of(context)
+                                      .translate('notSetting'),
+                              style: TextStyle(
+                                color: theme.isLightTheme ? black : white,
+                                fontSize:
+                                    notifier.sizeType == ScreenSizeType.large
+                                        ? 12.0
+                                        : 16.0,
+                              ),
                             ),
                           ),
                           InkWell(
@@ -217,7 +222,11 @@ class _EditGroupNameScreen extends StatelessWidget {
                                   return EditCategoryBottomSheet(
                                     buttonTitle: AppLocalizations.of(context)
                                         .translate('updateGroupName'),
-                                    initialValue: '',
+                                    initialValue: currentGroup != null &&
+                                            currentGroup['name'] != null
+                                        ? currentGroup['name']
+                                        : AppLocalizations.of(context)
+                                            .translate('notSetting'),
                                     isDisplayLowerField: false,
                                     onUpdatePressed: () {
                                       Navigator.of(context).pop();
@@ -325,10 +334,14 @@ class _EditGroupNameScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        Text(
-                          snapshot.data.docs[index].data()['name'] ?? '',
-                          style: TextStyle(
-                            fontSize: 12.0,
+                        Flexible(
+                          child: Text(
+                            snapshot.data.docs[index].data()['name'] ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                            ),
                           ),
                         ),
                       ],

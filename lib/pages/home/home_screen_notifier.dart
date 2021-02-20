@@ -466,7 +466,8 @@ class HomeScreenNotifier extends ChangeNotifier {
                               children: [
                                 const SizedBox(width: 20),
                                 Text(
-                                  'Who\'s task?',
+                                  AppLocalizations.of(context)
+                                      .translate('whoTask'),
                                   style: TextStyle(
                                     fontSize: sizeType == ScreenSizeType.large
                                         ? 12.0
@@ -582,7 +583,7 @@ class HomeScreenNotifier extends ChangeNotifier {
       ),
       builder: (BuildContext context) {
         return EditCategoryBottomSheet(
-          buttonTitle: 'Update Todo',
+          buttonTitle: AppLocalizations.of(context).translate('updateTodo'),
           initialValue: initialValue,
           selectedRemindDate: _selectedRemindDate,
           selectedPersonId: _selectedPersonId,

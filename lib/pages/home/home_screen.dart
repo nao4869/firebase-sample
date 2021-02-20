@@ -119,6 +119,7 @@ class _HomeScreen extends StatelessWidget {
                       constraints: BoxConstraints(
                         minWidth: 100,
                         maxHeight: 35,
+                        maxWidth: 250,
                       ),
                       child: DecoratedBox(
                         decoration: BoxDecoration(
@@ -131,7 +132,7 @@ class _HomeScreen extends StatelessWidget {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.all(8),
                           child: Tab(
                             text:
                                 snapshot.data.docs[index].data()['name'] ?? '',

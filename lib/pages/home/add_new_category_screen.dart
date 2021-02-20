@@ -174,27 +174,29 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 10),
                                     SizedBox(
-                                      width: size.width * .6,
-                                      height: size.width * .6,
+                                      width: size.width * .7,
                                       child: Padding(
                                         padding:
                                             const EdgeInsets.only(left: 8.0),
                                         child: Row(
                                           children: [
-                                            Text(
-                                              snapshot.data.docs[index]
-                                                      .data()['name'] ??
-                                                  '',
-                                              style: TextStyle(
-                                                color: darkModeNotifier
-                                                        .isLightTheme
-                                                    ? black
-                                                    : white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: notifier.sizeType ==
-                                                        ScreenSizeType.large
-                                                    ? 12.0
-                                                    : 16.0,
+                                            Flexible(
+                                              child: Text(
+                                                snapshot.data.docs[index]
+                                                        .data()['name'] ??
+                                                    '',
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                  color: darkModeNotifier
+                                                          .isLightTheme
+                                                      ? black
+                                                      : white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: notifier.sizeType ==
+                                                          ScreenSizeType.large
+                                                      ? 12.0
+                                                      : 16.0,
+                                                ),
                                               ),
                                             ),
                                           ],
