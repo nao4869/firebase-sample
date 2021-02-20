@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
@@ -29,6 +30,7 @@ import '../../app_localizations.dart';
 class HomeScreenNotifier extends ChangeNotifier {
   HomeScreenNotifier({
     this.context,
+    this.parentCategoryIdNotifier,
   }) {
     textController.text = '';
     videoController = VideoPlayerController.network(
@@ -47,6 +49,7 @@ class HomeScreenNotifier extends ChangeNotifier {
     sizeType = screenSize.specifyScreenSizeType();
   }
   final BuildContext context;
+  final CurrentParentCategoryIdProvider parentCategoryIdNotifier;
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
 
@@ -211,7 +214,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
-        .doc('parent')
+        .doc(parentCategoryIdNotifier.currentParentCategoryId)
         .collection('children')
         .doc(currentTabDocumentId)
         .collection('to-dos')

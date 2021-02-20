@@ -27,6 +27,8 @@ class AddCategoryScreen extends StatelessWidget {
       create: (_) => AddCategoryScreenNotifier(
         context: context,
         switchAppThemeNotifier: Provider.of(context, listen: false),
+        parentCategoryIdNotifier: Provider.of(context),
+        userNotifier: Provider.of(context),
       ),
       child: _CategoryPhotoScreen(),
     );
@@ -40,11 +42,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
         Provider.of<AddCategoryScreenNotifier>(context, listen: false);
     final theme = Provider.of<ThemeProvider>(context, listen: false);
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
-    final userNotifier = Provider.of<UserReferenceProvider>(context);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
-    final parentIdNotifier =
-        Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
     final currentThemeId =
         notifier.switchAppThemeNotifier.getCurrentThemeNumber();
     final size = MediaQuery.of(context).size;
@@ -74,7 +73,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 15.0),
             child: GestureDetector(
-              onTap: notifier.openModalBottomSheet,
+              onTap: () {
+                notifier.openModalBottomSheet(true);
+              },
               child: Icon(
                 Icons.add,
                 color: white,
@@ -92,7 +93,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
               .doc(groupNotifier.groupId)
               .collection('categories')
               .orderBy("createdAt",
-                  descending: userNotifier.isSortCategoryByCreatedAt ?? true)
+                  descending:
+                      notifier.userNotifier.isSortCategoryByCreatedAt ?? true)
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -154,12 +156,12 @@ class _CategoryPhotoScreen extends StatelessWidget {
                           .collection('groups')
                           .doc(groupNotifier.groupId)
                           .collection('categories')
-                          .doc(parentIdNotifier.currentParentCategoryId)
+                          .doc(notifier.currentTabDocumentId)
                           .collection('children')
                           .orderBy("createdAt",
-                              descending:
-                                  userNotifier.isSortCategoryByCreatedAt ??
-                                      true)
+                              descending: notifier
+                                      .userNotifier.isSortCategoryByCreatedAt ??
+                                  true)
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -173,7 +175,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                 ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  itemCount: snapshot.data.docs.length,
+                                  itemCount: snapshot.data.docs.length != 0
+                                      ? snapshot.data.docs.length
+                                      : 0,
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return Slidable(
@@ -326,6 +330,17 @@ class _CategoryPhotoScreen extends StatelessWidget {
               );
             }
           }),
+      floatingActionButton: FloatingActionButton(
+        elevation: 1.0,
+        backgroundColor: white,
+        onPressed: () {
+          notifier.openModalBottomSheet(false);
+        },
+        child: Icon(
+          Icons.add,
+          color: notifier.switchAppThemeNotifier.currentTheme,
+        ),
+      ),
     );
   }
 }

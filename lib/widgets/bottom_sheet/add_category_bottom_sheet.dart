@@ -2,15 +2,15 @@ import 'package:firebase_sample/widgets/buttons/full_width_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../app_localizations.dart';
-
 class AddCategoryBottomSheet extends StatelessWidget {
   AddCategoryBottomSheet({
     this.onPressed,
+    this.title,
     this.onNameChange,
   });
 
   final VoidCallback onPressed;
+  final String title;
   final Function(String) onNameChange;
 
   @override
@@ -53,7 +53,7 @@ class AddCategoryBottomSheet extends StatelessWidget {
             height: 50,
             width: size.width,
             child: FullWidthButton(
-              title: AppLocalizations.of(context).translate('addCategory'),
+              title: title,
               onPressed: onPressed,
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/add_category_bottom_sheet.dart';
@@ -19,6 +20,8 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   AddCategoryScreenNotifier({
     this.context,
     this.switchAppThemeNotifier,
+    this.parentCategoryIdNotifier,
+    this.userNotifier,
   }) {
     /// Controllerを初期化
     slidableController = SlidableController(
@@ -30,10 +33,14 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         size: MediaQuery.of(context).size,
         pixelRatio: MediaQuery.of(context).devicePixelRatio);
     sizeType = screenSize.specifyScreenSizeType();
+    currentTabDocumentId = parentCategoryIdNotifier.currentParentCategoryId;
+    print(currentTabDocumentId);
   }
 
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
+  final CurrentParentCategoryIdProvider parentCategoryIdNotifier;
+  final UserReferenceProvider userNotifier;
 
   final nameFieldFormKey = GlobalKey<FormState>();
   final textController = TextEditingController();
@@ -73,11 +80,33 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     isInitialLoadCompleted = true;
   }
 
+  void updateFirestoreParentCategoryId() {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
+        .update({"currentParentCategoryId": currentTabDocumentId});
+
+    // User Providerの値も更新
+    userNotifier.updateParentCategoryReference(currentTabDocumentId);
+    parentCategoryIdNotifier
+        .updateCurrentParentCategoryId(currentTabDocumentId);
+  }
+
   void updateCurrentTabId(String categoryId) {
     currentTabDocumentId = categoryId;
+    parentCategoryIdNotifier.updateCurrentParentCategoryId(categoryId);
   }
 
   void pop() {
+    updateFirestoreParentCategoryId();
     Navigator.of(context).pop();
   }
 
@@ -175,14 +204,11 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     );
   }
 
-  /// カテゴリーを追加する関数
-  /// colorのみ指定し、タスク名を追加は行わない
-  void addCategory() {
+  /// 親カテゴリーを追加する関数
+  void addParentCategory() {
     if (taskName != null && taskName != '') {
       final groupNotifier =
           Provider.of<CurrentGroupProvider>(context, listen: false);
-      final parentIdNotifier =
-          Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
       Navigator.of(context).pop();
       FirebaseFirestore.instance
           .collection('versions')
@@ -190,7 +216,29 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('categories')
-          .doc(parentIdNotifier.currentParentCategoryId)
+          .add({
+        // Groupのサブコレクションに、Categoryを作成
+        'name': taskName,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
+      notifyListeners();
+    }
+  }
+
+  /// 子カテゴリーを追加する関数
+  /// colorのみ指定し、タスク名を追加は行わない
+  void addCategory() {
+    if (taskName != null && taskName != '') {
+      final groupNotifier =
+          Provider.of<CurrentGroupProvider>(context, listen: false);
+      Navigator.of(context).pop();
+      FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v2')
+          .collection('groups')
+          .doc(groupNotifier.groupId)
+          .collection('categories')
+          .doc(parentCategoryIdNotifier.currentParentCategoryId)
           .collection('children')
           .add({
         // Groupのサブコレクションに、Categoryを作成
@@ -237,15 +285,13 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   ) {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
-    final parentIdNotifier =
-        Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
     FirebaseFirestore.instance
         .collection('versions')
         .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .collection('categories')
-        .doc(parentIdNotifier.currentParentCategoryId)
+        .doc(parentCategoryIdNotifier.currentParentCategoryId)
         .collection('children')
         .doc(documentId)
         .delete();
@@ -289,7 +335,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     }
   }
 
-  void openModalBottomSheet() {
+  void openModalBottomSheet(bool isParentCategory) {
     showModalBottomSheet(
       context: context,
       barrierColor: Colors.transparent,
@@ -301,12 +347,23 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         ),
       ),
       builder: (BuildContext context) {
-        return AddCategoryBottomSheet(
-          onNameChange: (String text) {
-            onNameChange(text);
-          },
-          onPressed: addCategory,
-        );
+        if (isParentCategory) {
+          return AddCategoryBottomSheet(
+            onNameChange: (String text) {
+              onNameChange(text);
+            },
+            title: AppLocalizations.of(context).translate('addParentCategory'),
+            onPressed: addParentCategory,
+          );
+        } else {
+          return AddCategoryBottomSheet(
+            onNameChange: (String text) {
+              onNameChange(text);
+            },
+            title: AppLocalizations.of(context).translate('addCategory'),
+            onPressed: addCategory,
+          );
+        }
       },
     );
   }

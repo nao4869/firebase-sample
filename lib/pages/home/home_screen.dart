@@ -29,6 +29,7 @@ class HomeScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => HomeScreenNotifier(
         context: context,
+        parentCategoryIdNotifier: Provider.of(context),
       ),
       child: _HomeScreen(),
     );
@@ -42,8 +43,6 @@ class _HomeScreen extends StatelessWidget {
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
-    final parentIdNotifier =
-        Provider.of<CurrentParentCategoryIdProvider>(context);
     final userNotifier = Provider.of<UserReferenceProvider>(context);
     final currentThemeId = switchAppThemeNotifier.getCurrentThemeNumber();
     return Scaffold(
@@ -83,8 +82,9 @@ class _HomeScreen extends StatelessWidget {
           const SizedBox(width: 20),
         ],
       ),
-      body: parentIdNotifier.currentParentCategoryId != null &&
-              parentIdNotifier.currentParentCategoryId.isNotEmpty
+      body: notifier.parentCategoryIdNotifier.currentParentCategoryId != null &&
+              notifier
+                  .parentCategoryIdNotifier.currentParentCategoryId.isNotEmpty
           ? StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('versions')
@@ -92,7 +92,8 @@ class _HomeScreen extends StatelessWidget {
                   .collection('groups')
                   .doc(groupNotifier.groupId)
                   .collection('categories')
-                  .doc(parentIdNotifier.currentParentCategoryId)
+                  .doc(
+                      notifier.parentCategoryIdNotifier.currentParentCategoryId)
                   .collection('children')
                   .orderBy("createdAt",
                       descending:
@@ -120,7 +121,9 @@ class _HomeScreen extends StatelessWidget {
                     ),
                     child: CustomTabView(
                       initPosition: notifier.initPosition,
-                      itemCount: snapshot.data.docs.length,
+                      itemCount: snapshot.data.docs.length != 0
+                          ? snapshot.data.docs.length
+                          : 0,
                       tabBuilder: (context, index) {
                         notifier.setInitialTabId(snapshot.data.docs[index].id);
                         return ConstrainedBox(
@@ -158,10 +161,12 @@ class _HomeScreen extends StatelessWidget {
                         );
                       },
                       onPositionChange: (index) {
-                        notifier.setCurrentIndex(index);
-                        notifier.initPosition = index;
-                        notifier
-                            .updateCurrentTabId(snapshot.data.docs[index].id);
+                        if (snapshot.data.docs.length != 0) {
+                          notifier.setCurrentIndex(index);
+                          notifier.initPosition = index;
+                          notifier
+                              .updateCurrentTabId(snapshot.data.docs[index].id);
+                        }
                       },
                       onScroll: (position) {},
                     ),
