@@ -4,6 +4,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
+import 'package:firebase_sample/tabs/custom_tab_bar.dart';
 import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -41,6 +42,8 @@ class _CategoryPhotoScreen extends StatelessWidget {
     final userNotifier = Provider.of<UserReferenceProvider>(context);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    final currentThemeId =
+        notifier.switchAppThemeNotifier.getCurrentThemeNumber();
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: theme.isLightTheme ? themeColor : darkBlack,
@@ -79,148 +82,250 @@ class _CategoryPhotoScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('versions')
-            .doc('v2')
-            .collection('groups')
-            .doc(groupNotifier.groupId)
-            .collection('categories')
-            .doc('parent')
-            .collection('children')
-            .orderBy("createdAt",
-                descending: userNotifier.isSortCategoryByCreatedAt ?? true)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          // エラーの場合
-          if (snapshot.hasError || snapshot.data == null) {
-            return CircularProgressDialog();
-          } else {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Slidable(
-                        key: Key(snapshot.data.docs[index].id),
-                        actionPane: SlidableDrawerActionPane(),
-                        actionExtentRatio: 1.0,
-                        dismissal: SlidableDismissal(
-                          closeOnCanceled: true,
-                          child: SlidableDrawerDismissal(),
-                          onWillDismiss: (actionType) {
-                            return showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                return notifier.deleteConfirmDialog(
-                                  actionType,
-                                  'categories',
-                                  snapshot.data.docs[index].id,
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            caption: 'Delete',
-                            color: Colors.red,
-                            icon: Icons.delete,
-                            onTap: () => notifier.showSnackBar(
-                              context,
-                              'Delete',
-                            ),
+          stream: FirebaseFirestore.instance
+              .collection('versions')
+              .doc('v2')
+              .collection('groups')
+              .doc(groupNotifier.groupId)
+              .collection('categories')
+              .doc('parent')
+              .collection('children')
+              .orderBy("createdAt",
+                  descending: userNotifier.isSortCategoryByCreatedAt ?? true)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            // エラーの場合
+            if (snapshot.hasError || snapshot.data == null) {
+              return CircularProgressDialog();
+            } else {
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  image: notifier
+                          .switchAppThemeNotifier.selectedImagePath.isNotEmpty
+                      ? DecorationImage(
+                          image: AssetImage(
+                            imageList[currentThemeId],
                           ),
-                        ],
-                        child: GestureDetector(
-                          onTap: () {
-                            notifier.displayActionSheet(
-                              actionType: SlideActionType.primary,
-                              collection: 'categories',
-                              documentId: snapshot.data.docs[index].id,
-                              initialValue:
-                                  snapshot.data.docs[index].data()['name'],
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: size.width * .8,
-                              height: notifier.sizeType == ScreenSizeType.large
-                                  ? 40
-                                  : 50,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: theme.isLightTheme ? white : black,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 50,
-                                      height: 50,
-                                      child: DecoratedBox(
-                                        decoration: BoxDecoration(
-                                          color: index >= colorList.length
-                                              ? colorList[0]
-                                              : colorList[index],
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10.0),
-                                            bottomLeft: Radius.circular(10.0),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                  color: darkModeNotifier.isLightTheme
+                      ? notifier.switchAppThemeNotifier.currentTheme
+                      : darkBlack,
+                ),
+                child: CustomTabView(
+                  initPosition: notifier.initPosition,
+                  itemCount: snapshot.data.docs.length,
+                  tabBuilder: (context, index) {
+                    notifier.setInitialTabId(snapshot.data.docs[index].id);
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 100,
+                        maxHeight: 35,
+                        maxWidth: 250,
+                      ),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: index >= colorList.length
+                              ? colorList[0]
+                              : colorList[index],
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            topLeft: Radius.circular(10),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Tab(
+                            text:
+                                snapshot.data.docs[index].data()['name'] ?? '',
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  pageBuilder: (context, index) {
+                    return StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('versions')
+                          .doc('v2')
+                          .collection('groups')
+                          .doc(groupNotifier.groupId)
+                          .collection('categories')
+                          .doc('parent')
+                          .collection('children')
+                          .orderBy("createdAt",
+                              descending:
+                                  userNotifier.isSortCategoryByCreatedAt ??
+                                      true)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        // エラーの場合
+                        if (snapshot.hasError || snapshot.data == null) {
+                          return CircularProgressDialog();
+                        } else {
+                          return SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 10),
+                                ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data.docs.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Slidable(
+                                      key: Key(snapshot.data.docs[index].id),
+                                      actionPane: SlidableDrawerActionPane(),
+                                      actionExtentRatio: 1.0,
+                                      dismissal: SlidableDismissal(
+                                        closeOnCanceled: true,
+                                        child: SlidableDrawerDismissal(),
+                                        onWillDismiss: (actionType) {
+                                          return showDialog<bool>(
+                                            context: context,
+                                            builder: (context) {
+                                              return notifier
+                                                  .deleteConfirmDialog(
+                                                actionType,
+                                                'categories',
+                                                snapshot.data.docs[index].id,
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      secondaryActions: <Widget>[
+                                        IconSlideAction(
+                                          caption: 'Delete',
+                                          color: Colors.red,
+                                          icon: Icons.delete,
+                                          onTap: () => notifier.showSnackBar(
+                                            context,
+                                            'Delete',
+                                          ),
+                                        ),
+                                      ],
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          notifier.displayActionSheet(
+                                            actionType: SlideActionType.primary,
+                                            collection: 'categories',
+                                            documentId:
+                                                snapshot.data.docs[index].id,
+                                            initialValue: snapshot
+                                                .data.docs[index]
+                                                .data()['name'],
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SizedBox(
+                                            width: size.width * .8,
+                                            height: notifier.sizeType ==
+                                                    ScreenSizeType.large
+                                                ? 40
+                                                : 50,
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(
+                                                color: theme.isLightTheme
+                                                    ? white
+                                                    : black,
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 50,
+                                                    height: 50,
+                                                    child: DecoratedBox(
+                                                      decoration: BoxDecoration(
+                                                        color: index >=
+                                                                colorList.length
+                                                            ? colorList[0]
+                                                            : colorList[index],
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10.0),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  10.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  SizedBox(
+                                                    width: size.width * .7,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Flexible(
+                                                            child: Text(
+                                                              snapshot
+                                                                          .data
+                                                                          .docs[
+                                                                              index]
+                                                                          .data()[
+                                                                      'name'] ??
+                                                                  '',
+                                                              maxLines: 2,
+                                                              style: TextStyle(
+                                                                color: darkModeNotifier
+                                                                        .isLightTheme
+                                                                    ? black
+                                                                    : white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: notifier
+                                                                            .sizeType ==
+                                                                        ScreenSizeType
+                                                                            .large
+                                                                    ? 12.0
+                                                                    : 16.0,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 20),
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    SizedBox(
-                                      width: size.width * .7,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                snapshot.data.docs[index]
-                                                        .data()['name'] ??
-                                                    '',
-                                                maxLines: 2,
-                                                style: TextStyle(
-                                                  color: darkModeNotifier
-                                                          .isLightTheme
-                                                      ? black
-                                                      : white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: notifier.sizeType ==
-                                                          ScreenSizeType.large
-                                                      ? 12.0
-                                                      : 16.0,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                  ],
-                                ),
-                              ),
+                                    );
+                                  },
+                                )
+                              ],
                             ),
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                ],
-              ),
-            );
-          }
-        },
-      ),
+                          );
+                        }
+                      },
+                    );
+                  },
+                  onPositionChange: (index) {
+                    notifier.setCurrentIndex(index);
+                    notifier.initPosition = index;
+                    notifier.updateCurrentTabId(snapshot.data.docs[index].id);
+                  },
+                  onScroll: (position) {},
+                ),
+              );
+            }
+          }),
     );
   }
 }

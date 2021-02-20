@@ -2,6 +2,7 @@ import 'package:circular_check_box/circular_check_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -41,6 +42,8 @@ class _HomeScreen extends StatelessWidget {
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final parentIdNotifier =
+        Provider.of<CurrentParentCategoryIdProvider>(context);
     final userNotifier = Provider.of<UserReferenceProvider>(context);
     final currentThemeId = switchAppThemeNotifier.getCurrentThemeNumber();
     return Scaffold(
@@ -87,7 +90,7 @@ class _HomeScreen extends StatelessWidget {
               .collection('groups')
               .doc(groupNotifier.groupId)
               .collection('categories')
-              .doc('parent')
+              .doc(parentIdNotifier.currentParentCategoryId)
               .collection('children')
               .orderBy("createdAt",
                   descending: userNotifier.isSortCategoryByCreatedAt ?? true)
@@ -183,6 +186,8 @@ class _HomeScreen extends StatelessWidget {
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    final parentIdNotifier =
+        Provider.of<CurrentParentCategoryIdProvider>(context, listen: false);
     final userNotifier = Provider.of<UserReferenceProvider>(context);
     return StreamBuilder(
       stream: FirebaseFirestore.instance
@@ -191,7 +196,7 @@ class _HomeScreen extends StatelessWidget {
           .collection('groups')
           .doc(groupNotifier.groupId)
           .collection('categories')
-          .doc('parent')
+          .doc(parentIdNotifier.currentParentCategoryId)
           .collection('children')
           .doc(categoryId)
           .collection('to-dos')

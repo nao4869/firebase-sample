@@ -24,6 +24,7 @@ class SplashScreen extends StatelessWidget {
         context: context,
         switchAppThemeProvider: Provider.of(context),
         groupNotifier: Provider.of(context),
+        parentCategoryIdNotifier: Provider.of(context),
         userNotifier: Provider.of(context, listen: false),
         userName: userName,
         invitationCode: invitationCode,

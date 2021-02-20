@@ -42,13 +42,16 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
 
   SlidableController slidableController;
   String taskName;
-  int currentTabIndex = 0;
-  int initPosition = 0;
   int selectedColorIndex = 0;
   bool isValid = false;
 
   Animation<double> rotationAnimation;
   Color fabColor = Colors.blue;
+
+  String currentTabDocumentId = '';
+  int currentTabIndex = 0;
+  int initPosition = 0;
+  bool isInitialLoadCompleted = false;
 
   void handleSlideAnimationChanged(Animation<double> slideAnimation) {
     rotationAnimation = slideAnimation;
@@ -58,6 +61,19 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   void handleSlideIsOpenChanged(bool isOpen) {
     fabColor = isOpen ? Colors.green : Colors.blue;
     notifyListeners();
+  }
+
+  void setInitialTabId(String categoryId) {
+    if (!isInitialLoadCompleted) {
+      currentTabDocumentId = categoryId;
+    } else {
+      return;
+    }
+    isInitialLoadCompleted = true;
+  }
+
+  void updateCurrentTabId(String categoryId) {
+    currentTabDocumentId = categoryId;
   }
 
   void pop() {

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
@@ -65,6 +66,11 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => CurrentGroupProvider(
             groupId: '',
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CurrentParentCategoryIdProvider(
+            currentParentCategoryId: '',
           ),
         ),
         ChangeNotifierProvider(

@@ -4,6 +4,7 @@ class UserReferenceProvider with ChangeNotifier {
   UserReferenceProvider({
     this.referenceToUser,
     this.userSettingsReference,
+    this.currentParentCategoryIdReference,
     this.isDisplayCompletedTodo,
     this.isDisplayOnlyCompletedTodo,
     this.isSortByCreatedAt,
@@ -12,6 +13,7 @@ class UserReferenceProvider with ChangeNotifier {
 
   String referenceToUser;
   String userSettingsReference;
+  String currentParentCategoryIdReference;
   bool isDisplayCompletedTodo;
   bool isDisplayOnlyCompletedTodo;
   bool isSortByCreatedAt;
@@ -39,5 +41,9 @@ class UserReferenceProvider with ChangeNotifier {
 
   void updateIsSortCategoryByCreatedAt(bool updated) {
     isSortCategoryByCreatedAt = updated;
+  }
+
+  void updateParentCategoryReference(String newReference) {
+    currentParentCategoryIdReference = newReference;
   }
 }

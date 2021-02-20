@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -18,6 +19,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     this.context,
     this.switchAppThemeProvider,
     this.groupNotifier,
+    this.parentCategoryIdNotifier,
     this.userNotifier,
     this.userName,
     this.invitationCode,
@@ -32,6 +34,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeProvider;
   final CurrentGroupProvider groupNotifier;
+  final CurrentParentCategoryIdProvider parentCategoryIdNotifier;
   final UserReferenceProvider userNotifier;
 
   bool _isRegistrationProcess = false;
@@ -45,6 +48,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   bool _isSortCategoryByCreatedAt = false;
   bool _isRegistrationCompleted = false;
   String _groupId = '';
+  String _parentCategoryId = '';
   String _deviceId;
   DocumentReference _userReference;
   QuerySnapshot _isUserExist;
@@ -210,25 +214,40 @@ class SplashScreenNotifier extends ChangeNotifier {
         'createdAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      addUserSettings(
-        groupId: value.id,
-        userId: _userReference.id,
-      );
-
       // チュートリアルCategoryを追加
-      final _reference = await fireStoreInstance
+      fireStoreInstance
           .collection('versions')
           .doc('v2')
           .collection('groups')
           .doc(value.id)
           .collection('categories')
-          .doc('parent')
-          .collection('children')
           .add({
-        // Groupのサブコレクションに、Categoryを作成
-        'name': 'Tutorial',
+        'name': 'Parent Category',
         'createdAt': Timestamp.fromDate(DateTime.now()),
+      }).then((parent) async {
+        final _reference = await fireStoreInstance
+            .collection('versions')
+            .doc('v2')
+            .collection('groups')
+            .doc(value.id)
+            .collection('categories')
+            .doc(parent.id)
+            .collection('children')
+            .add({
+          'name': 'Tutorial',
+          'createdAt': Timestamp.fromDate(DateTime.now()),
+        });
+        // Providerの親カテゴリーIDを更新
+        parentCategoryIdNotifier.updateCurrentParentCategoryId(parent.id);
+        addTutorialTodoList(_reference);
+
+        addUserSettings(
+          groupId: value.id,
+          parentCategoryId: parent.id,
+          userId: _userReference.id,
+        );
       });
+
       // ProviderのグループIDを更新
       groupNotifier.updateGroupId(value.id);
 
@@ -248,7 +267,6 @@ class SplashScreenNotifier extends ChangeNotifier {
       // ProviderのUser参照を更新
       userNotifier.updateUserReference(_referenceToUser);
       userNotifier.updateCompletedTodo(true);
-      addTutorialTodoList(_reference);
     });
   }
 
@@ -289,6 +307,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     });
 
     String _userSettingsReference;
+    String _parentCategoryId;
     final userSettingsReference = await FirebaseFirestore.instance
         .collection('versions')
         .doc('v2')
@@ -300,6 +319,7 @@ class SplashScreenNotifier extends ChangeNotifier {
         .get();
     userSettingsReference.docs.forEach((snapshot) {
       _userSettingsReference = snapshot.reference.id;
+      _parentCategoryId = snapshot.data()['currentParentCategoryId'];
       _selectedImagePath = snapshot.data()['backgroundImagePath'];
       _isDisplayCompletedTodo = snapshot.data()['displayCompletedTodo'];
       _isDisplayOnlyCompletedTodo =
@@ -308,16 +328,23 @@ class SplashScreenNotifier extends ChangeNotifier {
       _isSortCategoryByCreatedAt = snapshot.data()['isSortCategoryByCreatedAt'];
     });
     // ProviderのUser参照を更新
-    updateUserSettingsNotifier(_userSettingsReference);
+    updateUserSettingsNotifier(
+      _userSettingsReference,
+      _parentCategoryId,
+    );
 
     // 設定中の背景色がある際には、Providerで保持する
     switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
     _isRegistrationCompleted = true;
   }
 
-  void updateUserSettingsNotifier(String userSettingsReference) {
+  void updateUserSettingsNotifier(
+    String userSettingsReference,
+    String currentParentCategoryId,
+  ) {
     // ProviderのUser参照を更新
     userNotifier.updateUserReference(_referenceToUser);
+    userNotifier.updateParentCategoryReference(currentParentCategoryId);
     userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
     userNotifier.updateIsDisplayOnlyCompletedTodo(_isDisplayOnlyCompletedTodo);
     userNotifier.updateIsSortByCreatedAt(_isSortByCreatedAt);
@@ -328,6 +355,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   // ユーザー設定コレクションを初期化 - 初回ログイン、招待初回登録時実行
   void addUserSettings({
     String groupId,
+    String parentCategoryId,
     String userId,
   }) async {
     // UserSettingsコレクションを追加
@@ -348,6 +376,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       'isSortCategoryByCreatedAt': true,
       'backgroundDesignId': 0,
       'backgroundImagePath': '',
+      'currentParentCategoryId': parentCategoryId,
     });
     userNotifier.updateUserSettingsReference(reference.id);
   }
