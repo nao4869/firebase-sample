@@ -18,7 +18,7 @@ class InputField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SizedBox(
-        height: size.width * height,
+        height: height,
         width: size.width * width,
         child: DecoratedBox(
           decoration: BoxDecoration(

@@ -34,11 +34,23 @@ class EditCategoryBottomSheet extends StatelessWidget {
   final Function(String) onNameChange;
   final ScreenSizeType sizeType;
 
+  double setFormHeightByDevice(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    if (sizeType == ScreenSizeType.xlarge) {
+      return size.width * .4;
+    } else if (sizeType == ScreenSizeType.xxlarge) {
+      return size.width * .4;
+    } else {
+      return size.width * .3;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
+    final formHeightByDevice = setFormHeightByDevice(context);
     String _selectedPersonId;
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
@@ -49,7 +61,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
-              height: size.width * .3,
+              height: formHeightByDevice,
               width: size.width * .9,
               child: DecoratedBox(
                 decoration: BoxDecoration(

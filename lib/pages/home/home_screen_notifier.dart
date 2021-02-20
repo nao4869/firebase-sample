@@ -405,6 +405,17 @@ class HomeScreenNotifier extends ChangeNotifier {
     );
   }
 
+  double setFormHeightByDevice(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    if (sizeType == ScreenSizeType.xlarge) {
+      return size.width * .4;
+    } else if (sizeType == ScreenSizeType.xxlarge) {
+      return size.width * .4;
+    } else {
+      return size.width * .3;
+    }
+  }
+
   // 新規Todo作成時 ボトムシート表示関数
   void openModalBottomSheet() {
     final size = MediaQuery.of(context).size;
@@ -412,6 +423,7 @@ class HomeScreenNotifier extends ChangeNotifier {
         Provider.of<CurrentGroupProvider>(context, listen: false);
     final switchAppThemeNotifier =
         Provider.of<SwitchAppThemeProvider>(context, listen: false);
+    final formHeightByDevice = setFormHeightByDevice(context);
     showModalBottomSheet(
       context: context,
       barrierColor: Colors.transparent,
@@ -436,6 +448,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                       onChanged: (String text) {
                         onNameChange(text);
                       },
+                      height: formHeightByDevice,
                     ),
                     DateRow(
                       remindDate: _selectedRemindDate,
