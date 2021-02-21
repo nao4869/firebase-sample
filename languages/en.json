@@ -200,13 +200,17 @@
   "select": "Select",
   "deleteCategory": "Delete category",
   "confirmDeleteCategoryTodo": "To-dos in this category will also be deleted. Does it okay?",
+  "confirmDeleteParentCategory": "Children categories in this parent category will also be deleted. Does it okay?",
   "invitationMethod": "Invitation method",
   "inviteByQrCode": "Sharing QR code",
   "inviteByGroupId": "Sharing group id",
   "register": "Register",
   "manageCategory": "Manage Category",
   "updateCategory": "Update Category",
+  "updateParentCategory": "Update parent category",
   "todoDeleted": "Todo deleted",
+  "categoryDeleted": "Category deleted",
+  "parentCategoryDeleted": "Parent category deleted",
   "notSetting": "Not Setting",
   "updateGroupName": "Update Group Name",
   "inviteNewPerson": "Invite new person",
@@ -225,5 +229,7 @@
   "whoTask": "Who's task?",
   "when": "When?",
   "noRemindDate": "No remind date",
-  "updateTodo": "Update Todo"
+  "updateTodo": "Update Todo",
+  "editParentCategory": "Edit parent category",
+  "deleteParentCategory": "Delete parent category"
 }

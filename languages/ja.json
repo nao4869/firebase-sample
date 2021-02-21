@@ -199,13 +199,17 @@
   "select": "選択する",
   "deleteCategory": "カテゴリーを削除",
   "confirmDeleteCategoryTodo": "カテゴリー内の全てのTodoも削除されます。よろしいですか？",
+  "confirmDeleteParentCategory": "親カテゴリー内の全てのサブカテゴリーも削除されます。よろしいですか？",
   "invitationMethod": "招待方法",
   "inviteByQrCode": "QRコードを共有する",
   "inviteByGroupId": "グループIDを共有する",
   "register": "登録する",
   "manageCategory": "カテゴリーを管理する",
   "updateCategory": "カテゴリーを更新する",
+  "updateParentCategory": "親カテゴリーを更新する",
   "todoDeleted": "Todoを削除しました",
+  "categoryDeleted": "カテゴリーを削除しました",
+  "parentCategoryDeleted": "親カテゴリーを削除しました",
   "notSetting": "未設定",
   "updateGroupName": "グループ名を更新する",
   "inviteNewPerson": "新しく招待する",
@@ -224,5 +228,7 @@
   "whoTask": "誰のタスク？",
   "when": "いつまで？",
   "noRemindDate": "リマインドなし",
-  "updateTodo": "Todoを更新する"
+  "updateTodo": "Todoを更新する",
+  "editParentCategory": "親カテゴリーを編集する",
+  "deleteParentCategory": "親カテゴリーを削除する"
 }

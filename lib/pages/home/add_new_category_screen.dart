@@ -74,6 +74,18 @@ class _CategoryPhotoScreen extends StatelessWidget {
             padding: const EdgeInsets.only(right: 15.0),
             child: GestureDetector(
               onTap: () {
+                notifier.displayParentCategoryActionSheet();
+              },
+              child: Icon(
+                Icons.folder_open,
+                color: white,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: GestureDetector(
+              onTap: () {
                 notifier.openModalBottomSheet(true);
               },
               child: Icon(
@@ -194,7 +206,6 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                               return notifier
                                                   .deleteConfirmDialog(
                                                 actionType,
-                                                'categories',
                                                 snapshot.data.docs[index].id,
                                               );
                                             },
@@ -216,7 +227,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                         onTap: () {
                                           notifier.displayActionSheet(
                                             actionType: SlideActionType.primary,
-                                            collection: 'categories',
+                                            collection: 'children',
                                             documentId:
                                                 snapshot.data.docs[index].id,
                                             initialValue: snapshot
@@ -323,7 +334,11 @@ class _CategoryPhotoScreen extends StatelessWidget {
                   onPositionChange: (index) {
                     notifier.setCurrentIndex(index);
                     notifier.initPosition = index;
-                    notifier.updateCurrentTabId(snapshot.data.docs[index].id);
+                    notifier.updateCurrentTabId(
+                      categoryId: snapshot.data.docs[index].id,
+                      categoryName:
+                          snapshot.data.docs[index].data()['name'] ?? '',
+                    );
                   },
                   onScroll: (position) {},
                 ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/constants/texts.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
@@ -34,7 +35,6 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         pixelRatio: MediaQuery.of(context).devicePixelRatio);
     sizeType = screenSize.specifyScreenSizeType();
     currentTabDocumentId = parentCategoryIdNotifier.currentParentCategoryId;
-    print(currentTabDocumentId);
   }
 
   final BuildContext context;
@@ -57,6 +57,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   Color fabColor = Colors.blue;
 
   String currentTabDocumentId = '';
+  String currentTabCategoryName = '';
   int currentTabIndex = 0;
   int initPosition = 0;
   bool isInitialLoadCompleted = false;
@@ -100,8 +101,12 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         .updateCurrentParentCategoryId(currentTabDocumentId);
   }
 
-  void updateCurrentTabId(String categoryId) {
+  void updateCurrentTabId({
+    String categoryId,
+    String categoryName,
+  }) {
     currentTabDocumentId = categoryId;
+    currentTabCategoryName = categoryName;
     parentCategoryIdNotifier.updateCurrentParentCategoryId(categoryId);
   }
 
@@ -154,37 +159,116 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
       builder: (BuildContext context) {
         return CupertinoActionSheet(
           actions: [
-            CupertinoActionSheetAction(
-              child: Text(
-                AppLocalizations.of(context).translate('edit'),
-                style: TextStyle(
-                  color: switchAppThemeNotifier.currentTheme,
+            ColoredBox(
+              color: white,
+              child: CupertinoActionSheetAction(
+                child: Text(
+                  AppLocalizations.of(context).translate('edit'),
+                  style: TextStyle(
+                    color: switchAppThemeNotifier.currentTheme,
+                  ),
                 ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  editCategory(
+                    collection: collection,
+                    documentId: documentId,
+                    initialValue: initialValue,
+                  );
+                },
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                editCategory(
-                  collection: collection,
-                  documentId: documentId,
-                  initialValue: initialValue,
-                );
-              },
             ),
-            CupertinoActionSheetAction(
-              child: Text(
-                AppLocalizations.of(context).translate('doDelete'),
-                style: TextStyle(
-                  color: switchAppThemeNotifier.currentTheme,
+            ColoredBox(
+              color: white,
+              child: CupertinoActionSheetAction(
+                child: Text(
+                  AppLocalizations.of(context).translate('doDelete'),
+                  style: TextStyle(
+                    color: switchAppThemeNotifier.currentTheme,
+                  ),
                 ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+
+                  // 表示にはshowDialogを使用する必要あり
+                  return showDialog<bool>(
+                    context: context,
+                    builder: (context) {
+                      return deleteConfirmDialog(
+                        actionType,
+                        documentId,
+                      );
+                    },
+                  );
+                },
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                deleteConfirmDialog(
-                  actionType,
-                  collection,
-                  documentId,
-                );
-              },
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: Text(
+              AppLocalizations.of(context).translate('cancel'),
+              style: TextStyle(
+                color: switchAppThemeNotifier.currentTheme,
+              ),
+            ),
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> displayParentCategoryActionSheet({
+    SlideActionType actionType,
+  }) {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          actions: [
+            ColoredBox(
+              color: white,
+              child: CupertinoActionSheetAction(
+                child: Text(
+                  AppLocalizations.of(context).translate('editParentCategory'),
+                  style: TextStyle(
+                    color: switchAppThemeNotifier.currentTheme,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  editParentCategory();
+                },
+              ),
+            ),
+            ColoredBox(
+              color: white,
+              child: CupertinoActionSheetAction(
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('deleteParentCategory'),
+                  style: TextStyle(
+                    color: switchAppThemeNotifier.currentTheme,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+
+                  return showDialog<bool>(
+                    context: context,
+                    builder: (context) {
+                      return deleteConfirmDialog(
+                        actionType,
+                        parentCategoryIdNotifier.currentParentCategoryId,
+                        isParent: true,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
           cancelButton: CupertinoActionSheetAction(
@@ -251,28 +335,37 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
 
   Widget deleteConfirmDialog(
     SlideActionType actionType,
-    String collection,
-    String documentId,
-  ) {
+    String documentId, {
+    bool isParent = false,
+  }) {
     return CmnDialog(context).showDialogWidget(
       onPositiveCallback: () {
-        deleteCategory(
-          collection,
-          documentId,
-        );
-        deleteCategoryTodoList(documentId);
-        showSnackBar(
-          context,
-          actionType == SlideActionType.primary
-              ? 'Dismiss Archive'
-              : AppLocalizations.of(context).translate('todoDeleted'),
-        );
+        if (isParent) {
+          deleteParentCategory(documentId);
+          deleteChildrenCategories();
+        } else {
+          deleteCategory(documentId);
+          deleteCategoryTodoList(documentId);
+          showSnackBar(
+            context,
+            actionType == SlideActionType.primary
+                ? 'Dismiss Archive'
+                : isParent
+                    ? AppLocalizations.of(context)
+                        .translate('parentCategoryDeleted')
+                    : AppLocalizations.of(context).translate('categoryDeleted'),
+          );
+        }
       },
       onNegativeCallback: () {},
-      titleStr: AppLocalizations.of(context).translate('deleteCategory'),
+      titleStr: isParent
+          ? AppLocalizations.of(context).translate('deleteParentCategory')
+          : AppLocalizations.of(context).translate('deleteCategory'),
       titleColor: switchAppThemeNotifier.currentTheme,
-      msgStr:
-          AppLocalizations.of(context).translate('confirmDeleteCategoryTodo'),
+      msgStr: isParent
+          ? AppLocalizations.of(context)
+              .translate('confirmDeleteParentCategory')
+          : AppLocalizations.of(context).translate('confirmDeleteCategoryTodo'),
       positiveBtnStr: cmnOkay,
       negativeBtnStr: AppLocalizations.of(context).translate('cancel'),
     );
@@ -280,7 +373,6 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
 
   // 単一のCategoryを指定されたFireStore Collectionから削除します。
   void deleteCategory(
-    String collection,
     String documentId,
   ) {
     final groupNotifier =
@@ -293,6 +385,22 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         .collection('categories')
         .doc(parentCategoryIdNotifier.currentParentCategoryId)
         .collection('children')
+        .doc(documentId)
+        .delete();
+  }
+
+  // 親カテゴリー削除関数
+  void deleteParentCategory(
+    String documentId,
+  ) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('categories')
         .doc(documentId)
         .delete();
   }
@@ -315,6 +423,36 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
         .collection('children')
         .doc(documentId)
         .update({"name": taskName});
+  }
+
+  void updateParentCategory() {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('categories')
+        .doc(parentCategoryIdNotifier.currentParentCategoryId)
+        .update({"name": taskName});
+  }
+
+  void deleteChildrenCategories() {
+    try {
+      FirebaseFirestore.instance
+          .collection('to-dos')
+          .where('categoryId',
+              isEqualTo: '${parentCategoryIdNotifier.currentParentCategoryId}')
+          .get()
+          .then((snapshot) {
+        for (DocumentSnapshot ds in snapshot.docs) {
+          ds.reference.delete();
+        }
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 
   void deleteCategoryTodoList(
@@ -394,6 +532,36 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
           },
           onNameChange: (String text) {
             onNameChange(text);
+          },
+        );
+      },
+    );
+  }
+
+  void editParentCategory() {
+    taskName = currentTabCategoryName;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return EditCategoryBottomSheet(
+          buttonTitle:
+              AppLocalizations.of(context).translate('updateParentCategory'),
+          initialValue: taskName,
+          isDisplayLowerField: false,
+          onUpdatePressed: () {
+            Navigator.of(context).pop();
+            updateParentCategory();
+          },
+          onNameChange: (String text) {
+            onNameChange(text);
+            currentTabCategoryName = text;
           },
         );
       },
