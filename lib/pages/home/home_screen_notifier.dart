@@ -231,6 +231,7 @@ class HomeScreenNotifier extends ChangeNotifier {
           userReference != null ? userReference.reference : null,
     });
     _selectedRemindDate = null;
+    _selectedPersonIndex = null;
     _taskName = '';
   }
 
@@ -617,7 +618,12 @@ class HomeScreenNotifier extends ChangeNotifier {
             updateTodo(collection, documentId);
           },
           onSelectedPersonChanged: (String id) {
-            _selectedPersonId = id;
+            // 同一ユーザータップ時は、フォーカスを削除
+            if (_selectedPersonId == id) {
+              _selectedPersonId = null;
+            } else {
+              _selectedPersonId = id;
+            }
           },
           onNameChange: (String text) {
             onNameChange(text);

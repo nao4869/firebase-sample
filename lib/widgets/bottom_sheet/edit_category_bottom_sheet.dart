@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_sample/extensions/set_image_path.dart';
 
+import '../../app_localizations.dart';
+
 class EditCategoryBottomSheet extends StatelessWidget {
   EditCategoryBottomSheet({
     this.buttonTitle,
@@ -118,7 +120,7 @@ class EditCategoryBottomSheet extends StatelessWidget {
                           children: [
                             const SizedBox(width: 20),
                             Text(
-                              'Who\'s task?',
+                              AppLocalizations.of(context).translate('whoTask'),
                               style: TextStyle(
                                 fontSize: sizeType == ScreenSizeType.large
                                     ? 12.0
@@ -146,10 +148,15 @@ class EditCategoryBottomSheet extends StatelessWidget {
                                   onTap: () {
                                     onSelectedPersonChanged(
                                         snapshot.data.docs[index].id);
-                                    _selectedPersonId =
-                                        snapshot.data.docs[index].id;
-                                    print(_selectedPersonId);
-                                    print(snapshot.data.docs[index].id);
+
+                                    // 既に選択中のユーザーを再度タップした際に、フォーカスを解除
+                                    if (_selectedPersonId ==
+                                        snapshot.data.docs[index].id) {
+                                      _selectedPersonId = null;
+                                    } else {
+                                      _selectedPersonId =
+                                          snapshot.data.docs[index].id;
+                                    }
                                     setState(() {});
                                   },
                                   child: SizedBox(

@@ -281,7 +281,6 @@ class _HomeScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: ListTile(
-                                  dense: true,
                                   leading: SizedBox(
                                     width: 40,
                                     child: CircularCheckBox(
