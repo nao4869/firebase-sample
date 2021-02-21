@@ -516,9 +516,17 @@ class HomeScreenNotifier extends ChangeNotifier {
                                         .data()['imagePath']);
                                     return InkWell(
                                       onTap: () {
-                                        _selectedPersonIndex = index;
-                                        _referenceToUser =
-                                            snapshot.data.docs[index].id;
+                                        // 既に選択中のユーザーを再度タップした際に、フォーカスを解除
+                                        if (_selectedPersonIndex == index ||
+                                            _referenceToUser ==
+                                                snapshot.data.docs[index].id) {
+                                          _selectedPersonIndex = null;
+                                          _referenceToUser = null;
+                                        } else {
+                                          _selectedPersonIndex = index;
+                                          _referenceToUser =
+                                              snapshot.data.docs[index].id;
+                                        }
                                         setState(() {});
                                       },
                                       child: SizedBox(
