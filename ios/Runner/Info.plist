@@ -28,9 +28,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>画像登録の為、使用致します</string>
+	<string>App will use camera for user icon image registration</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>画像登録の為、使用致します</string>
+	<string>App will use camera for user icon image registration</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

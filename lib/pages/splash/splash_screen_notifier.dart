@@ -222,7 +222,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           .doc(value.id)
           .collection('categories')
           .add({
-        'name': 'Parent Category',
+        'name': AppLocalizations.of(context).translate('tutorial'),
         'createdAt': Timestamp.fromDate(DateTime.now()),
       }).then((parent) async {
         final _reference = await fireStoreInstance
@@ -234,7 +234,7 @@ class SplashScreenNotifier extends ChangeNotifier {
             .doc(parent.id)
             .collection('children')
             .add({
-          'name': 'Tutorial',
+          'name': AppLocalizations.of(context).translate('tutorial'),
           'createdAt': Timestamp.fromDate(DateTime.now()),
         });
         // Providerの親カテゴリーIDを更新
