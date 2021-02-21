@@ -48,6 +48,7 @@ class _SelectDesignScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 10),
               Column(
                 children: [
                   const SizedBox(height: 40),
@@ -160,7 +161,7 @@ class _SelectDesignScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 200),
+              const SizedBox(height: 400),
             ],
           ),
         ),
