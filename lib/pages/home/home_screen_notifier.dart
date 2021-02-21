@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
@@ -428,6 +429,11 @@ class HomeScreenNotifier extends ChangeNotifier {
     }
   }
 
+  void resetSelectedDate() {
+    _selectedRemindDate = null;
+    notifyListeners();
+  }
+
   // 新規Todo作成時 ボトムシート表示関数
   void openModalBottomSheet() {
     final size = MediaQuery.of(context).size;
@@ -459,12 +465,14 @@ class HomeScreenNotifier extends ChangeNotifier {
                     InputField(
                       onChanged: (String text) {
                         onNameChange(text);
+                        setState(() {});
                       },
                       height: formHeightByDevice,
                     ),
                     DateRow(
                       remindDate: _selectedRemindDate,
                       onPressed: showDateTimePicker,
+                      onReset: resetSelectedDate,
                       sizeType: sizeType,
                     ),
                     StreamBuilder(
@@ -486,7 +494,7 @@ class HomeScreenNotifier extends ChangeNotifier {
                           );
                         } else {
                           return SizedBox(
-                            height: 40,
+                            height: 60,
                             child: Row(
                               children: [
                                 const SizedBox(width: 20),
@@ -529,33 +537,63 @@ class HomeScreenNotifier extends ChangeNotifier {
                                         }
                                         setState(() {});
                                       },
-                                      child: SizedBox(
-                                        height: 30,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          child: Stack(
-                                            children: [
-                                              imageWidget,
-                                              if (_selectedPersonIndex == index)
-                                                SizedBox(
-                                                  height: 40,
-                                                  width: 40,
-                                                  child: DecoratedBox(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      color:
-                                                          switchAppThemeNotifier
-                                                              .currentTheme
-                                                              .withOpacity(0.5),
-                                                    ),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              child: Stack(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 40,
+                                                    width: 40,
+                                                    child: imageWidget,
                                                   ),
-                                                ),
-                                            ],
+                                                  if (_selectedPersonIndex ==
+                                                      index)
+                                                    SizedBox(
+                                                      height: 40,
+                                                      width: 40,
+                                                      child: DecoratedBox(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(30),
+                                                          color:
+                                                              switchAppThemeNotifier
+                                                                  .currentTheme
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          const SizedBox(height: 3),
+                                          Text(
+                                            snapshot.data.docs[index]
+                                                        .data()['name']
+                                                        .toString()
+                                                        .length >
+                                                    3
+                                                ? snapshot.data.docs[index]
+                                                    .data()['name']
+                                                    .toString()
+                                                    .substring(0, 4)
+                                                : snapshot.data.docs[index]
+                                                    .data()['name'],
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: black,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     );
                                   },

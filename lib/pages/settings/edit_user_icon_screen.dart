@@ -72,7 +72,9 @@ class _EditUserIconScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                   child: Icon(
                     Icons.check,
                     color: white,

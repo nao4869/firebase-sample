@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class SwitchAppThemeProvider with ChangeNotifier {
   SwitchAppThemeProvider({
     this.currentTheme,
-    this.selectedImagePath,
+    this.selectedImagePath = '',
   });
 
   Color currentTheme;
