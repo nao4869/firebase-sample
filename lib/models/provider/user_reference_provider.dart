@@ -5,6 +5,7 @@ class UserReferenceProvider with ChangeNotifier {
     this.referenceToUser,
     this.userSettingsReference,
     this.currentParentCategoryIdReference,
+    this.todoFontSize,
     this.isDisplayCompletedTodo,
     this.isDisplayOnlyCompletedTodo,
     this.isSortByCreatedAt,
@@ -14,6 +15,7 @@ class UserReferenceProvider with ChangeNotifier {
   String referenceToUser;
   String userSettingsReference;
   String currentParentCategoryIdReference;
+  double todoFontSize;
   bool isDisplayCompletedTodo;
   bool isDisplayOnlyCompletedTodo;
   bool isSortByCreatedAt;
@@ -45,5 +47,9 @@ class UserReferenceProvider with ChangeNotifier {
 
   void updateParentCategoryReference(String newReference) {
     currentParentCategoryIdReference = newReference;
+  }
+
+  void updateTodoFontSize(newFontSize) {
+    todoFontSize = newFontSize;
   }
 }

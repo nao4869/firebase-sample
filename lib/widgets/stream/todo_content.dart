@@ -1,5 +1,6 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
+import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,7 @@ class TodoContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final darkModeNotifier = Provider.of<ThemeProvider>(context);
+    final userSettingsNotifier = Provider.of<UserReferenceProvider>(context);
     return InkWell(
       onTap: onPressed,
       child: Padding(
@@ -36,7 +38,7 @@ class TodoContent extends StatelessWidget {
                     content,
                     maxLines: 100,
                     style: TextStyle(
-                      fontSize: sizeType == ScreenSizeType.large ? 12.0 : 15.0,
+                      fontSize: userSettingsNotifier.todoFontSize,
                       color: darkModeNotifier.isLightTheme ? black : white,
                       decoration: isChecked
                           ? TextDecoration.lineThrough
@@ -54,8 +56,7 @@ class TodoContent extends StatelessWidget {
                           DateFormat.yMMMd().add_jm().format(remindDate),
                           maxLines: 10,
                           style: TextStyle(
-                            fontSize:
-                                sizeType == ScreenSizeType.large ? 12.0 : 15.0,
+                            fontSize: userSettingsNotifier.todoFontSize,
                             color:
                                 darkModeNotifier.isLightTheme ? black : white,
                             decoration: isChecked

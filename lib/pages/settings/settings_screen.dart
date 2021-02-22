@@ -8,6 +8,7 @@ import 'package:firebase_sample/pages/settings/select_design_screen.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/pages/settings/settings_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/switch_application_theme.dart';
+import 'package:firebase_sample/widgets/stream/switch_number_list_time.dart';
 import 'package:firebase_sample/widgets/stream/switch_toggle_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +61,11 @@ class _SettingsScreen extends StatelessWidget {
             const SizedBox(height: 10),
             ...buildProfileSection(context),
             const SizedBox(height: 20),
+            ...buildAppThemeSettingsSection(context),
+            const SizedBox(height: 20),
             ...buildAppSettingsSection(context),
-            const SizedBox(height: 30)
+            const SizedBox(height: 20),
+            ...buildFontSizeSettingsSection(context),
           ],
         ),
       ),
@@ -90,11 +94,11 @@ class _SettingsScreen extends StatelessWidget {
     ];
   }
 
-  List<Widget> buildAppSettingsSection(BuildContext context) {
+  List<Widget> buildAppThemeSettingsSection(BuildContext context) {
     final notifier = Provider.of<SettingsScreenNotifier>(context);
     return [
       SettingTitle(
-        title: AppLocalizations.of(context).translate('accountSettings'),
+        title: AppLocalizations.of(context).translate('themeSettings'),
       ),
       SettingRow(
         title: AppLocalizations.of(context).translate('editAppTheme'),
@@ -115,6 +119,15 @@ class _SettingsScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    ];
+  }
+
+  List<Widget> buildAppSettingsSection(BuildContext context) {
+    final notifier = Provider.of<SettingsScreenNotifier>(context);
+    return [
+      SettingTitle(
+        title: AppLocalizations.of(context).translate('todoSettings'),
       ),
       SwitchToggleListTile(
         switchFieldName: 'displayCompletedTodo',
@@ -139,6 +152,19 @@ class _SettingsScreen extends StatelessWidget {
         onChanged: (bool value) {
           notifier.updateIsSortCategoryByCreatedAt(value);
         },
+      ),
+    ];
+  }
+
+  List<Widget> buildFontSizeSettingsSection(BuildContext context) {
+    final notifier = Provider.of<SettingsScreenNotifier>(context);
+    return [
+      SettingTitle(
+        title: AppLocalizations.of(context).translate('todoFontSizeSettings'),
+      ),
+      SwitchNumberListTile(
+        switchFieldName: 'todoFontSize',
+        onTap: notifier.showModalPicker,
       ),
     ];
   }
