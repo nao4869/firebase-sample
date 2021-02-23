@@ -96,7 +96,7 @@ class _SettingsScreen extends StatelessWidget {
             context: context,
             builder: (_) {
               return CmnDialog(context).showDialogWidget(
-                onPositiveCallback: () {},
+                onPositiveCallback: notifier.removeCurrentUserFromGroup,
                 titleStr:
                     AppLocalizations.of(context).translate('deleteAccount'),
                 titleColor: notifier.switchAppThemeNotifier.currentTheme,

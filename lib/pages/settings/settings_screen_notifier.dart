@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
+import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
@@ -227,5 +228,21 @@ class SettingsScreenNotifier extends ChangeNotifier {
     // User Providerの値も更新
     userNotifier.updateTodoFontSize(num.parse(selectedFontSize));
     Navigator.of(context).pop();
+  }
+
+  void removeCurrentUserFromGroup() {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    final deviceNotifier =
+        Provider.of<DeviceIdProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .update({
+      'deviceIds': FieldValue.arrayRemove(
+          [deviceNotifier.androidUid ?? deviceNotifier.iosUid])
+    });
   }
 }
