@@ -104,13 +104,10 @@ class EditGroupNameScreenNotifier extends ChangeNotifier {
       context: context,
       builder: (_) {
         return CmnDialog(context).showDialogWidget(
-          onPositiveCallback: showQrCodeDialog,
-          onNegativeCallback: showGroupIdDialog,
+          onPositiveCallback: showGroupIdDialog,
           titleStr: AppLocalizations.of(context).translate('invitationMethod'),
           titleColor: switchAppThemeNotifier.currentTheme,
           positiveBtnStr:
-              AppLocalizations.of(context).translate('inviteByQrCode'),
-          negativeBtnStr:
               AppLocalizations.of(context).translate('inviteByGroupId'),
         );
       },
