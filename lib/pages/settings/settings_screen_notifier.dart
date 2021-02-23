@@ -233,12 +233,12 @@ class SettingsScreenNotifier extends ChangeNotifier {
     Navigator.of(context).pop();
   }
 
-  void removeCurrentUserFromGroup() {
+  Future<void> removeCurrentUserFromGroup() async {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     final deviceNotifier =
         Provider.of<DeviceIdProvider>(context, listen: false);
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('versions')
         .doc('v2')
         .collection('groups')
@@ -247,6 +247,37 @@ class SettingsScreenNotifier extends ChangeNotifier {
       'deviceIds': FieldValue.arrayRemove(
           [deviceNotifier.androidUid ?? deviceNotifier.iosUid])
     });
+    await removeGroupOrRemoveUser();
+  }
+
+  Future<void> removeGroupOrRemoveUser() async {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    final groupReference = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .get();
+
+    // 他にグループ内にユーザーが存在しない
+    if (groupReference.data()['deviceIds'].length == 0) {
+      await FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v2')
+          .collection('groups')
+          .doc(groupNotifier.groupId)
+          .delete();
+    } else {
+      FirebaseFirestore.instance
+          .collection('versions')
+          .doc('v2')
+          .collection('groups')
+          .doc(groupNotifier.groupId)
+          .collection('users')
+          .doc(userNotifier.referenceToUser)
+          .delete();
+    }
   }
 
   Future<bool> removeAccountDialog() {
