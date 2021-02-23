@@ -8,9 +8,12 @@ import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/settings/edit_user_icon_screen.dart';
 import 'package:firebase_sample/pages/settings/edit_user_name_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/font_size_picker_bottom_sheet.dart';
+import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../app_localizations.dart';
 
 class SettingsScreenNotifier extends ChangeNotifier {
   SettingsScreenNotifier({
@@ -244,5 +247,41 @@ class SettingsScreenNotifier extends ChangeNotifier {
       'deviceIds': FieldValue.arrayRemove(
           [deviceNotifier.androidUid ?? deviceNotifier.iosUid])
     });
+  }
+
+  Future<bool> removeAccountDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (_) {
+        return CmnDialog(context).showDialogWidget(
+          onPositiveCallback: confirmDeleteAccount,
+          titleStr: AppLocalizations.of(context).translate('deleteAccount'),
+          titleColor: switchAppThemeNotifier.currentTheme,
+          msgStr: AppLocalizations.of(context)
+              .translate('deleteAccountDescription'),
+          positiveBtnStr:
+              AppLocalizations.of(context).translate('proceedToDelete'),
+          negativeBtnStr: AppLocalizations.of(context).translate('cancel'),
+        );
+      },
+    );
+  }
+
+  Future<bool> confirmDeleteAccount() {
+    return showDialog<bool>(
+      context: context,
+      builder: (_) {
+        return CmnDialog(context).showDialogWidget(
+          onPositiveCallback: removeCurrentUserFromGroup,
+          titleStr: AppLocalizations.of(context).translate('confirmation'),
+          titleColor: switchAppThemeNotifier.currentTheme,
+          msgStr:
+              AppLocalizations.of(context).translate('confirmDeleteAccount'),
+          positiveBtnStr:
+              AppLocalizations.of(context).translate('proceedToDelete'),
+          negativeBtnStr: AppLocalizations.of(context).translate('cancel'),
+        );
+      },
+    );
   }
 }

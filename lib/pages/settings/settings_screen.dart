@@ -91,25 +91,7 @@ class _SettingsScreen extends StatelessWidget {
       ),
       SettingRow(
         title: AppLocalizations.of(context).translate('deleteAccount'),
-        onTap: () {
-          showDialog<bool>(
-            context: context,
-            builder: (_) {
-              return CmnDialog(context).showDialogWidget(
-                onPositiveCallback: notifier.removeCurrentUserFromGroup,
-                titleStr:
-                    AppLocalizations.of(context).translate('deleteAccount'),
-                titleColor: notifier.switchAppThemeNotifier.currentTheme,
-                msgStr: AppLocalizations.of(context)
-                    .translate('deleteAccountDescription'),
-                positiveBtnStr:
-                    AppLocalizations.of(context).translate('proceedToDelete'),
-                negativeBtnStr:
-                    AppLocalizations.of(context).translate('cancel'),
-              );
-            },
-          );
-        },
+        onTap: notifier.removeAccountDialog,
       ),
     ];
   }

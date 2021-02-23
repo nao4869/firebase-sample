@@ -196,6 +196,8 @@
   "deleteAccount": "Delete current account",
   "proceedToDelete": "Proceed to delete account",
   "deleteAccountDescription": "If you would like to join to other groups, please delete current account by following button and re-install the app.\n\nAfter deleting account, you can register with another invitation code.",
+  "confirmation": "Confirmation",
+  "confirmDeleteAccount": "Are you sure you want to delete your account and all associated data?\n\nThere is no undo for this action.",
   "editProfileTitle": "Edit Profile",
   "editGroupName": "Edit Group Name",
   "groupName": "Group name",

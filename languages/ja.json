@@ -195,6 +195,8 @@
   "deleteAccount": "アカウントを削除する",
   "proceedToDelete": "アカウント削除へ進む",
   "deleteAccountDescription": "現在のアカウントを削除することで、他のグループに参加することができます。\nアプリを再インストールした後に、再度招待コードをご入力ください。",
+  "confirmation": "確認",
+  "confirmDeleteAccount": "本当にユーザーを削除し、関連する全てのデータを削除しますか？\n\nこの操作は取り消すことはできませんが、グループ内の他のユーザーの情報は保持されます。",
   "editProfileTitle": "プロフィールを編集する",
   "editGroupName": "編集する",
   "groupName": "グループ名",
