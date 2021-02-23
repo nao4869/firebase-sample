@@ -116,7 +116,7 @@ class _CustomTabsState extends State<CustomTabView>
               fontSize: 12.0,
             ),
             unselectedLabelColor: white,
-            indicatorColor: themeProvider.currentTheme,
+            indicatorColor: white,
             tabs: List.generate(
               widget.itemCount,
               (index) => widget.tabBuilder(
