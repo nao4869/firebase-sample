@@ -136,6 +136,24 @@ class SettingsScreenNotifier extends ChangeNotifier {
     userNotifier.updateIsSortCategoryByCreatedAt(isSortCategoryByCreatedAt);
   }
 
+  void updateIsDisplayCheckBox(bool isDisplayCheckBox) {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
+        .update({"isDisplayCheckBox": isDisplayCheckBox});
+
+    // User Providerの値も更新
+    userNotifier.updateIsDisplayCheckBox(isDisplayCheckBox);
+  }
+
   final List<String> items = [
     '13.0',
     '14.0',

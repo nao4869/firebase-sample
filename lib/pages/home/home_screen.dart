@@ -281,27 +281,31 @@ class _HomeScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: ListTile(
-                                  leading: SizedBox(
-                                    width: 40,
-                                    child: CircularCheckBox(
-                                      value: document['isChecked'],
-                                      checkColor: Colors.white,
-                                      activeColor: index >= colorList.length
-                                          ? colorList[0]
-                                          : colorList[index],
-                                      inactiveColor: index >= colorList.length
-                                          ? colorList[0]
-                                          : colorList[index],
-                                      disabledColor: Colors.grey,
-                                      onChanged: (val) {
-                                        notifier.updateTodoIsChecked(
-                                          'to-dos',
-                                          document.id,
-                                          !document['isChecked'],
-                                        );
-                                      },
-                                    ),
-                                  ),
+                                  leading: userNotifier.isDisplayCheckBox
+                                      ? SizedBox(
+                                          width: 40,
+                                          child: CircularCheckBox(
+                                            value: document['isChecked'],
+                                            checkColor: Colors.white,
+                                            activeColor:
+                                                index >= colorList.length
+                                                    ? colorList[0]
+                                                    : colorList[index],
+                                            inactiveColor:
+                                                index >= colorList.length
+                                                    ? colorList[0]
+                                                    : colorList[index],
+                                            disabledColor: Colors.grey,
+                                            onChanged: (val) {
+                                              notifier.updateTodoIsChecked(
+                                                'to-dos',
+                                                document.id,
+                                                !document['isChecked'],
+                                              );
+                                            },
+                                          ),
+                                        )
+                                      : null,
                                   title: TodoContent(
                                     onPressed: () {
                                       notifier.editTodo(

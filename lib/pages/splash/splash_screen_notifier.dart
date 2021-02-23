@@ -46,6 +46,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   bool _isDisplayOnlyCompletedTodo = false;
   bool _isSortByCreatedAt = false;
   bool _isSortCategoryByCreatedAt = false;
+  bool _isDisplayCheckBox = false;
   bool _isRegistrationCompleted = false;
   double _todoFontSize = 13.0;
   String _groupId = '';
@@ -327,6 +328,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           snapshot.data()['isDisplayOnlyCompletedTodo'];
       _isSortByCreatedAt = snapshot.data()['isSortByCreatedAt'];
       _isSortCategoryByCreatedAt = snapshot.data()['isSortCategoryByCreatedAt'];
+      _isDisplayCheckBox = snapshot.data()['isDisplayCheckBox'];
       _todoFontSize = snapshot.data()['todoFontSize'];
     });
 
@@ -338,6 +340,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       isDisplayOnlyCompletedTodo: _isDisplayOnlyCompletedTodo,
       isSortByCreatedAt: _isSortByCreatedAt,
       isSortCategoryByCreatedAt: _isSortCategoryByCreatedAt,
+      isDisplayCheckBox: _isDisplayCheckBox ?? true,
       todoFontSize: _todoFontSize,
       currentParentCategoryIdReference: _parentCategoryId,
     );
@@ -369,6 +372,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       'isDisplayOnlyCompletedTodo': false,
       'isSortByCreatedAt': true,
       'isSortCategoryByCreatedAt': true,
+      'isDisplayCheckBox': true,
       'todoFontSize': 13.0,
       'backgroundDesignId': 0,
       'backgroundImagePath': '',

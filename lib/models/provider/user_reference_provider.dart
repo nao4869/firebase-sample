@@ -10,6 +10,7 @@ class UserReferenceProvider with ChangeNotifier {
     this.isDisplayOnlyCompletedTodo,
     this.isSortByCreatedAt,
     this.isSortCategoryByCreatedAt,
+    this.isDisplayCheckBox,
   });
 
   String referenceToUser;
@@ -20,6 +21,7 @@ class UserReferenceProvider with ChangeNotifier {
   bool isDisplayOnlyCompletedTodo;
   bool isSortByCreatedAt;
   bool isSortCategoryByCreatedAt;
+  bool isDisplayCheckBox;
 
   void initializeUserSettings({
     String userReference,
@@ -28,6 +30,7 @@ class UserReferenceProvider with ChangeNotifier {
     bool isDisplayOnlyCompletedTodo,
     bool isSortByCreatedAt,
     bool isSortCategoryByCreatedAt,
+    bool isDisplayCheckBox,
     String currentParentCategoryIdReference,
     double todoFontSize,
   }) {
@@ -37,6 +40,7 @@ class UserReferenceProvider with ChangeNotifier {
     this.isDisplayOnlyCompletedTodo = isDisplayOnlyCompletedTodo;
     this.isSortByCreatedAt = isSortByCreatedAt;
     this.isSortCategoryByCreatedAt = isSortCategoryByCreatedAt;
+    this.isDisplayCheckBox = isDisplayCheckBox;
     this.currentParentCategoryIdReference = currentParentCategoryIdReference;
     this.todoFontSize = todoFontSize;
   }
@@ -59,6 +63,10 @@ class UserReferenceProvider with ChangeNotifier {
 
   void updateIsSortByCreatedAt(bool updated) {
     isSortByCreatedAt = updated;
+  }
+
+  void updateIsDisplayCheckBox(bool updated) {
+    isDisplayCheckBox = updated;
   }
 
   void updateIsSortCategoryByCreatedAt(bool updated) {

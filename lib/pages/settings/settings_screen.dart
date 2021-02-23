@@ -63,9 +63,9 @@ class _SettingsScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ...buildAppThemeSettingsSection(context),
             const SizedBox(height: 20),
-            ...buildAppSettingsSection(context),
-            const SizedBox(height: 20),
             ...buildFontSizeSettingsSection(context),
+            const SizedBox(height: 20),
+            ...buildAppSettingsSection(context),
           ],
         ),
       ),
@@ -151,6 +151,12 @@ class _SettingsScreen extends StatelessWidget {
         switchFieldName: 'isSortCategoryByCreatedAt',
         onChanged: (bool value) {
           notifier.updateIsSortCategoryByCreatedAt(value);
+        },
+      ),
+      SwitchToggleListTile(
+        switchFieldName: 'isDisplayCheckBox',
+        onChanged: (bool value) {
+          notifier.updateIsDisplayCheckBox(value);
         },
       ),
     ];
