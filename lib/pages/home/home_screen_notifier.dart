@@ -22,6 +22,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_sample/extensions/set_image_path.dart';
@@ -48,7 +49,37 @@ class HomeScreenNotifier extends ChangeNotifier {
         size: MediaQuery.of(context).size,
         pixelRatio: MediaQuery.of(context).devicePixelRatio);
     sizeType = screenSize.specifyScreenSizeType();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await rateMyApp.init();
+      if (rateMyApp.shouldOpenDialog) {
+        rateMyApp.showRateDialog(
+          context,
+          title: AppLocalizations.of(context).translate('doReview'),
+          message: AppLocalizations.of(context).translate('ifYouLikeApp'),
+          rateButton: AppLocalizations.of(context).translate('doReview'),
+          noButton: AppLocalizations.of(context).translate('notNow'),
+          laterButton: AppLocalizations.of(context).translate('later'),
+          listener: (button) {
+            // The button click listener (useful if you want to cancel the click event).
+            switch (button) {
+              case RateMyAppDialogButton.rate:
+                rateMyApp.launchStore();
+                break;
+              case RateMyAppDialogButton.later:
+                debugPrint('Clicked on "Later".');
+                break;
+              case RateMyAppDialogButton.no:
+                debugPrint('Clicked on "No".');
+                break;
+            }
+            return true; // Return false if you want to cancel the click event.
+          },
+        );
+      }
+    });
   }
+
   final BuildContext context;
   final CurrentParentCategoryIdProvider parentCategoryIdNotifier;
   final nameFieldFormKey = GlobalKey<FormState>();
@@ -80,6 +111,17 @@ class HomeScreenNotifier extends ChangeNotifier {
 
   Animation<double> rotationAnimation;
   Color fabColor = Colors.blue;
+
+  /// 評価ポップアップ表示用のライブラリインスタンス
+  RateMyApp rateMyApp = RateMyApp(
+    preferencesPrefix: 'rateMyApp_ShareDo',
+    minDays: 0, // 0の際には、初日でも表示可能
+    minLaunches: 2, // minDaysを経過し、最低起動回数を超えた際に表示
+    remindDays: 1, // 再表示時までの、起動最低日数
+    remindLaunches: 2, // 再表示時までの、起動回数
+    appStoreIdentifier: '1553758427',
+    googlePlayIdentifier: 'com.share.todo.list',
+  );
 
   @override
   void dispose() {
