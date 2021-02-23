@@ -22,6 +22,8 @@ class SettingsScreenNotifier extends ChangeNotifier {
         size: MediaQuery.of(context).size,
         pixelRatio: MediaQuery.of(context).devicePixelRatio);
     sizeType = screenSize.specifyScreenSizeType();
+    selectedFontSize = userNotifier.todoFontSize.toString();
+    setFontSizeIndex();
   }
 
   final BuildContext context;
@@ -34,7 +36,7 @@ class SettingsScreenNotifier extends ChangeNotifier {
   ScreenSizeType sizeType;
 
   /// ピッカー用選択済み、選択候補アイテム
-  String selectedFontSize = '14.0';
+  String selectedFontSize = '13.0';
   int selectedFontSizeIndex = 0;
 
   // ダークモード切り替え関数
@@ -135,6 +137,8 @@ class SettingsScreenNotifier extends ChangeNotifier {
   }
 
   final List<String> items = [
+    '13.0',
+    '14.0',
     '15.0',
     '16.0',
     '17.0',
@@ -146,34 +150,33 @@ class SettingsScreenNotifier extends ChangeNotifier {
   /// Notifier生成時に、カテゴリー名の文字サイズを初期化
   void setFontSizeIndex() {
     final size = userNotifier.todoFontSize;
-    if (size == 15.0) {
+
+    if (size == 13.0) {
       selectedFontSizeIndex = 0;
-    } else if (size == 16.0) {
+    } else if (size == 14.0) {
       selectedFontSizeIndex = 1;
-    } else if (size == 17.0) {
+    } else if (size == 15.0) {
       selectedFontSizeIndex = 2;
-    } else if (size == 18.0) {
+    } else if (size == 16.0) {
       selectedFontSizeIndex = 3;
-    } else if (size == 19.0) {
+    } else if (size == 17.0) {
       selectedFontSizeIndex = 4;
-    } else {
+    } else if (size == 18.0) {
       selectedFontSizeIndex = 5;
+    } else if (size == 19.0) {
+      selectedFontSizeIndex = 6;
+    } else {
+      selectedFontSizeIndex = 7;
     }
   }
 
   void showModalPicker() {
-    final userSettingsNotifier =
-        Provider.of<UserReferenceProvider>(context, listen: false);
     showModalBottomSheet<void>(
       context: context,
       isDismissible: false,
       builder: (BuildContext context) {
         return FontSizePickerBottomSheet(
-          onPressedDone: () {
-            userSettingsNotifier
-                .updateTodoFontSize(num.parse(selectedFontSize));
-            Navigator.of(context).pop();
-          },
+          onPressedDone: updateFireStoreTodoFontSize,
           onSelectedItemChanged: onSelectedFontSizeChanged,
           items: items,
           selectedIndex: selectedFontSizeIndex,
@@ -187,5 +190,24 @@ class SettingsScreenNotifier extends ChangeNotifier {
     selectedFontSize = items[index];
     selectedFontSizeIndex = index;
     notifyListeners();
+  }
+
+  void updateFireStoreTodoFontSize() {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
+        .update({"todoFontSize": num.parse(selectedFontSize)});
+
+    // User Providerの値も更新
+    userNotifier.updateTodoFontSize(num.parse(selectedFontSize));
+    Navigator.of(context).pop();
   }
 }

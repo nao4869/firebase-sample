@@ -47,6 +47,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   bool _isSortByCreatedAt = false;
   bool _isSortCategoryByCreatedAt = false;
   bool _isRegistrationCompleted = false;
+  double _todoFontSize = 13.0;
   String _groupId = '';
   String _parentCategoryId = '';
   String _deviceId;
@@ -326,6 +327,7 @@ class SplashScreenNotifier extends ChangeNotifier {
           snapshot.data()['isDisplayOnlyCompletedTodo'];
       _isSortByCreatedAt = snapshot.data()['isSortByCreatedAt'];
       _isSortCategoryByCreatedAt = snapshot.data()['isSortCategoryByCreatedAt'];
+      _todoFontSize = snapshot.data()['todoFontSize'];
     });
 
     parentCategoryIdNotifier.updateCurrentParentCategoryId(_parentCategoryId);
@@ -351,6 +353,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     userNotifier.updateIsDisplayOnlyCompletedTodo(_isDisplayOnlyCompletedTodo);
     userNotifier.updateIsSortByCreatedAt(_isSortByCreatedAt);
     userNotifier.updateIsSortCategoryByCreatedAt(_isSortCategoryByCreatedAt);
+    userNotifier.updateTodoFontSize(_todoFontSize);
     userNotifier.updateUserSettingsReference(userSettingsReference);
   }
 
@@ -376,6 +379,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       'isDisplayOnlyCompletedTodo': false,
       'isSortByCreatedAt': true,
       'isSortCategoryByCreatedAt': true,
+      'todoFontSize': 13.0,
       'backgroundDesignId': 0,
       'backgroundImagePath': '',
       'currentParentCategoryId': parentCategoryId,

@@ -80,7 +80,7 @@ void main() async {
             isDisplayCompletedTodo: true,
             isSortByCreatedAt: true,
             isSortCategoryByCreatedAt: true,
-            todoFontSize: 15.0,
+            todoFontSize: 13.0,
           ),
         ),
         ChangeNotifierProvider(
