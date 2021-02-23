@@ -21,6 +21,26 @@ class UserReferenceProvider with ChangeNotifier {
   bool isSortByCreatedAt;
   bool isSortCategoryByCreatedAt;
 
+  void initializeUserSettings({
+    String userReference,
+    String userSettingsReference,
+    bool isDisplayCompletedTodo,
+    bool isDisplayOnlyCompletedTodo,
+    bool isSortByCreatedAt,
+    bool isSortCategoryByCreatedAt,
+    String currentParentCategoryIdReference,
+    double todoFontSize,
+  }) {
+    this.referenceToUser = userReference;
+    this.userSettingsReference = userSettingsReference;
+    this.isDisplayCompletedTodo = isDisplayCompletedTodo;
+    this.isDisplayOnlyCompletedTodo = isDisplayOnlyCompletedTodo;
+    this.isSortByCreatedAt = isSortByCreatedAt;
+    this.isSortCategoryByCreatedAt = isSortCategoryByCreatedAt;
+    this.currentParentCategoryIdReference = currentParentCategoryIdReference;
+    this.todoFontSize = todoFontSize;
+  }
+
   void updateUserReference(String newUserReference) {
     referenceToUser = newUserReference;
   }

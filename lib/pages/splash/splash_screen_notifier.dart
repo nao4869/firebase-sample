@@ -331,30 +331,20 @@ class SplashScreenNotifier extends ChangeNotifier {
     });
 
     parentCategoryIdNotifier.updateCurrentParentCategoryId(_parentCategoryId);
-    // ProviderのUser参照を更新
-    updateUserSettingsNotifier(
-      _userSettingsReference,
-      _parentCategoryId,
+    userNotifier.initializeUserSettings(
+      userReference: _referenceToUser,
+      userSettingsReference: _userSettingsReference,
+      isDisplayCompletedTodo: _isDisplayCompletedTodo,
+      isDisplayOnlyCompletedTodo: _isDisplayOnlyCompletedTodo,
+      isSortByCreatedAt: _isSortByCreatedAt,
+      isSortCategoryByCreatedAt: _isSortCategoryByCreatedAt,
+      todoFontSize: _todoFontSize,
+      currentParentCategoryIdReference: _parentCategoryId,
     );
 
     // 設定中の背景色がある際には、Providerで保持する
     switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
     _isRegistrationCompleted = true;
-  }
-
-  void updateUserSettingsNotifier(
-    String userSettingsReference,
-    String currentParentCategoryId,
-  ) {
-    // ProviderのUser参照を更新
-    userNotifier.updateUserReference(_referenceToUser);
-    userNotifier.updateParentCategoryReference(currentParentCategoryId);
-    userNotifier.updateCompletedTodo(_isDisplayCompletedTodo);
-    userNotifier.updateIsDisplayOnlyCompletedTodo(_isDisplayOnlyCompletedTodo);
-    userNotifier.updateIsSortByCreatedAt(_isSortByCreatedAt);
-    userNotifier.updateIsSortCategoryByCreatedAt(_isSortCategoryByCreatedAt);
-    userNotifier.updateTodoFontSize(_todoFontSize);
-    userNotifier.updateUserSettingsReference(userSettingsReference);
   }
 
   // ユーザー設定コレクションを初期化 - 初回ログイン、招待初回登録時実行
