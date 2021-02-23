@@ -265,7 +265,7 @@ class CmnDialog {
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 30,
+          horizontal: 10,
           vertical: 20,
         ),
         child: IntrinsicWidth(
@@ -294,20 +294,26 @@ class CmnDialog {
                 //--- 以下ボタンエリア -----------------
                 Column(
                   children: <Widget>[
-                    _getBtn(
-                      // PositiveButton
-                      btnStr: positiveBtnStr,
-                      btnBgColor: themeProvider.currentTheme,
-                      btnTextColor: COLOR_WHITE,
-                      isCloseDialog: isPositiveCloseDialog,
-                      onPressedCallback: onPositiveCallback,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: _getBtn(
+                        // PositiveButton
+                        btnStr: positiveBtnStr,
+                        btnBgColor: themeProvider.currentTheme,
+                        btnTextColor: COLOR_WHITE,
+                        isCloseDialog: isPositiveCloseDialog,
+                        onPressedCallback: onPositiveCallback,
+                      ),
                     ),
-                    _getBtn(
-                      // NegativeButton
-                      btnStr: negativeBtnStr,
-                      btnBgColor: secondButtonColor,
-                      btnTextColor: COLOR_DLGBTN_ACCENT_NONE,
-                      onPressedCallback: onNegativeCallback,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: _getBtn(
+                        // NegativeButton
+                        btnStr: negativeBtnStr,
+                        btnBgColor: secondButtonColor,
+                        btnTextColor: COLOR_DLGBTN_ACCENT_NONE,
+                        onPressedCallback: onNegativeCallback,
+                      ),
                     ),
                   ],
                 )
@@ -546,7 +552,6 @@ class CmnDialog {
       msgStr, // ダイアログメッセージ文字列
       textAlign: TextAlign.center, // 中央折返し
       style: const TextStyle(
-//		fontFamily: "Roboto",
         fontSize: FONTSIZE_DLG_MSG,
         fontWeight: FONTWEIGHT_DLG_MSG,
         color: COLOR_TEXT_TONEDOWN,

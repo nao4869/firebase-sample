@@ -8,6 +8,7 @@ import 'package:firebase_sample/pages/settings/select_design_screen.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/pages/settings/settings_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/switch_application_theme.dart';
+import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:firebase_sample/widgets/stream/switch_number_list_time.dart';
 import 'package:firebase_sample/widgets/stream/switch_toggle_list_tile.dart';
 import 'package:flutter/cupertino.dart';
@@ -66,6 +67,7 @@ class _SettingsScreen extends StatelessWidget {
             ...buildFontSizeSettingsSection(context),
             const SizedBox(height: 20),
             ...buildAppSettingsSection(context),
+            const SizedBox(height: 50),
           ],
         ),
       ),
@@ -88,14 +90,31 @@ class _SettingsScreen extends StatelessWidget {
         onTap: notifier.navigateEditUserIconScreen,
       ),
       SettingRow(
-        title: AppLocalizations.of(context).translate('authenticatePhone'),
-        onTap: () {},
+        title: AppLocalizations.of(context).translate('deleteAccount'),
+        onTap: () {
+          showDialog<bool>(
+            context: context,
+            builder: (_) {
+              return CmnDialog(context).showDialogWidget(
+                onPositiveCallback: () {},
+                titleStr:
+                    AppLocalizations.of(context).translate('deleteAccount'),
+                titleColor: notifier.switchAppThemeNotifier.currentTheme,
+                msgStr: AppLocalizations.of(context)
+                    .translate('deleteAccountDescription'),
+                positiveBtnStr:
+                    AppLocalizations.of(context).translate('proceedToDelete'),
+                negativeBtnStr:
+                    AppLocalizations.of(context).translate('cancel'),
+              );
+            },
+          );
+        },
       ),
     ];
   }
 
   List<Widget> buildAppThemeSettingsSection(BuildContext context) {
-    final notifier = Provider.of<SettingsScreenNotifier>(context);
     return [
       SettingTitle(
         title: AppLocalizations.of(context).translate('themeSettings'),
