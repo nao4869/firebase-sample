@@ -241,5 +241,7 @@
   "noRemindDate": "リマインドなし",
   "updateTodo": "Todoを更新する",
   "editParentCategory": "親カテゴリーを編集する",
-  "deleteParentCategory": "親カテゴリーを削除する"
+  "deleteParentCategory": "親カテゴリーを削除する",
+  "accountDeleted": "退会済みです",
+  "reinstallDescription": "既に退会処理が完了し、アカウントは削除されています。再インストール後に再登録をお願い致します。"
 }

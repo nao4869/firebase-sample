@@ -7,6 +7,7 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/provider/withdrawal_status_provider.dart';
 import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/pages/splash/splash_screen.dart';
@@ -90,6 +91,11 @@ void main() async {
           create: (_) => DeviceIdProvider(
             androidUid: deviceData['androidId'],
             iosUid: deviceData['identifierForVendor'],
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => WithdrawalStatusProvider(
+            isWithdrawn: false,
           ),
         ),
       ],

@@ -100,7 +100,7 @@ class _UserRegistrationScreen extends StatelessWidget {
                     isEnable: true,
                     title: AppLocalizations.of(context).translate('register'),
                     color: themeProvider.currentTheme,
-                    onPressed: notifier.checkInvitationCodeValidity,
+                    onPressed: notifier.checkWithdrawalStatusAndTransit,
                   ),
                 ],
               ),

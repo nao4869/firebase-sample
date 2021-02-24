@@ -4,9 +4,11 @@ import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/provider/withdrawal_status_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/settings/edit_user_icon_screen.dart';
 import 'package:firebase_sample/pages/settings/edit_user_name_screen.dart';
+import 'package:firebase_sample/pages/splash/user_registration_screen.dart';
 import 'package:firebase_sample/widgets/bottom_sheet/font_size_picker_bottom_sheet.dart';
 import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,6 +40,8 @@ class SettingsScreenNotifier extends ChangeNotifier {
 
   ScreenSize screenSize;
   ScreenSizeType sizeType;
+  bool _isWithdrawn = false;
+  bool get getWithdrawStatus => _isWithdrawn;
 
   /// ピッカー用選択済み、選択候補アイテム
   String selectedFontSize = '13.0';
@@ -60,6 +64,14 @@ class SettingsScreenNotifier extends ChangeNotifier {
     Navigator.of(context, rootNavigator: true).push(
       CupertinoPageRoute(
         builder: (context) => EditUserIconScreen(),
+      ),
+    );
+  }
+
+  Future<void> navigateRegistrationScreen() async {
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) => UserRegistrationScreen(),
       ),
     );
   }
@@ -253,12 +265,17 @@ class SettingsScreenNotifier extends ChangeNotifier {
   Future<void> removeGroupOrRemoveUser() async {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
+    final withdrawalStatusNotifier =
+        Provider.of<WithdrawalStatusProvider>(context, listen: false);
     final groupReference = await FirebaseFirestore.instance
         .collection('versions')
         .doc('v2')
         .collection('groups')
         .doc(groupNotifier.groupId)
         .get();
+
+    _isWithdrawn = true;
+    notifyListeners();
 
     // グループ内に他ユーザーが存在しない
     if (groupReference.data()['deviceIds'].length == 0) {
@@ -270,8 +287,10 @@ class SettingsScreenNotifier extends ChangeNotifier {
           .delete();
     } else {
       // グループ内に別ユーザーが存在
+      withdrawalStatusNotifier.updateWithdrawalStatus(true);
       deleteCurrentUserSettingDocument();
       deleteCurrentUserDocument();
+      navigateRegistrationScreen();
     }
   }
 
@@ -325,7 +344,7 @@ class SettingsScreenNotifier extends ChangeNotifier {
     return showDialog<bool>(
       context: context,
       builder: (_) {
-        return CmnDialog(context).showDialogWidget(
+        return CmnDialog(context).showWithdrawDialogWidget(
           onPositiveCallback: removeCurrentUserFromGroup,
           titleStr: AppLocalizations.of(context).translate('confirmation'),
           titleColor: switchAppThemeNotifier.currentTheme,

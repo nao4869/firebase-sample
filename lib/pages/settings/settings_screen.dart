@@ -38,6 +38,7 @@ class SettingsScreen extends StatelessWidget {
 
 class _SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
+    final notifier = Provider.of<SettingsScreenNotifier>(context);
     final theme = Provider.of<ThemeProvider>(context);
     final switchAppThemeNotifier = Provider.of<SwitchAppThemeProvider>(context);
     return Scaffold(
@@ -54,23 +55,25 @@ class _SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 10),
-            ...buildProfileSection(context),
-            const SizedBox(height: 20),
-            ...buildAppThemeSettingsSection(context),
-            const SizedBox(height: 20),
-            ...buildFontSizeSettingsSection(context),
-            const SizedBox(height: 20),
-            ...buildAppSettingsSection(context),
-            const SizedBox(height: 50),
-          ],
-        ),
-      ),
+      body: notifier.getWithdrawStatus
+          ? Container()
+          : SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(height: 10),
+                  ...buildProfileSection(context),
+                  const SizedBox(height: 20),
+                  ...buildAppThemeSettingsSection(context),
+                  const SizedBox(height: 20),
+                  ...buildFontSizeSettingsSection(context),
+                  const SizedBox(height: 20),
+                  ...buildAppSettingsSection(context),
+                  const SizedBox(height: 50),
+                ],
+              ),
+            ),
     );
   }
 

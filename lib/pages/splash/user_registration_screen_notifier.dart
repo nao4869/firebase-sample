@@ -4,11 +4,13 @@ import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
+import 'package:firebase_sample/models/provider/withdrawal_status_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/splash/splash_screen.dart';
 import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_localizations.dart';
 
@@ -76,6 +78,17 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
     groupFormKey.currentState.reset();
   }
 
+  void checkWithdrawalStatusAndTransit() {
+    final withdrawalStatusNotifier =
+        Provider.of<WithdrawalStatusProvider>(context, listen: false);
+
+    if (withdrawalStatusNotifier.isWithdrawn) {
+      reInstallDescriptionDialog();
+    } else {
+      checkInvitationCodeValidity();
+    }
+  }
+
   void checkInvitationCodeValidity() async {
     final fireStoreInstance = FirebaseFirestore.instance;
     if (invitationCode.isNotEmpty) {
@@ -120,6 +133,21 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
           invitationCode: isInvitedUser ? invitationCode : null,
         ),
       ),
+    );
+  }
+
+  Future<bool> reInstallDescriptionDialog() {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return CmnDialog(context).showWithdrawDialogWidget(
+          titleStr: AppLocalizations.of(context).translate('accountDeleted'),
+          titleColor: switchAppThemeNotifier.currentTheme,
+          msgStr:
+              AppLocalizations.of(context).translate('reinstallDescription'),
+        );
+      },
     );
   }
 }

@@ -242,5 +242,7 @@
   "noRemindDate": "No remind date",
   "updateTodo": "Update Todo",
   "editParentCategory": "Edit parent category",
-  "deleteParentCategory": "Delete parent category"
+  "deleteParentCategory": "Delete parent category",
+  "accountDeleted": "Account has been deleted",
+  "reinstallDescription": "Your account has already been deleted. Please re-install the app to register again."
 }
