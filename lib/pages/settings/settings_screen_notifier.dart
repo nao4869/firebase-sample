@@ -260,7 +260,7 @@ class SettingsScreenNotifier extends ChangeNotifier {
         .doc(groupNotifier.groupId)
         .get();
 
-    // 他にグループ内にユーザーが存在しない
+    // グループ内に他ユーザーが存在しない
     if (groupReference.data()['deviceIds'].length == 0) {
       await FirebaseFirestore.instance
           .collection('versions')
@@ -269,15 +269,38 @@ class SettingsScreenNotifier extends ChangeNotifier {
           .doc(groupNotifier.groupId)
           .delete();
     } else {
-      FirebaseFirestore.instance
-          .collection('versions')
-          .doc('v2')
-          .collection('groups')
-          .doc(groupNotifier.groupId)
-          .collection('users')
-          .doc(userNotifier.referenceToUser)
-          .delete();
+      // グループ内に別ユーザーが存在
+      deleteCurrentUserSettingDocument();
+      deleteCurrentUserDocument();
     }
+  }
+
+  Future<void> deleteCurrentUserDocument() async {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .delete();
+  }
+
+  Future<void> deleteCurrentUserSettingDocument() async {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(userNotifier.referenceToUser)
+        .collection('userSettings')
+        .doc(userNotifier.userSettingsReference)
+        .delete();
   }
 
   Future<bool> removeAccountDialog() {
