@@ -146,6 +146,7 @@ class UserRegistrationScreenNotifier extends ChangeNotifier {
           titleColor: switchAppThemeNotifier.currentTheme,
           msgStr:
               AppLocalizations.of(context).translate('reinstallDescription'),
+          onPositiveCallback: null,
         );
       },
     );

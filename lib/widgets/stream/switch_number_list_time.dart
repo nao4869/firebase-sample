@@ -40,7 +40,7 @@ class SwitchNumberListTile extends StatelessWidget {
             onTap: onTap,
           );
         } else {
-          DocumentSnapshot currentUserSetting = snapshot?.data?.docs?.first;
+          // DocumentSnapshot currentUserSetting = snapshot?.data?.docs?.first;
           return SettingRow(
             title: AppLocalizations.of(context).translate(switchFieldName),
             onTap: onTap,

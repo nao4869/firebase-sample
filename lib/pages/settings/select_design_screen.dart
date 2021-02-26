@@ -1,6 +1,5 @@
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
-import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/settings/select_design_screen_notifier.dart';
 import 'package:firebase_sample/widgets/buttons/rounded_button.dart';
 import 'package:flutter/cupertino.dart';

@@ -1,14 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
-import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/theme_provider.dart';
-import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/pages/settings/select_design_screen.dart';
 import 'package:firebase_sample/pages/settings/setting_row.dart';
 import 'package:firebase_sample/pages/settings/settings_screen_notifier.dart';
 import 'package:firebase_sample/pages/settings/switch_application_theme.dart';
-import 'package:firebase_sample/widgets/dialog/common_dialog.dart';
 import 'package:firebase_sample/widgets/stream/switch_number_list_time.dart';
 import 'package:firebase_sample/widgets/stream/switch_toggle_list_tile.dart';
 import 'package:flutter/cupertino.dart';

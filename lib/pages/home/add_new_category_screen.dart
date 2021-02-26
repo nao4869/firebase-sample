@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/constants/colors.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
-import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
-import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/home/add_new_category_screen_notifier.dart';
 import 'package:firebase_sample/tabs/custom_tab_bar.dart';

@@ -1,7 +1,5 @@
 import 'package:firebase_sample/constants/colors.dart';
-import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CustomTabView extends StatefulWidget {
   final int itemCount;
@@ -96,8 +94,6 @@ class _CustomTabsState extends State<CustomTabView>
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider =
-        Provider.of<SwitchAppThemeProvider>(context, listen: false);
     if (widget.itemCount < 1) return widget.stub ?? Container();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
