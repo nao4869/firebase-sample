@@ -279,12 +279,9 @@ class SettingsScreenNotifier extends ChangeNotifier {
 
     // グループ内に他ユーザーが存在しない
     if (groupReference.data()['deviceIds'].length == 0) {
-      await FirebaseFirestore.instance
-          .collection('versions')
-          .doc('v2')
-          .collection('groups')
-          .doc(groupNotifier.groupId)
-          .delete();
+      withdrawalStatusNotifier.updateWithdrawalStatus(true);
+      deleteCurrentUserGroup();
+      navigateRegistrationScreen();
     } else {
       // グループ内に別ユーザーが存在
       withdrawalStatusNotifier.updateWithdrawalStatus(true);
@@ -292,6 +289,17 @@ class SettingsScreenNotifier extends ChangeNotifier {
       deleteCurrentUserDocument();
       navigateRegistrationScreen();
     }
+  }
+
+  Future<void> deleteCurrentUserGroup() async {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .delete();
   }
 
   Future<void> deleteCurrentUserDocument() async {
