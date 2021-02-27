@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
@@ -280,11 +281,13 @@ class SettingsScreenNotifier extends ChangeNotifier {
     // グループ内に他ユーザーが存在しない
     if (groupReference.data()['deviceIds'].length == 0) {
       withdrawalStatusNotifier.updateWithdrawalStatus(true);
+      deleteExistingUserIconFile();
       deleteCurrentUserGroup();
       navigateRegistrationScreen();
     } else {
       // グループ内に別ユーザーが存在
       withdrawalStatusNotifier.updateWithdrawalStatus(true);
+      deleteExistingUserIconFile();
       deleteCurrentUserSettingDocument();
       deleteCurrentUserDocument();
       navigateRegistrationScreen();
@@ -364,5 +367,28 @@ class SettingsScreenNotifier extends ChangeNotifier {
         );
       },
     );
+  }
+
+  Future<void> deleteExistingUserIconFile() async {
+    final groupNotifier =
+        Provider.of<CurrentGroupProvider>(context, listen: false);
+    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
+    final userReference = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(notifier.referenceToUser)
+        .get();
+
+    if (userReference.data()['imagePath'] != null &&
+        !(userReference.data()['imagePath'].toString().contains('assets'))) {
+      final firebase_storage.Reference existingImageStoragePath =
+          firebase_storage.FirebaseStorage.instance
+              .refFromURL(userReference.data()['imagePath']);
+
+      await existingImageStoragePath.delete();
+    }
   }
 }
