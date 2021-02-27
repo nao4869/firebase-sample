@@ -63,6 +63,7 @@ class _EditGroupNameScreen extends StatelessWidget {
             ...buildAppSettingsSection(context),
             const SizedBox(height: 30),
             _buildInvitePersonTile(context),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -73,7 +74,6 @@ class _EditGroupNameScreen extends StatelessWidget {
     final notifier = Provider.of<EditGroupNameScreenNotifier>(context);
     final theme = Provider.of<ThemeProvider>(context);
     final groupNotifier = Provider.of<CurrentGroupProvider>(context);
-    final size = MediaQuery.of(context).size;
     return [
       SettingTitle(
         title: AppLocalizations.of(context).translate('groupName'),
@@ -189,21 +189,17 @@ class _EditGroupNameScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          SizedBox(
-                            width: size.width * .57,
-                            child: Text(
-                              currentGroup != null &&
-                                      currentGroup['name'] != null
-                                  ? currentGroup['name']
-                                  : AppLocalizations.of(context)
-                                      .translate('notSetting'),
-                              style: TextStyle(
-                                color: theme.isLightTheme ? black : white,
-                                fontSize:
-                                    notifier.sizeType == ScreenSizeType.large
-                                        ? 12.0
-                                        : 16.0,
-                              ),
+                          Text(
+                            currentGroup != null && currentGroup['name'] != null
+                                ? currentGroup['name']
+                                : AppLocalizations.of(context)
+                                    .translate('notSetting'),
+                            style: TextStyle(
+                              color: theme.isLightTheme ? black : white,
+                              fontSize:
+                                  notifier.sizeType == ScreenSizeType.large
+                                      ? 12.0
+                                      : 16.0,
                             ),
                           ),
                           InkWell(
