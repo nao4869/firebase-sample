@@ -142,6 +142,15 @@ class SplashScreenNotifier extends ChangeNotifier {
         'deviceIds': FieldValue.arrayUnion([_deviceId])
       });
 
+      // 親カテゴリIDを取得
+      final parentCategoryId = await fireStoreInstance
+          .collection('versions')
+          .doc('v2')
+          .collection('groups')
+          .doc(invitationCode)
+          .collection('categories')
+          .get();
+
       // 初回起動時のみ、groupを追加
       final referenceToUser = await fireStoreInstance
           .collection('versions')
@@ -167,6 +176,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       addUserSettings(
         groupId: invitationCode,
         userId: referenceToUser.id,
+        parentCategoryId: parentCategoryId?.docs?.first?.id,
       );
     }
   }
