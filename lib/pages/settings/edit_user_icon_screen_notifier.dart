@@ -59,10 +59,10 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
     }
 
     if (_image != null) {
-      firebase_storage.Reference storageReference = firebase_storage
-          .FirebaseStorage.instance
-          .ref()
-          .child('images/${Path.basename(_image.path)}}');
+      await deleteExistingUserIconFile();
+      firebase_storage.Reference storageReference =
+          firebase_storage.FirebaseStorage.instance.ref().child(
+              'user_images/${groupNotifier.groupId}/${userReference.referenceToUser}/${Path.basename(_image.path)}}');
       isUploadingImage = true;
       notifyListeners();
       await storageReference.putFile(_image);
@@ -81,6 +81,28 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         isUploadingImage = false;
         notifyListeners();
       });
+    }
+  }
+
+  Future<void> deleteExistingUserIconFile() async {
+    final notifier = Provider.of<UserReferenceProvider>(context, listen: false);
+    final userReference = await FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(groupNotifier.groupId)
+        .collection('users')
+        .doc(notifier.referenceToUser)
+        .get();
+
+    if (userReference.data()['imagePath'] != null &&
+        !(userReference.data()['imagePath'].toString().contains('assets'))) {
+      final firebase_storage.Reference existingImageStoragePath =
+          firebase_storage.FirebaseStorage.instance
+              .ref()
+              .child(userReference.data()['imagePath']);
+
+      await existingImageStoragePath.delete();
     }
   }
 
