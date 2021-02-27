@@ -25,11 +25,15 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         size: MediaQuery.of(context).size,
         pixelRatio: MediaQuery.of(context).devicePixelRatio);
     sizeType = screenSize.specifyScreenSizeType();
+    iconsRowWidthByDevice = setIconsRowWidthByDeviceSize();
+    iconsRowHeightByDevice = setIconsRowHeightByDeviceSize();
   }
 
   String _uploadedFileURL;
   File _image;
   bool isUploadingImage = false;
+  double iconsRowWidthByDevice;
+  double iconsRowHeightByDevice;
 
   final BuildContext context;
   final SwitchAppThemeProvider switchAppThemeNotifier;
@@ -121,5 +125,25 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         .doc(notifier.referenceToUser)
         .update({'imagePath': path});
     notifyListeners();
+  }
+
+  double setIconsRowWidthByDeviceSize() {
+    if (sizeType == ScreenSizeType.large) {
+      return 70;
+    } else if (sizeType == ScreenSizeType.xxlarge) {
+      return 75;
+    } else {
+      return 90;
+    }
+  }
+
+  double setIconsRowHeightByDeviceSize() {
+    if (sizeType == ScreenSizeType.large) {
+      return 80;
+    } else if (sizeType == ScreenSizeType.xxlarge) {
+      return 80;
+    } else {
+      return 100;
+    }
   }
 }

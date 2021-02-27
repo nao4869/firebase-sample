@@ -187,9 +187,9 @@ class _EditUserIconScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0),
+        padding: const EdgeInsets.only(left: 15.0),
         child: SizedBox(
-          height: notifier.sizeType == ScreenSizeType.large ? 80 : 100,
+          height: notifier.iconsRowHeightByDevice,
           child: ListView.separated(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -203,10 +203,8 @@ class _EditUserIconScreen extends StatelessWidget {
                           'assets/images/person_icon_${index + 1}.png');
                     },
                     child: SizedBox(
-                      width:
-                          notifier.sizeType == ScreenSizeType.large ? 70 : 90,
-                      height:
-                          notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                      width: notifier.iconsRowHeightByDevice,
+                      height: notifier.iconsRowHeightByDevice,
                       child: Image.asset(
                         'assets/images/person_icon_${index + 1}.png',
                       ),
@@ -229,9 +227,9 @@ class _EditUserIconScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0),
+        padding: const EdgeInsets.only(left: 15.0),
         child: SizedBox(
-          height: notifier.sizeType == ScreenSizeType.large ? 80 : 100,
+          height: notifier.iconsRowHeightByDevice,
           child: ListView.separated(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -243,8 +241,8 @@ class _EditUserIconScreen extends StatelessWidget {
                       'assets/images/person_icon_${index + 5}.png');
                 },
                 child: SizedBox(
-                  width: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
-                  height: notifier.sizeType == ScreenSizeType.large ? 70 : 90,
+                  width: notifier.iconsRowHeightByDevice,
+                  height: notifier.iconsRowHeightByDevice,
                   child: Image.asset(
                     'assets/images/person_icon_${index + 5}.png',
                   ),
