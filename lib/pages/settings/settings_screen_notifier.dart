@@ -281,16 +281,16 @@ class SettingsScreenNotifier extends ChangeNotifier {
     // グループ内に他ユーザーが存在しない
     if (groupReference.data()['deviceIds'].length == 0) {
       withdrawalStatusNotifier.updateWithdrawalStatus(true);
-      deleteExistingUserIconFile();
-      deleteCurrentUserGroup();
-      navigateRegistrationScreen();
+      await deleteExistingUserIconFile();
+      await deleteCurrentUserGroup();
+      await navigateRegistrationScreen();
     } else {
       // グループ内に別ユーザーが存在
       withdrawalStatusNotifier.updateWithdrawalStatus(true);
-      deleteExistingUserIconFile();
-      deleteCurrentUserSettingDocument();
-      deleteCurrentUserDocument();
-      navigateRegistrationScreen();
+      await deleteExistingUserIconFile();
+      await deleteCurrentUserSettingDocument();
+      await deleteCurrentUserDocument();
+      await navigateRegistrationScreen();
     }
   }
 
