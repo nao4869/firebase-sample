@@ -62,7 +62,7 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
       await deleteExistingUserIconFile();
       firebase_storage.Reference storageReference =
           firebase_storage.FirebaseStorage.instance.ref().child(
-              'user_images/${groupNotifier.groupId}/${userReference.referenceToUser}/${Path.basename(_image.path)}}');
+              'user_images/${groupNotifier.groupId}/${userReference.referenceToUser}/${Path.basename(_image.path)}');
       isUploadingImage = true;
       notifyListeners();
       await storageReference.putFile(_image);
@@ -99,8 +99,7 @@ class EditUserIconScreenNotifier extends ChangeNotifier {
         !(userReference.data()['imagePath'].toString().contains('assets'))) {
       final firebase_storage.Reference existingImageStoragePath =
           firebase_storage.FirebaseStorage.instance
-              .ref()
-              .child(userReference.data()['imagePath']);
+              .refFromURL(userReference.data()['imagePath']);
 
       await existingImageStoragePath.delete();
     }
