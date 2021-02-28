@@ -112,6 +112,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
             if (snapshot.hasError || snapshot.data == null) {
               return CircularProgressDialog();
             } else {
+              final initPosition = snapshot.data.docs.indexWhere((element) =>
+                  element.id ==
+                  notifier.parentCategoryIdNotifier.currentParentCategoryId);
               return DecoratedBox(
                 decoration: BoxDecoration(
                   image: notifier
@@ -128,10 +131,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
                       : darkBlack,
                 ),
                 child: CustomTabView(
-                  initPosition: notifier.initPosition,
+                  initPosition: initPosition,
                   itemCount: snapshot.data.docs.length,
                   tabBuilder: (context, index) {
-                    notifier.setInitialTabId(snapshot.data.docs[index].id);
                     return ConstrainedBox(
                       constraints: BoxConstraints(
                         minWidth: 100,
@@ -330,8 +332,6 @@ class _CategoryPhotoScreen extends StatelessWidget {
                     );
                   },
                   onPositionChange: (index) {
-                    notifier.setCurrentIndex(index);
-                    notifier.initPosition = index;
                     notifier.updateCurrentTabId(
                       categoryId: snapshot.data.docs[index].id,
                       categoryName:

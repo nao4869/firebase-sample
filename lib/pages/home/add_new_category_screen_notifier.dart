@@ -58,8 +58,6 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
 
   String currentTabDocumentId = '';
   String currentTabCategoryName = '';
-  int currentTabIndex = 0;
-  int initPosition = 0;
   bool isInitialLoadCompleted = false;
 
   void handleSlideAnimationChanged(Animation<double> slideAnimation) {
@@ -72,16 +70,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setInitialTabId(String categoryId) {
-    if (!isInitialLoadCompleted) {
-      currentTabDocumentId = categoryId;
-    } else {
-      return;
-    }
-    isInitialLoadCompleted = true;
-  }
-
-  void updateFirestoreParentCategoryId() {
+  void updateFireStoreParentCategoryId() {
     final groupNotifier =
         Provider.of<CurrentGroupProvider>(context, listen: false);
     FirebaseFirestore.instance
@@ -111,7 +100,7 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
   }
 
   void pop() {
-    updateFirestoreParentCategoryId();
+    updateFireStoreParentCategoryId();
     Navigator.of(context).pop();
   }
 
@@ -132,11 +121,6 @@ class AddCategoryScreenNotifier extends ChangeNotifier {
     onNameChange('');
     nameFieldFormKey.currentState.reset();
     taskName = '';
-    notifyListeners();
-  }
-
-  void setCurrentIndex(int index) {
-    currentTabIndex = index;
     notifyListeners();
   }
 
