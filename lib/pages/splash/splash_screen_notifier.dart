@@ -351,7 +351,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       userSettingsReference: _userSettingsReference,
       isDisplayCompletedTodo: _isDisplayCompletedTodo,
       isDisplayOnlyCompletedTodo: _isDisplayOnlyCompletedTodo,
-      isSortByCreatedAt: _isSortByCreatedAt,
+      isSortByCreatedAt: _isSortByCreatedAt ?? false,
       isSortCategoryByCreatedAt: _isSortCategoryByCreatedAt,
       isDisplayCheckBox: _isDisplayCheckBox ?? true,
       todoFontSize: _todoFontSize,
