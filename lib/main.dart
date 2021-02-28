@@ -82,6 +82,7 @@ void main() async {
             isSortByCreatedAt: true,
             isSortCategoryByCreatedAt: true,
             isDisplayCheckBox: true,
+            isDisplayCreatedAt: false,
             isDisplayOnlyCompletedTodo: false,
             currentParentCategoryIdReference: '',
             todoFontSize: 13.0,

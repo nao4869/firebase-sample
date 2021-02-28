@@ -330,6 +330,9 @@ class _HomeScreen extends StatelessWidget {
                                           ? document['remindDate'].toDate() ??
                                               ''
                                           : null,
+                                      createdDate: document['createdAt'] != null
+                                          ? document['createdAt'].toDate() ?? ''
+                                          : null,
                                       isChecked: document['isChecked'],
                                       sizeType: notifier.sizeType,
                                     ),

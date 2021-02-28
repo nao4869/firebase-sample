@@ -159,6 +159,12 @@ class _SettingsScreen extends StatelessWidget {
           notifier.updateIsDisplayCheckBox(value);
         },
       ),
+      SwitchToggleListTile(
+        switchFieldName: 'isDisplayCreatedAt',
+        onChanged: (bool value) {
+          notifier.updateIsDisplayCreatedAt(value);
+        },
+      ),
     ];
   }
 

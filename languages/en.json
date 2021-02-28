@@ -27,6 +27,7 @@
   "isSortByCreatedAt": "Sort to-dos by created date",
   "isSortCategoryByCreatedAt": "Sort categories by created date",
   "isDisplayCheckBox": "Display todo check box",
+  "isDisplayCreatedAt": "Display todo created date",
   "todoFontSize": "Todo font size",
   "directMessageScreen": "Direct message screen",
   "editNameFontSize": "Font size - Account name",

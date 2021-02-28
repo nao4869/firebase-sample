@@ -11,6 +11,7 @@ class TodoContent extends StatelessWidget {
     this.onPressed,
     this.content,
     this.remindDate,
+    this.createdDate,
     this.isChecked = false,
     this.sizeType,
   });
@@ -18,6 +19,7 @@ class TodoContent extends StatelessWidget {
   final VoidCallback onPressed;
   final String content;
   final DateTime remindDate;
+  final DateTime createdDate;
   final bool isChecked;
   final ScreenSizeType sizeType;
 
@@ -65,6 +67,30 @@ class TodoContent extends StatelessWidget {
                           ),
                         ),
                       ),
+                    ],
+                  )
+                : Container(),
+            userSettingsNotifier.isDisplayCreatedAt
+                ? const SizedBox(height: 5)
+                : Container(),
+            userSettingsNotifier.isDisplayCreatedAt
+                ? Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          DateFormat.yMMMd().add_jm().format(createdDate),
+                          maxLines: 10,
+                          style: TextStyle(
+                            fontSize: userSettingsNotifier.todoFontSize,
+                            color:
+                                darkModeNotifier.isLightTheme ? black : white,
+                            decoration: isChecked
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
                     ],
                   )
                 : Container(),

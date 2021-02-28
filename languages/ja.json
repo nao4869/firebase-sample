@@ -27,6 +27,7 @@
   "isSortByCreatedAt": "Todoを新しい順に並べ替える",
   "isSortCategoryByCreatedAt": "カテゴリーを新しい順に並べ替える",
   "isDisplayCheckBox": "Todo - チェックボックスを表示する",
+  "isDisplayCreatedAt": "Todo - 作成日を表示する",
   "todoFontSize": "Todo - 文字サイズ",
   "directMessageScreen": "旧版 - DM画面",
   "editNameFontSize": "文字サイズ変更 - ユーザー名",

@@ -48,6 +48,7 @@ class SplashScreenNotifier extends ChangeNotifier {
   bool _isSortCategoryByCreatedAt = false;
   bool _isDisplayCheckBox = false;
   bool _isRegistrationCompleted = false;
+  bool _isDisplayCreatedAt = false;
   double _todoFontSize = 13.0;
   String _groupId = '';
   String _parentCategoryId = '';
@@ -340,8 +341,10 @@ class SplashScreenNotifier extends ChangeNotifier {
       _isSortCategoryByCreatedAt = snapshot.data()['isSortCategoryByCreatedAt'];
       _isDisplayCheckBox = snapshot.data()['isDisplayCheckBox'];
       _todoFontSize = snapshot.data()['todoFontSize'];
+      _isDisplayCreatedAt = snapshot.data()['isDisplayCreatedAt'];
     });
 
+    addCreatedAtIfNotExist(_userSettingsReference);
     parentCategoryIdNotifier.updateCurrentParentCategoryId(_parentCategoryId);
     userNotifier.initializeUserSettings(
       userReference: _referenceToUser,
@@ -358,6 +361,19 @@ class SplashScreenNotifier extends ChangeNotifier {
     // 設定中の背景色がある際には、Providerで保持する
     switchAppThemeProvider.updateSelectedImagePath(_selectedImagePath);
     _isRegistrationCompleted = true;
+  }
+
+  void addCreatedAtIfNotExist(String userSettingReference) {
+    FirebaseFirestore.instance
+        .collection('versions')
+        .doc('v2')
+        .collection('groups')
+        .doc(_groupId)
+        .collection('users')
+        .doc(_referenceToUser)
+        .collection('userSettings')
+        .doc(userSettingReference)
+        .update({"isDisplayCreatedAt": false});
   }
 
   // ユーザー設定コレクションを初期化 - 初回ログイン、招待初回登録時実行
@@ -383,6 +399,7 @@ class SplashScreenNotifier extends ChangeNotifier {
       'isSortByCreatedAt': true,
       'isSortCategoryByCreatedAt': true,
       'isDisplayCheckBox': true,
+      'isDisplayCreatedAt': false,
       'todoFontSize': 13.0,
       'backgroundDesignId': 0,
       'backgroundImagePath': '',
