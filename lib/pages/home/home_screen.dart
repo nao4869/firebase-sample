@@ -220,132 +220,136 @@ class _HomeScreen extends StatelessWidget {
           return Container();
         } else {
           notifier.updateTodoList(snapshot.data.docs);
-          return Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: false,
-              header: MaterialClassicHeader(
-                color: switchAppThemeNotifier.currentTheme,
-              ),
-              controller: notifier.refreshController,
-              onRefresh: notifier.onRefresh,
-              onLoading: notifier.onLoading,
-              child: ListView(
-                children: notifier.todoList.map(
-                  (DocumentSnapshot document) {
-                    if (document == null) {
-                      return Container();
-                    } else {
-                      final userReference = document['taggedUserReference'];
-                      return Column(
-                        children: [
-                          FractionallySizedBox(
-                            widthFactor:
-                                notifier.sizeType == ScreenSizeType.large
-                                    ? .99
-                                    : .95,
-                            child: Slidable(
-                              key: Key(document.id),
-                              actionPane: SlidableDrawerActionPane(),
-                              actionExtentRatio: 1.0,
-                              dismissal: SlidableDismissal(
-                                child: SlidableDrawerDismissal(),
-                                onDismissed: (actionType) {
-                                  notifier.showSnackBar(
-                                    context,
-                                    actionType == SlideActionType.primary
-                                        ? 'Dismiss Archive'
-                                        : 'Todo deleted',
-                                  );
-                                  notifier.deleteTodo(
-                                    'to-dos',
-                                    document.id,
-                                  );
-                                },
-                              ),
-                              secondaryActions: <Widget>[
-                                IconSlideAction(
-                                  caption: 'Delete',
-                                  color: Colors.red,
-                                  icon: Icons.delete,
-                                  onTap: () => notifier.showSnackBar(
-                                    context,
-                                    'Delete',
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: false,
+                header: MaterialClassicHeader(
+                  color: switchAppThemeNotifier.currentTheme,
+                ),
+                controller: notifier.refreshController,
+                onRefresh: notifier.onRefresh,
+                onLoading: notifier.onLoading,
+                child: ListView(
+                  children: notifier.todoList.map(
+                    (DocumentSnapshot document) {
+                      if (document == null) {
+                        return Container();
+                      } else {
+                        final userReference = document['taggedUserReference'];
+                        return Column(
+                          children: [
+                            FractionallySizedBox(
+                              widthFactor:
+                                  notifier.sizeType == ScreenSizeType.large
+                                      ? .99
+                                      : .95,
+                              child: Slidable(
+                                key: Key(document.id),
+                                actionPane: SlidableDrawerActionPane(),
+                                actionExtentRatio: 1.0,
+                                dismissal: SlidableDismissal(
+                                  child: SlidableDrawerDismissal(),
+                                  onDismissed: (actionType) {
+                                    notifier.showSnackBar(
+                                      context,
+                                      actionType == SlideActionType.primary
+                                          ? 'Dismiss Archive'
+                                          : 'Todo deleted',
+                                    );
+                                    notifier.deleteTodo(
+                                      'to-dos',
+                                      document.id,
+                                    );
+                                  },
+                                ),
+                                secondaryActions: <Widget>[
+                                  IconSlideAction(
+                                    caption: 'Delete',
+                                    color: Colors.red,
+                                    icon: Icons.delete,
+                                    onTap: () => notifier.showSnackBar(
+                                      context,
+                                      'Delete',
+                                    ),
                                   ),
-                                ),
-                              ],
-                              child: Card(
-                                color: white.withOpacity(0.9),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: ListTile(
-                                  leading: userNotifier.isDisplayCheckBox
-                                      ? SizedBox(
-                                          width: 40,
-                                          child: CircularCheckBox(
-                                            value: document['isChecked'],
-                                            checkColor: Colors.white,
-                                            activeColor:
-                                                index >= colorList.length
-                                                    ? colorList[0]
-                                                    : colorList[index],
-                                            inactiveColor:
-                                                index >= colorList.length
-                                                    ? colorList[0]
-                                                    : colorList[index],
-                                            disabledColor: Colors.grey,
-                                            onChanged: (val) {
-                                              notifier.updateTodoIsChecked(
-                                                'to-dos',
-                                                document.id,
-                                                !document['isChecked'],
-                                              );
-                                            },
-                                          ),
-                                        )
-                                      : null,
-                                  title: TodoContent(
-                                    onPressed: () {
-                                      notifier.editTodo(
-                                        collection: 'to-dos',
-                                        documentId: document.id,
-                                        initialValue: document['name'],
-                                        selectedPersonId: document[
-                                                    'taggedUserReference'] !=
-                                                null
-                                            ? document['taggedUserReference'].id
-                                            : null,
-                                        remindDate: document['remindDate'] !=
-                                                null
-                                            ? document['remindDate'].toDate()
-                                            : null,
-                                      );
-                                    },
-                                    content: document['name'] ?? '',
-                                    remindDate: document['remindDate'] != null
-                                        ? document['remindDate'].toDate() ?? ''
+                                ],
+                                child: Card(
+                                  color: white.withOpacity(0.9),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: ListTile(
+                                    leading: userNotifier.isDisplayCheckBox
+                                        ? SizedBox(
+                                            width: 40,
+                                            child: CircularCheckBox(
+                                              value: document['isChecked'],
+                                              checkColor: Colors.white,
+                                              activeColor:
+                                                  index >= colorList.length
+                                                      ? colorList[0]
+                                                      : colorList[index],
+                                              inactiveColor:
+                                                  index >= colorList.length
+                                                      ? colorList[0]
+                                                      : colorList[index],
+                                              disabledColor: Colors.grey,
+                                              onChanged: (val) {
+                                                notifier.updateTodoIsChecked(
+                                                  'to-dos',
+                                                  document.id,
+                                                  !document['isChecked'],
+                                                );
+                                              },
+                                            ),
+                                          )
                                         : null,
-                                    isChecked: document['isChecked'],
-                                    sizeType: notifier.sizeType,
+                                    title: TodoContent(
+                                      onPressed: () {
+                                        notifier.editTodo(
+                                          collection: 'to-dos',
+                                          documentId: document.id,
+                                          initialValue: document['name'],
+                                          selectedPersonId: document[
+                                                      'taggedUserReference'] !=
+                                                  null
+                                              ? document['taggedUserReference']
+                                                  .id
+                                              : null,
+                                          remindDate: document['remindDate'] !=
+                                                  null
+                                              ? document['remindDate'].toDate()
+                                              : null,
+                                        );
+                                      },
+                                      content: document['name'] ?? '',
+                                      remindDate: document['remindDate'] != null
+                                          ? document['remindDate'].toDate() ??
+                                              ''
+                                          : null,
+                                      isChecked: document['isChecked'],
+                                      sizeType: notifier.sizeType,
+                                    ),
+                                    trailing: userReference != null
+                                        ? TaggedUserImage(
+                                            taggedUserReferenceId:
+                                                userReference.id,
+                                            sizeType: notifier.sizeType,
+                                          )
+                                        : null,
                                   ),
-                                  trailing: userReference != null
-                                      ? TaggedUserImage(
-                                          taggedUserReferenceId:
-                                              userReference.id,
-                                          sizeType: notifier.sizeType,
-                                        )
-                                      : null,
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                ).toList(),
+                          ],
+                        );
+                      }
+                    },
+                  ).toList(),
+                ),
               ),
             ),
           );
