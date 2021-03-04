@@ -143,7 +143,7 @@ class _CategoryPhotoScreen extends StatelessWidget {
                       child: DecoratedBox(
                         decoration: BoxDecoration(
                           color: index >= colorList.length
-                              ? colorList[0]
+                              ? colorList[index - colorList.length]
                               : colorList[index],
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
@@ -260,7 +260,9 @@ class _CategoryPhotoScreen extends StatelessWidget {
                                                       decoration: BoxDecoration(
                                                         color: index >=
                                                                 colorList.length
-                                                            ? colorList[0]
+                                                            ? colorList[index -
+                                                                colorList
+                                                                    .length]
                                                             : colorList[index],
                                                         borderRadius:
                                                             BorderRadius.only(
