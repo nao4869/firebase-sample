@@ -214,6 +214,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.9"
+  flutter_rounded_progress_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_rounded_progress_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   flutter_slidable:
     dependency: "direct main"
     description:

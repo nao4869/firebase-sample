@@ -8,15 +8,13 @@ import 'package:firebase_sample/models/provider/theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
 import 'package:firebase_sample/pages/chart/chart_list_screen_notifier.dart';
-import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
-import 'package:firebase_sample/tabs/custom_tab_bar.dart';
-import 'package:firebase_sample/widgets/dialog/circular_progress_dialog.dart';
+import 'package:firebase_sample/plugin/flutter_rounded_progress_bar.dart';
+import 'package:firebase_sample/plugin/rounded_progress_bar_style.dart';
 import 'package:firebase_sample/widgets/stream/tagged_user_image.dart';
 import 'package:firebase_sample/widgets/stream/todo_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -53,8 +51,60 @@ class _ChartListScreen extends StatelessWidget {
             ? switchAppThemeNotifier.currentTheme
             : darkBlack,
         elevation: 1.0,
+        title: Text(
+          '達成済みタスク',
+          style: TextStyle(
+            color: white,
+            fontWeight: FontWeight.bold,
+            fontSize: 14.0,
+          ),
+        ),
       ),
-      body: Container(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Center(
+                child: FractionallySizedBox(
+                  widthFactor:
+                      notifier.sizeType == ScreenSizeType.large ? .99 : .95,
+                  child: Card(
+                    color: white.withOpacity(0.9),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'カテゴリー名称',
+                            style: TextStyle(
+                              color: black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                          Text(
+                            '50%',
+                            style: TextStyle(
+                              color: black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: _buildRoundedProgressBar(context, 1),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -228,6 +278,39 @@ class _ChartListScreen extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+  Widget _buildRoundedProgressBar(
+    BuildContext context,
+    int index,
+  ) {
+    final theme = Provider.of<ThemeProvider>(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: RoundedProgressBar(
+              height: 10,
+              childLeft: Text(
+                '${50}%',
+                style: TextStyle(
+                  color: theme.getThemeData == lightTheme
+                      ? Colors.black
+                      : Colors.white,
+                ),
+              ),
+              percent: 50.0,
+              color: colorList[index],
+//              style: RoundedProgressBarStyle(
+//                widthShadow: 30,
+//                colorBorder: Theme.of(context).primaryColor,
+//              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
