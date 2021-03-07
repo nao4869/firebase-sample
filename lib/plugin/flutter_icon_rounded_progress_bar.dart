@@ -1,5 +1,5 @@
+import 'package:firebase_sample/plugin/rounded_progress_bar_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 
 class IconRoundedProgressBar extends StatefulWidget {
   final double percent;

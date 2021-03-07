@@ -1,5 +1,5 @@
+import 'package:firebase_sample/plugin/rounded_progress_bar_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 
 class RoundedProgressBar extends StatefulWidget {
   final double percent;
@@ -16,20 +16,21 @@ class RoundedProgressBar extends StatefulWidget {
   final int milliseconds;
   final BorderRadiusGeometry borderRadius;
 
-  RoundedProgressBar(
-      {this.percent = 40,
-      this.height = 50,
-      this.style,
-      this.color,
-      this.margin,
-      this.reverse = false,
-      this.childCenter,
-      this.childLeft,
-      this.childRight,
-      this.milliseconds = 500,
-      this.borderRadius,
-      this.paddingChildLeft,
-      this.paddingChildRight}) {
+  RoundedProgressBar({
+    this.percent = 40,
+    this.height = 50,
+    this.style,
+    this.color,
+    this.margin,
+    this.reverse = false,
+    this.childCenter,
+    this.childLeft,
+    this.childRight,
+    this.milliseconds = 500,
+    this.borderRadius,
+    this.paddingChildLeft,
+    this.paddingChildRight,
+  }) {
     assert(percent >= 0);
     assert(height > 0);
   }
@@ -97,52 +98,67 @@ class RoundedProgressBarState extends State<RoundedProgressBar> {
       width = constraint.maxWidth;
       widthProgress = width * widget.percent / 100;
       return Container(
-          margin: widget.margin,
-          decoration: BoxDecoration(
-              borderRadius: borderRadius, color: style.colorBorder),
-          padding: EdgeInsets.all(style.borderWidth),
-          child: Column(children: <Widget>[
+        margin: widget.margin,
+        decoration:
+            BoxDecoration(borderRadius: borderRadius, color: style.colorBorder),
+        padding: EdgeInsets.all(style.borderWidth),
+        child: Column(
+          children: <Widget>[
             Container(
-                constraints: BoxConstraints.expand(height: widget.height),
-                decoration: BoxDecoration(
-                    borderRadius: borderRadius,
-                    color: style.backgroundProgress),
-                child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
+              constraints: BoxConstraints.expand(
+                height: widget.height,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: borderRadius,
+                color: style.backgroundProgress,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
                   Expanded(
-                      child: Stack(alignment: alignment, children: <Widget>[
-                    AnimatedContainer(
-                        duration: Duration(milliseconds: widget.milliseconds),
-                        width: widthProgress + style.widthShadow,
-                        decoration: BoxDecoration(
-                          borderRadius: borderRadius,
-                          color: style.colorProgressDark,
-                        )),
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: widget.milliseconds),
-                      width: widthProgress,
-                      decoration: BoxDecoration(
-                        borderRadius: borderRadius,
-                        color: style.colorProgress,
-                      ),
+                    child: Stack(
+                      alignment: alignment,
+                      children: <Widget>[
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: widget.milliseconds),
+                          width: widthProgress + style.widthShadow,
+                          decoration: BoxDecoration(
+                            borderRadius: borderRadius,
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: widget.milliseconds),
+                          width: widthProgress,
+                          decoration: BoxDecoration(
+                            borderRadius: borderRadius,
+                            color: style.colorProgress,
+                          ),
+                        ),
+                        Center(child: widget.childCenter),
+                        Padding(
+                          padding: paddingChildLeft,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: widget.childLeft,
+                          ),
+                        ),
+                        Padding(
+                          padding: paddingChildRight,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: widget.childRight,
+                          ),
+                        )
+                      ],
                     ),
-                    Center(child: widget.childCenter),
-                    Padding(
-                      padding: paddingChildLeft,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: widget.childLeft,
-                      ),
-                    ),
-                    Padding(
-                      padding: paddingChildRight,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: widget.childRight,
-                      ),
-                    )
-                  ]))
-                ]))
-          ]));
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
     });
   }
 }

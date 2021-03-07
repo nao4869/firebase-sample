@@ -64,7 +64,7 @@ class _ChartListScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(3.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: Center(
                 child: FractionallySizedBox(
                   widthFactor:
@@ -303,10 +303,10 @@ class _ChartListScreen extends StatelessWidget {
               ),
               percent: 50.0,
               color: colorList[index],
-//              style: RoundedProgressBarStyle(
-//                widthShadow: 30,
-//                colorBorder: Theme.of(context).primaryColor,
-//              ),
+              style: RoundedProgressBarStyle(
+                widthShadow: 30,
+                colorBorder: Theme.of(context).primaryColor,
+              ),
             ),
           ),
         ],

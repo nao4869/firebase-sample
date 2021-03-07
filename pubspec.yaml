@@ -74,9 +74,6 @@ dependencies:
   # アプリレビュー
   rate_my_app: ^0.7.2
 
-  # UI構成要素
-  flutter_rounded_progress_bar: ^0.1.2
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -32,12 +32,13 @@ class RoundedProgressBarStyle {
   final double borderWidth;
   final double widthShadow;
 
-  RoundedProgressBarStyle(
-      {this.backgroundProgress = backgroundProgressDefault,
-      this.colorProgress = colorProgressDefault,
-      this.colorProgressDark = colorProgressDarkDefault,
-      this.colorBorder = colorBorderDefault,
-      this.colorBackgroundIcon = colorBorderDefault,
-      this.widthShadow = 6,
-      this.borderWidth = 6});
+  RoundedProgressBarStyle({
+    this.backgroundProgress = backgroundProgressDefault,
+    this.colorProgress = colorProgressDefault,
+    this.colorProgressDark = colorProgressDarkDefault,
+    this.colorBorder = colorBorderDefault,
+    this.colorBackgroundIcon = colorBorderDefault,
+    this.widthShadow = 6,
+    this.borderWidth = 6,
+  });
 }
