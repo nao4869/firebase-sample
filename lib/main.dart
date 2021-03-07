@@ -12,6 +12,7 @@ import 'package:firebase_sample/pages/home/home_screen.dart';
 import 'package:firebase_sample/pages/home/home_screen_notifier.dart';
 import 'package:firebase_sample/pages/splash/splash_screen.dart';
 import 'package:firebase_sample/pages/splash/user_registration_screen.dart';
+import 'package:firebase_sample/tabs/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -150,6 +151,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         'home-screen': (_) => HomeScreen(),
         'user-registration-screen': (_) => UserRegistrationScreen(),
+        'tabs-screen': (_) => TabScreen(),
       },
     );
   }

@@ -7,7 +7,7 @@ import 'package:firebase_sample/models/provider/current_parent_category_id.dart'
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
 import 'package:firebase_sample/models/provider/switch_app_theme_provider.dart';
 import 'package:firebase_sample/models/provider/user_reference_provider.dart';
-import 'package:firebase_sample/pages/home/home_screen.dart';
+import 'package:firebase_sample/tabs/tabs_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -431,7 +431,7 @@ class SplashScreenNotifier extends ChangeNotifier {
 
   void navigateHomeScreen() {
     Navigator.of(context, rootNavigator: true).pushReplacementNamed(
-      HomeScreen.routeName,
+      TabScreen.routeName,
     );
   }
 }
