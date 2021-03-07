@@ -111,50 +111,49 @@ class _ChartListScreen extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  child: ListTile(
-                                    title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 6.0),
-                                          child: Text(
-                                            snapshot.data.docs[index]
-                                                .data()['name'],
-                                            style: TextStyle(
-                                              color: black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14.0,
-                                            ),
-                                          ),
-                                        ),
-                                        StreamBuilder(
-                                          stream: FirebaseFirestore.instance
-                                              .collection('versions')
-                                              .doc('v2')
-                                              .collection('groups')
-                                              .doc(groupNotifier.groupId)
-                                              .collection('categories')
-                                              .doc(notifier
-                                                  .parentCategoryIdNotifier
-                                                  .currentParentCategoryId)
-                                              .collection('children')
-                                              .doc(snapshot.data.docs[index].id)
-                                              .collection('to-dos')
-                                              .snapshots(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<QuerySnapshot>
-                                                  todoSnapShot) {
-                                            // エラーの場合
-                                            if (todoSnapShot.hasError ||
-                                                todoSnapShot.data == null) {
-                                              return CircularProgressDialog();
-                                            } else {
-                                              final completedPercent = notifier
-                                                  .calculateCompletePercent(
-                                                      todoSnapShot.data.docs);
-                                              return Text(
+                                  child: StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('versions')
+                                        .doc('v2')
+                                        .collection('groups')
+                                        .doc(groupNotifier.groupId)
+                                        .collection('categories')
+                                        .doc(notifier.parentCategoryIdNotifier
+                                            .currentParentCategoryId)
+                                        .collection('children')
+                                        .doc(snapshot.data.docs[index].id)
+                                        .collection('to-dos')
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<QuerySnapshot>
+                                            todoSnapShot) {
+                                      if (todoSnapShot.hasError ||
+                                          todoSnapShot.data == null) {
+                                        return CircularProgressDialog();
+                                      } else {
+                                        final completedPercent =
+                                            notifier.calculateCompletePercent(
+                                                todoSnapShot.data.docs);
+                                        return ListTile(
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 6.0),
+                                                child: Text(
+                                                  snapshot.data.docs[index]
+                                                      .data()['name'],
+                                                  style: TextStyle(
+                                                    color: black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
                                                 completedPercent.isNaN
                                                     ? '0.0%'
                                                     : completedPercent
@@ -166,14 +165,17 @@ class _ChartListScreen extends StatelessWidget {
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14.0,
                                                 ),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    subtitle: _buildRoundedProgressBar(
-                                        context, index),
+                                              ),
+                                            ],
+                                          ),
+                                          subtitle: _buildRoundedProgressBar(
+                                            context: context,
+                                            todoList: todoSnapShot.data.docs,
+                                            index: index,
+                                          ),
+                                        );
+                                      }
+                                    },
                                   ),
                                 ),
                               ),
@@ -189,11 +191,14 @@ class _ChartListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRoundedProgressBar(
+  Widget _buildRoundedProgressBar({
     BuildContext context,
+    List<QueryDocumentSnapshot> todoList,
     int index,
-  ) {
+  }) {
+    final notifier = Provider.of<ChartListScreenNotifier>(context);
     final theme = Provider.of<ThemeProvider>(context);
+    final completedPercent = notifier.calculateCompletePercent(todoList);
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: Row(
@@ -209,7 +214,9 @@ class _ChartListScreen extends StatelessWidget {
                       : Colors.white,
                 ),
               ),
-              percent: 50.0,
+              percent: completedPercent <= 0.0 || completedPercent.isNaN
+                  ? 0.0
+                  : completedPercent,
               color: index >= colorList.length
                   ? colorList[index - colorList.length]
                   : colorList[index],
