@@ -245,5 +245,6 @@
   "editParentCategory": "Edit parent category",
   "deleteParentCategory": "Delete parent category",
   "accountDeleted": "Account has been deleted",
-  "reinstallDescription": "Your account has already been deleted. Please uninstall and reinstall the app to register again."
+  "reinstallDescription": "Your account has already been deleted. Please uninstall and reinstall the app to register again.",
+  "completedTaskPercent": "Completed Task Percent"
 }

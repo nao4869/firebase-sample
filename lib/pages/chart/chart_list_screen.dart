@@ -13,6 +13,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_localizations.dart';
+
 class ChartListScreen extends StatelessWidget {
   const ChartListScreen();
 
@@ -47,7 +49,7 @@ class _ChartListScreen extends StatelessWidget {
             : darkBlack,
         elevation: 1.0,
         title: Text(
-          '達成済みタスク',
+          AppLocalizations.of(context).translate('completedTaskPercent'),
           style: TextStyle(
             color: white,
             fontWeight: FontWeight.bold,
@@ -140,9 +142,8 @@ class _ChartListScreen extends StatelessWidget {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 6.0),
+                                                padding: const EdgeInsets.only(
+                                                    left: 6.0),
                                                 child: Text(
                                                   snapshot.data.docs[index]
                                                       .data()['name'],
@@ -153,17 +154,21 @@ class _ChartListScreen extends StatelessWidget {
                                                   ),
                                                 ),
                                               ),
-                                              Text(
-                                                completedPercent.isNaN
-                                                    ? '0.0%'
-                                                    : completedPercent
-                                                            .roundToDouble()
-                                                            .toString() +
-                                                        '%',
-                                                style: TextStyle(
-                                                  color: black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0,
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 6.0),
+                                                child: Text(
+                                                  completedPercent.isNaN
+                                                      ? '0.0%'
+                                                      : completedPercent
+                                                              .roundToDouble()
+                                                              .toString() +
+                                                          '%',
+                                                  style: TextStyle(
+                                                    color: black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0,
+                                                  ),
                                                 ),
                                               ),
                                             ],

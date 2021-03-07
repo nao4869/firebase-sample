@@ -71,11 +71,11 @@ class _TabScreenState extends State<TabScreen> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.bubble_chart_sharp,
+                  Icons.bar_chart,
                   color: warmGrey,
                 ),
                 activeIcon: Icon(
-                  Icons.bubble_chart_sharp,
+                  Icons.bar_chart,
                   color: themeProvider.currentTheme,
                 ),
               ),

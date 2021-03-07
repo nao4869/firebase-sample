@@ -244,5 +244,6 @@
   "editParentCategory": "親カテゴリーを編集する",
   "deleteParentCategory": "親カテゴリーを削除する",
   "accountDeleted": "退会済みです",
-  "reinstallDescription": "既に退会処理が完了し、アカウントは削除されています。再インストール後に再登録をお願い致します。"
+  "reinstallDescription": "既に退会処理が完了し、アカウントは削除されています。再インストール後に再登録をお願い致します。",
+  "completedTaskPercent": "達成済みタスク"
 }
