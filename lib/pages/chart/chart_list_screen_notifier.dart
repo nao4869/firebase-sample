@@ -41,13 +41,7 @@ class ChartListScreenNotifier extends ChangeNotifier {
 
   ScreenSize screenSize;
   ScreenSizeType sizeType;
-
-  String _taskName;
   bool isValid = false;
-
-  File _image;
-  String _uploadedFileURL;
-  int _selectedPersonIndex;
 
   DateTime _selectedRemindDate;
   bool get isDateValid => _selectedRemindDate != null;
@@ -59,8 +53,6 @@ class ChartListScreenNotifier extends ChangeNotifier {
   int currentTabIndex = 0;
   int initPosition = 0;
   bool isInitialLoadCompleted = false;
-  String _referenceToUser = '';
-  String _selectedPersonId = '';
   List<QueryDocumentSnapshot> todoList = [];
 
   Animation<double> rotationAnimation;
@@ -71,6 +63,18 @@ class ChartListScreenNotifier extends ChangeNotifier {
     textController.dispose();
     videoController.dispose();
     super.dispose();
+  }
+
+  double calculateCompletePercent(
+    List<QueryDocumentSnapshot> todoList,
+  ) {
+    final completedPercent = todoList
+            .where((element) => element['isChecked'] == true)
+            .toList()
+            .length /
+        todoList.length *
+        100;
+    return completedPercent;
   }
 
   RefreshController refreshController =

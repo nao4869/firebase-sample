@@ -151,16 +151,9 @@ class _ChartListScreen extends StatelessWidget {
                                                 todoSnapShot.data == null) {
                                               return CircularProgressDialog();
                                             } else {
-                                              final completedPercent = (todoSnapShot
-                                                          .data.docs
-                                                          .where((element) =>
-                                                              element[
-                                                                  'isChecked'] ==
-                                                              true)
-                                                          .toList()
-                                                          .length /
-                                                      todoSnapShot.data.size) *
-                                                  100;
+                                              final completedPercent = notifier
+                                                  .calculateCompletePercent(
+                                                      todoSnapShot.data.docs);
                                               return Text(
                                                 completedPercent.isNaN
                                                     ? '0.0%'
