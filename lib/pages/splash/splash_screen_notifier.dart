@@ -87,14 +87,9 @@ class SplashScreenNotifier extends ChangeNotifier {
   }
 
   Future<void> getFcmToken() async {
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      debugPrint("Settings registered: $settings");
-    });
+    _firebaseMessaging.requestPermission();
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
       _fcmToken = token;

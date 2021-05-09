@@ -18,7 +18,8 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<void> retrievePostData() async {
-    var url = 'https://fir-book-sample.firebaseio.com/posts.json';
+    final url =
+        Uri.http('https://fir-book-sample.firebaseio.com/posts.json', "");
     try {
       final response = await http.get(url); // get for fetching from DB
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -49,8 +50,8 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<void> addPost(Post post) async {
-    const url = 'https://fir-book-sample.firebaseio.com/posts.json';
-
+    final url =
+        Uri.http('https://fir-book-sample.firebaseio.com/posts.json', "");
     try {
       final response = await http.post(
         url,
@@ -84,7 +85,8 @@ class PostProvider with ChangeNotifier {
     final postIndex = posts.indexWhere((cs) => cs.id == id);
 
     if (postIndex >= 0) {
-      final url = 'https://fir-book-sample.firebaseio.com/posts/$id.json';
+      final url =
+          Uri.http('https://fir-book-sample.firebaseio.com/posts/$id.json', "");
       await http.patch(url,
           body: json.encode({
             'name': newPost.name,
@@ -100,7 +102,8 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<void> deletePost(String id) async {
-    final url = 'https://fir-book-sample.firebaseio.com/posts/$id.json';
+    final url =
+        Uri.http('https://fir-book-sample.firebaseio.com/posts/$id.json', "");
     final existingPostIndex = posts.indexWhere((post) => post.id == id);
     var existingCourse = posts[existingPostIndex];
     posts.removeAt(existingPostIndex);
