@@ -23,7 +23,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rate_my_app/rate_my_app.dart';
-import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_sample/extensions/set_image_path.dart';
 
@@ -35,11 +34,6 @@ class HomeScreenNotifier extends ChangeNotifier {
     this.parentCategoryIdNotifier,
   }) {
     textController.text = '';
-    videoController = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    );
-    initializeVideoPlayerFuture = videoController.initialize();
-
     slidableController = SlidableController(
       onSlideAnimationChanged: handleSlideAnimationChanged,
       onSlideIsOpenChanged: handleSlideIsOpenChanged,
@@ -99,7 +93,6 @@ class HomeScreenNotifier extends ChangeNotifier {
   bool get isDateValid => _selectedRemindDate != null;
 
   SlidableController slidableController;
-  VideoPlayerController videoController;
   Future<void> initializeVideoPlayerFuture;
   String currentTabDocumentId = '';
   int currentTabIndex = 0;
@@ -126,7 +119,6 @@ class HomeScreenNotifier extends ChangeNotifier {
   @override
   void dispose() {
     textController.dispose();
-    videoController.dispose();
     super.dispose();
   }
 
@@ -368,15 +360,6 @@ class HomeScreenNotifier extends ChangeNotifier {
     onNameChange('');
     nameFieldFormKey.currentState.reset();
     _taskName = '';
-    notifyListeners();
-  }
-
-  void playAndPauseVideo() {
-    if (videoController.value.isPlaying) {
-      videoController.pause();
-    } else {
-      videoController.play();
-    }
     notifyListeners();
   }
 
