@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/screen_size/screen_size.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:video_player/video_player.dart';
 
 class ChartListScreenNotifier extends ChangeNotifier {
   ChartListScreenNotifier({
@@ -18,11 +16,6 @@ class ChartListScreenNotifier extends ChangeNotifier {
     this.parentCategoryIdNotifier,
   }) {
     textController.text = '';
-    videoController = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    );
-    initializeVideoPlayerFuture = videoController.initialize();
-
     slidableController = SlidableController(
       onSlideAnimationChanged: handleSlideAnimationChanged,
       onSlideIsOpenChanged: handleSlideIsOpenChanged,
@@ -47,8 +40,6 @@ class ChartListScreenNotifier extends ChangeNotifier {
   bool get isDateValid => _selectedRemindDate != null;
 
   SlidableController slidableController;
-  VideoPlayerController videoController;
-  Future<void> initializeVideoPlayerFuture;
   String currentTabDocumentId = '';
   int currentTabIndex = 0;
   int initPosition = 0;
@@ -61,7 +52,6 @@ class ChartListScreenNotifier extends ChangeNotifier {
   @override
   void dispose() {
     textController.dispose();
-    videoController.dispose();
     super.dispose();
   }
 
