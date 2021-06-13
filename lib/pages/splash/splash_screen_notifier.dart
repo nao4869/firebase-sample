@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_sample/models/provider/current_group_provider.dart';
 import 'package:firebase_sample/models/provider/current_parent_category_id.dart';
 import 'package:firebase_sample/models/provider/device_id_provider.dart';
@@ -63,7 +61,7 @@ class SplashScreenNotifier extends ChangeNotifier {
     _isLoading = true;
     initDeviceId();
 
-    await getFcmToken();
+    // await getFcmToken();
 
     // ユーザー登録済み判定、非同期で取得する為、await必須
     await initUserReference();
@@ -86,20 +84,20 @@ class SplashScreenNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> getFcmToken() async {
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      debugPrint("Settings registered: $settings");
-    });
-    _firebaseMessaging.getToken().then((String token) {
-      assert(token != null);
-      _fcmToken = token;
-    });
-  }
+//  Future<void> getFcmToken() async {
+//    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+//
+//    _firebaseMessaging.requestNotificationPermissions(
+//        const IosNotificationSettings(sound: true, badge: true, alert: true));
+//    _firebaseMessaging.onIosSettingsRegistered
+//        .listen((IosNotificationSettings settings) {
+//      debugPrint("Settings registered: $settings");
+//    });
+//    _firebaseMessaging.getToken().then((String token) {
+//      assert(token != null);
+//      _fcmToken = token;
+//    });
+//  }
 
   // デバイスIDを設定
   void initDeviceId() {
